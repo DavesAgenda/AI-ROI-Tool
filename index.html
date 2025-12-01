@@ -1,0 +1,1568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Automation ROI Calculator</title>
+  <style>
+    /* Scoped styling tuned to Valid Agenda brand */
+    #va-roi-calculator {
+      --va-primary: #0f3555;
+      --va-secondary: #1c4e71;
+      --va-accent: #f58220;
+      --va-accent-soft: #ffb067;
+      --va-cream: #f9f4ec;
+      --va-panel: #ffffff;
+      --va-muted: #4f6373;
+      --va-line: #e7edf3;
+      --va-danger: #c94b4b;
+      --va-success: #2f9e44;
+      --va-shadow: 0 26px 90px rgba(13, 55, 85, 0.16);
+      --va-radius: 16px;
+      --va-spacing: 16px;
+      --va-font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      background: #ffffff;
+      color: #111827;
+      padding: 24px 0;
+    }
+
+    #va-roi-calculator .va-roi {
+      font-family: var(--va-font);
+      background: linear-gradient(165deg, rgba(12, 57, 92, 0.08), transparent 45%), var(--va-cream);
+      color: var(--va-primary);
+      min-height: 100vh;
+      margin: 0;
+      padding: 48px 18px 80px;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    #va-roi-calculator .va-shell {
+      max-width: 1180px;
+      margin: 0 auto 90px;
+      background: var(--va-panel);
+      border: 1px solid var(--va-line);
+      box-shadow: 0 30px 60px rgba(15, 53, 85, 0.1);
+      border-radius: 24px;
+      padding: 36px;
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    #va-roi-calculator .va-shell::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(120deg, rgba(12, 57, 92, 0.12), transparent 42%, rgba(245, 130, 32, 0.08) 100%),
+        linear-gradient(-8deg, rgba(12, 57, 92, 0.08), transparent 50%);
+      opacity: 0.7;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    #va-roi-calculator .va-shell > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    #va-roi-calculator .va-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    #va-roi-calculator .va-title {
+      margin: 0;
+      font-size: 2.2rem;
+      letter-spacing: -0.4px;
+      color: var(--va-primary);
+    }
+
+    #va-roi-calculator .va-lede {
+      color: var(--va-muted);
+      margin: 6px 0 0;
+      max-width: 720px;
+      line-height: 1.5;
+    }
+
+    #va-roi-calculator .va-tag {
+      padding: 8px 14px;
+      background: rgba(245, 130, 32, 0.12);
+      border: 1px solid rgba(245, 130, 32, 0.4);
+      color: var(--va-primary);
+      border-radius: 999px;
+      font-size: 0.95rem;
+      letter-spacing: 0.2px;
+      white-space: nowrap;
+      font-weight: 700;
+    }
+
+    #va-roi-calculator .va-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    #va-roi-calculator .va-card {
+      background: var(--va-panel);
+      border-radius: 20px;
+      padding: 28px;
+      border: 1px solid var(--va-line);
+      box-shadow: 0 18px 50px rgba(12, 55, 85, 0.08);
+    }
+
+    #va-roi-calculator .va-card h3 {
+      margin: 0 0 12px;
+      font-size: 1.3rem;
+      color: var(--va-primary);
+      font-weight: 800;
+      letter-spacing: -0.2px;
+    }
+
+    #va-roi-calculator .va-card p {
+      margin: 6px 0 12px;
+      color: var(--va-muted);
+      line-height: 1.5;
+      font-size: 0.95rem;
+    }
+
+    #va-roi-calculator .va-field {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    #va-roi-calculator .va-field label {
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.95rem;
+      color: var(--va-primary);
+    }
+
+    #va-roi-calculator .va-field small {
+      color: var(--va-muted);
+      font-weight: 400;
+    }
+
+    #va-roi-calculator .va-input,
+    #va-roi-calculator .va-select {
+      background: #f6f8fb;
+      border: 1px solid var(--va-line);
+      color: var(--va-primary);
+      padding: 14px 16px;
+      border-radius: 10px;
+      font-size: 1rem;
+      outline: none;
+      transition: border 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    #va-roi-calculator .va-input:focus,
+    #va-roi-calculator .va-select:focus {
+      border-color: var(--va-accent);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(245, 130, 32, 0.16);
+    }
+
+    #va-roi-calculator .va-toggle {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    #va-roi-calculator .va-btn {
+      background: #f6f8fb;
+      border: 1px solid var(--va-line);
+      color: var(--va-primary);
+      padding: 10px 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-weight: 600;
+    }
+
+    #va-roi-calculator .va-btn:hover {
+      background: #eef3f7;
+    }
+
+    #va-roi-calculator .va-btn.active {
+      background: var(--va-accent);
+      color: #fff;
+      border-color: var(--va-accent);
+      box-shadow: 0 10px 25px rgba(245, 130, 32, 0.25);
+    }
+
+    #va-roi-calculator .va-highlight {
+      background: #f9fafb;
+      border: 1px solid var(--va-line);
+      border-radius: 16px;
+      padding: 18px;
+      margin-top: 10px;
+      box-shadow: 0 12px 30px rgba(15, 53, 85, 0.05);
+    }
+
+    #va-roi-calculator .va-highlight strong {
+      font-size: 1.1rem;
+    }
+
+    #va-roi-calculator .va-matrix {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    #va-roi-calculator .va-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #eef3f7;
+      border: 1px solid var(--va-line);
+      font-size: 0.9rem;
+      color: var(--va-primary);
+      width: fit-content;
+    }
+
+    #va-roi-calculator .va-error {
+      color: var(--va-danger);
+      font-size: 0.9rem;
+      margin: 6px 0 0;
+    }
+
+    #va-roi-calculator .va-success {
+      color: var(--va-success);
+      font-weight: 600;
+    }
+
+    #va-roi-calculator .va-progress {
+      background: #f1f4f8;
+      border-radius: 12px;
+      border: 1px solid var(--va-line);
+      overflow: hidden;
+      height: 12px;
+      position: relative;
+      margin-top: 8px;
+    }
+
+    #va-roi-calculator .va-progress span {
+      display: block;
+      height: 100%;
+      background: linear-gradient(90deg, var(--va-accent), var(--va-accent-soft));
+      width: 0%;
+      transition: width 0.25s ease;
+    }
+
+    #va-roi-calculator .va-chart {
+      background: #f6f8fb;
+      border-radius: 12px;
+      border: 1px solid var(--va-line);
+      padding: 12px;
+      margin-top: 8px;
+    }
+
+    #va-roi-calculator .va-chart-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    #va-roi-calculator .va-bar {
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(15, 53, 85, 0.08);
+      overflow: hidden;
+      flex: 1;
+    }
+
+    #va-roi-calculator .va-bar span {
+      display: block;
+      height: 100%;
+      background: var(--va-accent);
+      width: 0%;
+      transition: width 0.25s ease;
+    }
+
+    #va-roi-calculator .va-badge {
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: inline-block;
+    }
+
+    .va-badge.quick { background: rgba(47, 158, 68, 0.16); color: #2f9e44; border: 1px solid rgba(47, 158, 68, 0.6); }
+    .va-badge.bet { background: rgba(27, 104, 158, 0.14); color: #1b689e; border: 1px solid rgba(27, 104, 158, 0.6); }
+    .va-badge.hobby { background: rgba(245, 130, 32, 0.16); color: #b95c0a; border: 1px solid rgba(245, 130, 32, 0.55); }
+    .va-badge.trap { background: rgba(201, 75, 75, 0.18); color: #c94b4b; border: 1px solid rgba(201, 75, 75, 0.6); }
+
+    #va-roi-calculator .va-footer {
+      margin-top: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    #va-roi-calculator .va-cta {
+      background: linear-gradient(135deg, var(--va-accent), #f49a3a);
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.2px;
+      box-shadow: 0 14px 34px rgba(245, 130, 32, 0.28);
+    }
+
+    #va-roi-calculator .va-proceed {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 14px;
+      padding: 10px 14px;
+      background: #f6f8fb;
+      border: 1px solid var(--va-line);
+      border-radius: 12px;
+      color: var(--va-primary);
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    #va-roi-calculator .va-proceed:hover {
+      background: #eef3f7;
+      border-color: var(--va-accent);
+      color: var(--va-accent);
+      box-shadow: 0 10px 24px rgba(12, 55, 85, 0.12);
+    }
+
+    #va-roi-calculator .va-table {
+      margin-top: 14px;
+      border: 1px solid var(--va-line);
+      border-radius: 16px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 12px 30px rgba(15, 53, 85, 0.05);
+    }
+
+    #va-roi-calculator .va-table-head,
+    #va-roi-calculator .va-table-foot {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
+      gap: 6px;
+      padding: 10px 14px;
+      background: #f6f8fb;
+      color: var(--va-primary);
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    #va-roi-calculator .va-table-body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    #va-roi-calculator .va-table-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
+      gap: 6px;
+      padding: 12px 14px;
+      border-top: 1px solid var(--va-line);
+      align-items: center;
+      color: var(--va-primary);
+    }
+
+    #va-roi-calculator .va-table-row small {
+      color: var(--va-muted);
+      display: block;
+      font-size: 0.85rem;
+      margin-top: 2px;
+    }
+
+    #va-roi-calculator .va-table-empty {
+      padding: 12px 14px;
+      color: var(--va-muted);
+      text-align: left;
+    }
+
+    @media (max-width: 768px) {
+      #va-roi-calculator .va-table-head,
+      #va-roi-calculator .va-table-row,
+      #va-roi-calculator .va-table-foot {
+        grid-template-columns: 1.6fr 1fr 1fr;
+        grid-auto-rows: auto;
+        grid-template-areas:
+          "task task task"
+          "owner weekly annual"
+          "cost savings empty";
+      }
+
+      #va-roi-calculator .va-table-head span:nth-child(1),
+      #va-roi-calculator .va-table-row span:nth-child(1),
+      #va-roi-calculator .va-table-foot strong:nth-child(1) { grid-area: task; }
+      #va-roi-calculator .va-table-head span:nth-child(2),
+      #va-roi-calculator .va-table-row span:nth-child(2),
+      #va-roi-calculator .va-table-foot span:nth-child(2) { grid-area: owner; }
+      #va-roi-calculator .va-table-head span:nth-child(3),
+      #va-roi-calculator .va-table-row span:nth-child(3),
+      #va-roi-calculator .va-table-foot span:nth-child(3) { grid-area: weekly; }
+      #va-roi-calculator .va-table-head span:nth-child(4),
+      #va-roi-calculator .va-table-row span:nth-child(4),
+      #va-roi-calculator .va-table-foot span:nth-child(4) { grid-area: annual; }
+      #va-roi-calculator .va-table-head span:nth-child(5),
+      #va-roi-calculator .va-table-row span:nth-child(5),
+      #va-roi-calculator .va-table-foot span:nth-child(5) { grid-area: cost; }
+      #va-roi-calculator .va-table-head span:nth-child(6),
+      #va-roi-calculator .va-table-row span:nth-child(6),
+      #va-roi-calculator .va-table-foot span:nth-child(6) { grid-area: savings; }
+    }
+
+    #va-roi-calculator .va-zone {
+      position: absolute;
+      width: 50%;
+      height: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: rgba(15, 53, 85, 0.35);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    #va-roi-calculator .va-zone.quick { background: rgba(47, 158, 68, 0.08); color: rgba(47, 158, 68, 0.55); }
+    #va-roi-calculator .va-zone.bet { background: rgba(27, 104, 158, 0.07); color: rgba(27, 104, 158, 0.6); }
+    #va-roi-calculator .va-zone.hobby { background: rgba(245, 130, 32, 0.08); color: rgba(185, 92, 10, 0.6); }
+    #va-roi-calculator .va-zone.trap { background: rgba(201, 75, 75, 0.08); color: rgba(201, 75, 75, 0.6); }
+
+    #va-roi-calculator .va-zone.quick { right: 0; bottom: 0; }
+    #va-roi-calculator .va-zone.bet { right: 0; top: 0; }
+    #va-roi-calculator .va-zone.hobby { left: 0; bottom: 0; }
+    #va-roi-calculator .va-zone.trap { left: 0; top: 0; }
+
+    #va-roi-calculator .va-ready-layout {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    #va-roi-calculator .va-info-card {
+      background: #f6f8fb;
+      border: 1px dashed var(--va-line);
+      border-radius: var(--va-radius);
+      padding: 14px;
+      color: var(--va-primary);
+    }
+
+    #va-roi-calculator .va-info-card h4 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+    }
+
+    #va-roi-calculator .va-info-card ul {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--va-muted);
+      line-height: 1.5;
+    }
+
+    #va-roi-calculator .va-chip-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+      align-items: center;
+    }
+
+    #va-roi-calculator .va-chip {
+      border: 1px solid var(--va-line);
+      background: #f7f9fc;
+      color: var(--va-primary);
+      padding: 10px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      text-align: center;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    #va-roi-calculator .va-chip:hover {
+      background: #eef3f7;
+      border-color: rgba(245, 130, 32, 0.4);
+      color: var(--va-accent);
+    }
+
+    #va-roi-calculator .va-chip.active {
+      background: linear-gradient(135deg, var(--va-accent), #f8a44a);
+      color: #fff;
+      border-color: var(--va-accent);
+      box-shadow: 0 10px 24px rgba(245, 130, 32, 0.28);
+    }
+
+    #va-roi-calculator .va-ready-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    #va-roi-calculator .inventory-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    #va-roi-calculator .readiness-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    #va-roi-calculator .readiness-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    #va-roi-calculator .va-ready-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    #va-roi-calculator .task-form-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 40px;
+      align-items: start;
+    }
+
+    #va-roi-calculator .readiness-card {
+      background: #f9fafb;
+      border: 1px solid var(--va-line);
+      border-radius: 12px;
+      padding: 26px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.04);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    #va-roi-calculator .readiness-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    #va-roi-calculator .readiness-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    @media (max-width: 900px) {
+      #va-roi-calculator .task-form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      #va-roi-calculator .va-ready-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    #va-roi-calculator .va-ready-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+      color: var(--va-primary);
+    }
+
+    #va-roi-calculator .va-info {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1px solid var(--va-muted);
+      color: var(--va-primary);
+      font-size: 0.75rem;
+      cursor: help;
+      background: #fff;
+    }
+
+    #va-roi-calculator .va-switch {
+      position: relative;
+      width: 52px;
+      height: 26px;
+      border-radius: 999px;
+      border: none;
+      background: #cbd5e1;
+      cursor: pointer;
+      padding: 0;
+      transition: all 0.2s ease;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    #va-roi-calculator .va-switch-thumb {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 20px;
+      height: 20px;
+      background: #fff;
+      border-radius: 50%;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.16);
+    }
+
+    #va-roi-calculator .va-switch.on {
+      background: linear-gradient(135deg, #1ac65d, #0fa64b);
+      box-shadow: 0 6px 18px rgba(26, 198, 93, 0.35);
+    }
+
+    #va-roi-calculator .va-switch.on .va-switch-thumb {
+      left: 29px;
+    }
+
+    #va-roi-calculator .va-switch:active .va-switch-thumb {
+      transform: scale(0.96);
+    }
+
+    #va-roi-calculator .soft-card {
+      background: #f9fafb;
+      border: 1px solid var(--va-line);
+      border-radius: 16px;
+      box-shadow: 0 12px 30px rgba(15, 53, 85, 0.05);
+    }
+
+    #va-roi-calculator .priority-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      border: 1px solid transparent;
+    }
+    #va-roi-calculator .priority-pill.quick { background: rgba(47, 158, 68, 0.16); color: #1f7c3a; border-color: rgba(47, 158, 68, 0.45); }
+    #va-roi-calculator .priority-pill.bet { background: rgba(27, 104, 158, 0.14); color: #1b689e; border-color: rgba(27, 104, 158, 0.45); }
+    #va-roi-calculator .priority-pill.hobby { background: rgba(245, 130, 32, 0.16); color: #b95c0a; border-color: rgba(245, 130, 32, 0.45); }
+    #va-roi-calculator .priority-pill.trap { background: rgba(201, 75, 75, 0.18); color: #a03b3b; border-color: rgba(201, 75, 75, 0.45); }
+
+    #va-roi-calculator .classification-table .va-table-head,
+    #va-roi-calculator .classification-table .va-table-row {
+      grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    }
+
+    #va-roi-calculator .va-info:hover::after,
+    #va-roi-calculator .va-info:focus-visible::after {
+      content: attr(data-tip);
+      position: absolute;
+      top: 120%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #0f3555;
+      color: #fff;
+      padding: 6px 8px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      line-height: 1.3;
+      width: 180px;
+      box-shadow: 0 10px 24px rgba(15, 53, 85, 0.2);
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    #va-roi-calculator .va-range-wrap {
+      padding: 0 4px;
+    }
+
+    #va-roi-calculator input[type="range"],
+    #va-roi-calculator .va-range {
+      -webkit-appearance: none;
+      width: 100%;
+      margin: 0;
+      height: 10px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      outline: none;
+    }
+
+    #va-roi-calculator input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--va-accent), #f8a44a);
+      box-shadow: 0 6px 12px rgba(245, 130, 32, 0.35);
+      cursor: pointer;
+      border: 2px solid #fff;
+    }
+
+    #va-roi-calculator input[type="range"]::-moz-range-thumb {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--va-accent), #f8a44a);
+      box-shadow: 0 6px 12px rgba(245, 130, 32, 0.35);
+      cursor: pointer;
+      border: 2px solid #fff;
+    }
+
+    #va-roi-calculator input[type="range"]::-webkit-slider-runnable-track {
+      height: 8px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--va-accent), var(--va-accent-soft));
+    }
+
+    #va-roi-calculator input[type="range"]::-moz-range-track {
+      height: 8px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--va-accent), var(--va-accent-soft));
+    }
+
+    @media (max-width: 768px) {
+      #va-roi-calculator .va-shell { padding: 22px; }
+      #va-roi-calculator .va-header { flex-direction: column; }
+      #va-roi-calculator .va-title { font-size: 1.75rem; }
+      #va-roi-calculator .va-roi { padding: 24px 14px 40px; }
+      #va-roi-calculator .va-ready-layout { grid-template-columns: 1fr; }
+      #va-roi-calculator .inventory-layout { grid-template-columns: 1fr; }
+      #va-roi-calculator .readiness-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div id="va-roi-calculator">
+  <div class="va-roi">
+  <div class="va-shell">
+    <div class="va-header">
+      <div>
+        <h1 class="va-title">Automation ROI Calculator</h1>
+        <p class="va-lede">
+          Quickly size the time and cost of recurring work to decide if automation is worth it.
+        </p>
+      </div>
+    </div>
+
+    <div class="va-card" id="part-1">
+      <h3>How this works</h3>
+      <div class="va-ready-layout">
+        <div class="va-info-card" style="grid-column: span 2;">
+          <h4>Use this to capture tasks and rank automation fit</h4>
+          <ul>
+            <li>List each workflow with time, frequency, and hourly cost.</li>
+            <li>Toggle effort factors per task to reflect automation readiness.</li>
+            <li>See total time and cost, plus a simple 50% automation savings view.</li>
+            <li>Plot tasks by impact and effort to choose what to automate first.</li>
+          </ul>
+        </div>
+      </div>
+      <a class="va-proceed" href="#part-2">Start adding tasks</a>
+    </div>
+
+    <div class="va-card" id="part-2" style="margin-top:16px;">
+      <h3>Workflow Inventory</h3>
+      <p>Add each recurring task, save it, then add another. Effort factors live inside each task.</p>
+      <form id="inventory-form" autocomplete="off">
+        <div class="task-form-grid">
+          <div class="left-col">
+            <div class="va-field">
+              <label>Task name </label>
+              <input class="va-input" id="task-name" type="text" placeholder="e.g., Weekly reporting emails" />
+            </div>
+            <div class="va-grid" style="grid-template-columns: repeat(auto-fit,minmax(180px,1fr));">
+              <div class="va-field">
+                <label>Frequency per week</label>
+                <input class="va-input" id="freq" type="number" min="0" step="1" placeholder="e.g., 5" />
+              </div>
+              <div class="va-field">
+                <label>Minutes per task</label>
+                <input class="va-input" id="minutes" type="number" min="0" step="0.5" placeholder="e.g., 20" />
+              </div>
+              <div class="va-field">
+                <label>Hourly cost of the role ($)</label>
+                <input class="va-input" id="hourly" type="number" min="0" step="1" placeholder="e.g., 60" />
+              </div>
+              <div class="va-field">
+                <label>Role title</label>
+                <input class="va-input" id="role" type="text" placeholder="e.g., Ops Manager" />
+              </div>
+            </div>
+            <div class="va-field">
+              <label style="flex-direction:column; align-items:flex-start; gap:4px;">
+                <span>Pain level</span>
+                <small title="Why it matters: higher pain means bigger urgency">How disruptive is this work?</small>
+              </label>
+              <input id="pain" type="hidden" value="5" />
+              <div class="va-chip-group" id="pain-chips">
+                <button type="button" class="va-chip" data-pain="1" data-label="Minor annoyance">Minor annoyance</button>
+                <button type="button" class="va-chip" data-pain="3" data-label="Manageable">Manageable</button>
+                <button type="button" class="va-chip" data-pain="5" data-label="Moderate">Moderate</button>
+                <button type="button" class="va-chip" data-pain="7" data-label="Disruptive">Disruptive</button>
+                <button type="button" class="va-chip" data-pain="10" data-label="Severe impact">Severe impact</button>
+              </div>
+              <div style="color:var(--va-muted);font-size:0.9rem;margin-top:6px;" hidden="true">Selected: <strong id="pain-display">Moderate</strong></div>
+            </div>
+          </div>
+          <div class="right-col">
+            <div class="readiness-card">
+              <h3 style="margin:0;">Readiness to automate</h3>
+              <p style="margin:0;color:var(--va-muted);font-size:0.95rem;">Turn on what’s true.<br>More on = easier to automate.</p>
+              <div id="task-readiness-list" class="va-ready-list readiness-grid" style="margin-top:6px;"></div>
+            </div>
+          </div>
+        </div>
+        <div id="form-error" class="va-error" style="display:none;"></div>
+      </form>
+      <div class="va-footer" style="margin-top:10px;">
+        <div style="color:var(--va-muted);">Save each task, then add another to compare.</div>
+        <button class="va-cta" id="save-task-btn" type="button">Save task</button>
+      </div>
+      <div class="va-highlight soft-card" style="margin-top:12px;">
+        <strong>Saved tasks</strong>
+        <div id="task-list" style="margin-top:10px; display:flex; flex-direction:column; gap:10px;"></div>
+        <div id="task-empty" style="color:var(--va-muted); font-size:0.95rem;">No tasks saved yet.</div>
+      </div>
+      <a class="va-proceed" href="#part-3">View ROI summary</a>
+    </div>
+
+    <div class="va-card" id="part-3" style="margin-top:16px;">
+      <h3>ROI Summary</h3>
+      <p>See time and cost for each saved task, plus a 50% automation savings view.</p>
+      <div class="va-highlight soft-card">
+        <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center;">
+          <div>
+            <div style="color:var(--va-muted);font-size:0.9rem;">Current annual cost</div>
+            <div style="font-size:1.5rem;font-weight:800;" id="annual-cost">$0 / year</div>
+          </div>
+          <div class="va-pill" id="weekly-hours">0 hrs / week</div>
+        </div>
+        <div class="va-pill" style="margin-top:10px;">Annual hours: <span id="annual-hours" style="margin-left:6px;">0</span></div>
+      </div>
+      <div class="va-table" aria-live="polite">
+        <div class="va-table-head">
+          <span>Task</span><span>Owner</span><span>Weekly hrs</span><span>Annual hrs</span><span>Annual cost</span><span>Savings (50%)</span>
+        </div>
+        <div id="task-table-body" class="va-table-body"></div>
+        <div id="task-table-empty" class="va-table-empty">Add tasks to see ROI.</div>
+        <div class="va-table-foot" id="task-totals">
+          <strong>Totals</strong><span></span><span id="total-weekly">0</span><span id="total-annual">0</span><span id="total-cost">$0</span><span id="total-savings">$0</span>
+        </div>
+      </div>
+      <div class="va-chart">
+        <div class="va-chart-bar">
+          <span style="width:120px;color:var(--va-muted);font-size:0.9rem;">Current cost</span>
+          <div class="va-bar"><span id="cost-bar"></span></div>
+        </div>
+        <div class="va-chart-bar">
+          <span style="width:120px;color:var(--va-muted);font-size:0.9rem;">If automated (50%)</span>
+          <div class="va-bar"><span id="savings-bar" style="background:#34d399;"></span></div>
+        </div>
+        <div style="color:var(--va-muted);font-size:0.9rem;">Estimated savings at 50% automation: <strong id="savings-figure">$0</strong></div>
+      </div>
+      <a class="va-proceed" href="#part-4">View decision matrix</a>
+    </div>
+
+    <div class="va-card" id="part-4" style="margin-top:16px;">
+      <h3>Decision Matrix</h3>
+      <p>Impact uses annual cost; effort uses your readiness toggles. Hover dots to see details.</p>
+      <div class="va-chart soft-card" style="margin-top:12px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px;">
+          <strong>Portfolio view</strong>
+          <small style="color:var(--va-muted);">Each dot is a task</small>
+        </div>
+          <div id="matrix-plot" style="position:relative;">
+            <canvas id="decision-matrix-canvas" style="width:100%;max-width:100%;height:360px;display:block;border:1px solid var(--va-line);border-radius:12px;"></canvas>
+            <div style="position:absolute;left:8px;top:8px;color:var(--va-muted);font-size:0.85rem;">Effort ↑ (more)</div>
+            <div style="position:absolute;right:8px;bottom:8px;color:var(--va-muted);font-size:0.85rem;">Impact →</div>
+          </div>
+      </div>
+      <div class="va-table classification-table" style="margin-top:12px;">
+        <div class="va-table-head">
+          <span>Task</span><span>Owner</span><span>Impact</span><span>Effort</span><span>Annual cost</span><span>Savings (50%)</span><span>Priority</span>
+        </div>
+        <div id="classification-table" class="va-table-body"></div>
+        <div id="classification-empty" class="va-table-empty">Add tasks to plot them on the matrix.</div>
+      </div>
+    </div>
+
+    <div class="va-card" style="margin-top: 16px;">
+      <h3>Next steps</h3>
+      <p>Pick the level of help that fits your team.</p>
+      <div class="va-matrix">
+        <div class="va-highlight">
+          <strong>Teach</strong>
+          <p>Coaching so your team can build simple automations confidently.</p>
+        </div>
+        <div class="va-highlight">
+          <strong>Evaluate</strong>
+          <p>ROI-first assessment to find the best opportunities and sequence them.</p>
+        </div>
+        <div class="va-highlight">
+          <strong>Deliver</strong>
+          <p>Low or no-code builds that are easy to run and tied to measurable outcomes.</p>
+        </div>
+      </div>
+      <div class="va-footer">
+        <div style="color:var(--va-muted);">Want a quick readout? We’ll map the value math to a delivery plan.</div>
+        <button class="va-cta">Book an Evaluate Session</button>
+      </div>
+    </div>
+  </div>
+
+  </div>
+  </div>
+  </div>
+
+  <script>
+    // Encapsulate logic to avoid globals
+    (() => {
+      const readinessChecks = [
+        { id: "documented", label: "Easy to explain", tip: "" },
+        { id: "digital", label: "Everything is already digital", tip: "" },
+        { id: "repeatable", label: "Happens the same way each time", tip: "" },
+        { id: "frequency", label: "Safe to automate", tip: "" },
+        { id: "access", label: "Someone can approve it", tip: "" },
+      ];
+
+      const els = {
+        weeklyHours: document.getElementById("weekly-hours"),
+        annualHours: document.getElementById("annual-hours"),
+        annualCost: document.getElementById("annual-cost"),
+        savingsFigure: document.getElementById("savings-figure"),
+        costBar: document.getElementById("cost-bar"),
+        savingsBar: document.getElementById("savings-bar"),
+        painInput: document.getElementById("pain"),
+        painDisplay: document.getElementById("pain-display"),
+        painChips: Array.from(document.querySelectorAll("#pain-chips .va-chip")),
+        formError: document.getElementById("form-error"),
+        saveTaskBtn: document.getElementById("save-task-btn"),
+        taskReadinessList: document.getElementById("task-readiness-list"),
+        taskList: document.getElementById("task-list"),
+        taskEmpty: document.getElementById("task-empty"),
+        matrixPlot: document.getElementById("matrix-plot"),
+        matrixCanvas: document.getElementById("decision-matrix-canvas"),
+        taskTableBody: document.getElementById("task-table-body"),
+        taskTableEmpty: document.getElementById("task-table-empty"),
+        totalWeekly: document.getElementById("total-weekly"),
+        totalAnnual: document.getElementById("total-annual"),
+        totalCost: document.getElementById("total-cost"),
+        totalSavings: document.getElementById("total-savings"),
+        classificationTable: document.getElementById("classification-table"),
+        classificationEmpty: document.getElementById("classification-empty"),
+        fields: {
+          task: document.getElementById("task-name"),
+          freq: document.getElementById("freq"),
+          minutes: document.getElementById("minutes"),
+          hourly: document.getElementById("hourly"),
+          role: document.getElementById("role"),
+        },
+      };
+
+      const state = {
+        formReadiness: {},
+        values: {
+          task: "",
+          freq: 0,
+          minutes: 0,
+          hourly: 0,
+          role: "",
+          pain: 5,
+        },
+        tasks: [],
+        editingId: null,
+      };
+
+      const STORAGE_KEY = "va-roi-state";
+      let matrixDots = [];
+
+      function getFormTask() {
+        return {
+          id: "current",
+          task: els.fields.task.value.trim(),
+          freq: Number(els.fields.freq.value) || 0,
+          minutes: Number(els.fields.minutes.value) || 0,
+          hourly: Number(els.fields.hourly.value) || 0,
+          role: els.fields.role.value.trim(),
+          pain: Number(els.painInput.value) || 5,
+          readiness: { ...state.formReadiness },
+        };
+      }
+
+      function formatCurrency(value) {
+        if (!isFinite(value)) return "$0";
+        const rounded = Math.round(value);
+        const sign = rounded < 0 ? "-" : "";
+        return `${sign}$${Math.abs(rounded).toLocaleString()}`;
+      }
+
+      function percentOf(max, value) {
+        if (max <= 0) return 0;
+        return Math.min(100, Math.round((value / max) * 100));
+      }
+
+      function setPainValue(val, silent = false) {
+        els.painInput.value = val;
+        els.painChips.forEach((chip) => {
+          const isActive = Number(chip.dataset.pain) === Number(val);
+          chip.classList.toggle("active", isActive);
+          if (isActive && chip.dataset.label) {
+            els.painDisplay.textContent = chip.dataset.label;
+          }
+        });
+        if (!silent) update();
+      }
+
+      function renderTaskReadinessForm() {
+        els.taskReadinessList.innerHTML = "";
+        readinessChecks.forEach((check) => {
+          const item = document.createElement("div");
+          item.className = "va-ready-item";
+
+          const labelRow = document.createElement("div");
+          labelRow.className = "va-ready-label";
+          const label = document.createElement("span");
+          label.textContent = check.label;
+          const info = document.createElement("span");
+          info.className = "va-info";
+          info.textContent = "";
+          info.title = "";
+          info.setAttribute("data-tip", "");
+          info.style.display = "none";
+          labelRow.appendChild(label);
+          labelRow.appendChild(info);
+
+          const switchBtn = document.createElement("button");
+          switchBtn.type = "button";
+          switchBtn.className = "va-switch";
+          const thumb = document.createElement("span");
+          thumb.className = "va-switch-thumb";
+          switchBtn.appendChild(thumb);
+
+          const applyState = (val) => {
+            switchBtn.classList.toggle("on", val === true);
+          };
+
+          const setState = (val) => {
+            state.formReadiness[check.id] = val;
+            applyState(val);
+            saveState();
+            update();
+          };
+
+          switchBtn.addEventListener("click", () => setState(!state.formReadiness[check.id]));
+
+          const saved = state.formReadiness[check.id];
+          applyState(saved === true);
+          if (saved !== true) state.formReadiness[check.id] = false;
+
+          item.appendChild(labelRow);
+          item.appendChild(switchBtn);
+          els.taskReadinessList.appendChild(item);
+        });
+      }
+
+      function validateNumbers() {
+        const { freq, minutes, hourly } = els.fields;
+        const values = [freq, minutes, hourly];
+        const invalid = values.some((input) => Number(input.value) < 0);
+        if (invalid) {
+          els.formError.style.display = "block";
+          els.formError.textContent = "Inputs cannot be negative.";
+          return false;
+        }
+        els.formError.style.display = "none";
+        return true;
+      }
+
+      function validateForSave() {
+        const baseValid = validateNumbers();
+        const missingName = getFormTask().task === "";
+        if (!baseValid || missingName) {
+          els.formError.style.display = "block";
+          els.formError.textContent = missingName ? "Give the task a name before saving." : els.formError.textContent;
+          return false;
+        }
+        return true;
+      }
+
+      function getReadinessScore(readiness = {}) {
+        const total = readinessChecks.length;
+        const yesCount = readinessChecks.reduce((acc, check) => acc + (readiness[check.id] ? 1 : 0), 0);
+        const score = total ? yesCount / total : 0;
+        const effort = score >= 0.6 ? "Low" : score >= 0.4 ? "Medium" : "High";
+        return { score, effort };
+      }
+
+      function calculateTaskMetrics(task) {
+        const weeklyHours = (task.freq * task.minutes) / 60;
+        const annualHours = weeklyHours * 52;
+        const annualCost = annualHours * task.hourly;
+        const savings = annualCost * 0.5;
+        return { weeklyHours, annualHours, annualCost, savings };
+      }
+
+      function getDecisionMeta(impactValue, effortScore) {
+        const impactLevel = impactValue >= 20000 ? "High" : "Low";
+        const effortLevel = effortScore >= 0.6 ? "Low" : effortScore >= 0.4 ? "Medium" : "High";
+
+        let badgeClass = "hobby";
+        let label = "Low Impact + Low Effort";
+        let note = "Focus where the value is meaningful and the path to automate is clear.";
+
+        if (impactLevel === "High" && effortLevel === "Low") {
+          badgeClass = "quick";
+          label = "Quick Win";
+          note = "High dollar impact with a clear path — act fast.";
+        } else if (impactLevel === "High" && effortLevel !== "Low") {
+          badgeClass = "bet";
+          label = "Strategic Bet";
+          note = "Big upside, but plan for change management or tech dependencies.";
+        } else if (impactLevel === "Low" && effortLevel === "Low") {
+          badgeClass = "hobby";
+          label = "Hobby";
+          note = "Light lift, low value. Only automate if it unlocks learning or morale.";
+        } else {
+          badgeClass = "trap";
+          label = "Trap";
+          note = "Low value and high effort. Park it or simplify before automating.";
+        }
+
+        return { badgeClass, label, note, impactLevel, effortLevel };
+      }
+
+      function saveState() {
+        try {
+          const payload = {
+            values: {
+              task: els.fields.task.value,
+              freq: els.fields.freq.value,
+              minutes: els.fields.minutes.value,
+              hourly: els.fields.hourly.value,
+              role: els.fields.role.value,
+              pain: els.painInput.value,
+            },
+            tasks: state.tasks,
+            editingId: state.editingId,
+            formReadiness: state.formReadiness,
+          };
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+        } catch (err) {
+          // fail silently; storage may be blocked
+        }
+      }
+
+      function restoreState() {
+        try {
+          const saved = localStorage.getItem(STORAGE_KEY);
+          if (!saved) return;
+          const parsed = JSON.parse(saved);
+          if (parsed.values) {
+            const { task, freq, minutes, hourly, role, pain } = parsed.values;
+            els.fields.task.value = task || "";
+            els.fields.freq.value = freq || "";
+            els.fields.minutes.value = minutes || "";
+            els.fields.hourly.value = hourly || "";
+            els.fields.role.value = role || "";
+            els.painInput.value = pain || 5;
+            els.painDisplay.textContent = els.painInput.value;
+          }
+          if (parsed.readiness) {
+            state.formReadiness = parsed.readiness;
+          }
+          if (Array.isArray(parsed.tasks)) {
+            state.tasks = parsed.tasks;
+          }
+          state.editingId = parsed.editingId || null;
+          if (parsed.formReadiness) {
+            state.formReadiness = parsed.formReadiness;
+          }
+        } catch (err) {
+          console.warn("Could not restore saved state", err);
+        }
+      }
+
+      function resetForm() {
+        els.fields.task.value = "";
+        els.fields.freq.value = "";
+        els.fields.minutes.value = "";
+        els.fields.hourly.value = "";
+        els.fields.role.value = "";
+        setPainValue(5, true);
+        state.formReadiness = {};
+        state.editingId = null;
+        renderTaskReadinessForm();
+        setSaveMode();
+      }
+
+      function setSaveMode() {
+        els.saveTaskBtn.textContent = state.editingId ? "Update task" : "Save task";
+      }
+
+      function loadTaskIntoForm(task) {
+        els.fields.task.value = task.task || "";
+        els.fields.freq.value = task.freq || "";
+        els.fields.minutes.value = task.minutes || "";
+        els.fields.hourly.value = task.hourly || "";
+        els.fields.role.value = task.role || "";
+        setPainValue(task.pain || 5, true);
+        state.formReadiness = task.readiness || {};
+        renderTaskReadinessForm();
+        state.editingId = task.id;
+        setSaveMode();
+      }
+
+      function renderTaskList() {
+        els.taskList.innerHTML = "";
+        if (!state.tasks.length) {
+          els.taskEmpty.style.display = "block";
+          return;
+        }
+        els.taskEmpty.style.display = "none";
+        state.tasks.forEach((task) => {
+          const metrics = calculateTaskMetrics(task);
+          const row = document.createElement("div");
+          row.style.display = "flex";
+          row.style.alignItems = "center";
+          row.style.justifyContent = "space-between";
+          row.style.gap = "10px";
+          row.style.border = `1px solid ${getComputedStyle(document.documentElement).getPropertyValue("--va-line") || "#dfe6ee"}`;
+          row.style.borderRadius = "14px";
+          row.style.padding = "12px 14px";
+          row.style.background = "#fff";
+          row.style.boxShadow = "0 10px 28px rgba(12,55,85,0.08)";
+
+          const left = document.createElement("div");
+          left.innerHTML = `<strong style="font-size:1.05rem;">${task.task}</strong><div style="color:var(--va-muted);font-size:0.9rem;margin-top:2px;">${task.role || "Owner"}</div><div style="color:#1b7b4d;font-weight:700;margin-top:6px;">${metrics.weeklyHours.toFixed(1)} hrs/wk · ${formatCurrency(metrics.annualCost)}/yr · ${formatCurrency(metrics.savings)} est. savings</div>`;
+
+          const actions = document.createElement("div");
+          actions.style.display = "flex";
+          actions.style.alignItems = "center";
+          actions.style.gap = "8px";
+
+          const editBtn = document.createElement("button");
+          editBtn.textContent = "Edit";
+          editBtn.className = "va-btn";
+          editBtn.addEventListener("click", () => {
+            loadTaskIntoForm(task);
+          });
+
+          const viewBtn = document.createElement("button");
+          viewBtn.textContent = "View";
+          viewBtn.className = "va-btn";
+          viewBtn.addEventListener("click", () => {
+            update();
+            location.hash = "#part-3";
+          });
+
+          const removeBtn = document.createElement("button");
+          removeBtn.textContent = "Remove";
+          removeBtn.className = "va-btn";
+          removeBtn.addEventListener("click", () => {
+            state.tasks = state.tasks.filter((t) => t.id !== task.id);
+            renderTaskList();
+            update();
+          });
+
+          actions.appendChild(viewBtn);
+          actions.appendChild(removeBtn);
+          actions.appendChild(editBtn);
+          row.appendChild(left);
+          row.appendChild(actions);
+          els.taskList.appendChild(row);
+        });
+      }
+
+      function getPortfolioTasks() {
+        if (state.tasks.length) return state.tasks;
+        const fallback = getFormTask();
+        return fallback.task || fallback.freq || fallback.minutes || fallback.hourly ? [fallback] : [];
+      }
+
+      function renderROI(tasks) {
+        const totals = tasks.reduce(
+          (acc, task) => {
+            const m = calculateTaskMetrics(task);
+            acc.weeklyHours += m.weeklyHours;
+            acc.annualHours += m.annualHours;
+            acc.annualCost += m.annualCost;
+            acc.savings += m.savings;
+            return acc;
+          },
+          { weeklyHours: 0, annualHours: 0, annualCost: 0, savings: 0 }
+        );
+
+        els.weeklyHours.textContent = `${totals.weeklyHours.toFixed(1)} hrs / week`;
+        els.annualHours.textContent = totals.annualHours.toFixed(1);
+        els.annualCost.textContent = `${formatCurrency(totals.annualCost)} / year`;
+        els.savingsFigure.textContent = formatCurrency(totals.savings);
+
+        const maxCost = Math.max(totals.annualCost, totals.savings, 1);
+        els.costBar.style.width = `${percentOf(maxCost, totals.annualCost)}%`;
+        els.savingsBar.style.width = `${percentOf(maxCost, totals.savings)}%`;
+
+        return totals;
+      }
+
+      function renderTaskTable(tasks, totals) {
+        els.taskTableBody.innerHTML = "";
+        const hasTasks = tasks.length > 0;
+        els.taskTableEmpty.style.display = hasTasks ? "none" : "block";
+        if (!hasTasks) {
+          els.totalWeekly.textContent = "0";
+          els.totalAnnual.textContent = "0";
+          els.totalCost.textContent = "$0";
+          els.totalSavings.textContent = "$0";
+          return;
+        }
+
+        tasks.forEach((task) => {
+          const metrics = calculateTaskMetrics(task);
+          const row = document.createElement("div");
+          row.className = "va-table-row";
+          row.innerHTML = `
+            <span><strong>${task.task || "Untitled task"}</strong><small>${task.freq || 0}x/wk · ${task.minutes || 0} min each</small></span>
+            <span>${task.role || "Owner"}</span>
+            <span style="font-weight:700;color:#1b7b4d;">${metrics.weeklyHours.toFixed(1)}</span>
+            <span>${metrics.annualHours.toFixed(1)}</span>
+            <span style="font-weight:700;color:#1b7b4d;">${formatCurrency(metrics.annualCost)}</span>
+            <span>${formatCurrency(metrics.savings)}</span>
+          `;
+          els.taskTableBody.appendChild(row);
+        });
+
+        els.totalWeekly.textContent = totals.weeklyHours.toFixed(1);
+        els.totalAnnual.textContent = totals.annualHours.toFixed(1);
+        els.totalCost.textContent = formatCurrency(totals.annualCost);
+        els.totalSavings.textContent = formatCurrency(totals.savings);
+      }
+
+      function renderMatrix(tasks) {
+        const canvas = els.matrixCanvas;
+        if (!canvas) return;
+        const ctx = canvas.getContext("2d");
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        let tooltip = els.matrixPlot.querySelector(".va-tooltip");
+        if (!tooltip) {
+          tooltip = document.createElement("div");
+          tooltip.className = "va-tooltip";
+          tooltip.style.position = "absolute";
+          tooltip.style.padding = "10px 12px";
+          tooltip.style.borderRadius = "10px";
+          tooltip.style.background = "#0f3555";
+          tooltip.style.color = "#fff";
+          tooltip.style.fontSize = "0.9rem";
+          tooltip.style.boxShadow = "0 12px 30px rgba(15,53,85,0.25)";
+          tooltip.style.pointerEvents = "none";
+          tooltip.style.display = "none";
+          tooltip.style.zIndex = "5";
+          tooltip.style.minWidth = "240px";
+          tooltip.style.maxWidth = "320px";
+          els.matrixPlot.appendChild(tooltip);
+        }
+
+        if (!tasks.length) {
+          tooltip.style.display = "none";
+          return;
+        }
+
+        const w = canvas.width;
+        const h = canvas.height;
+        const padding = 24;
+
+        // Quadrants
+        ctx.fillStyle = "rgba(201,75,75,0.08)";
+        ctx.fillRect(0, 0, w / 2, h / 2);
+        ctx.fillStyle = "rgba(27,104,158,0.07)";
+        ctx.fillRect(w / 2, 0, w / 2, h / 2);
+        ctx.fillStyle = "rgba(245,130,32,0.08)";
+        ctx.fillRect(0, h / 2, w / 2, h / 2);
+        ctx.fillStyle = "rgba(47,158,68,0.08)";
+        ctx.fillRect(w / 2, h / 2, w / 2, h / 2);
+
+        ctx.fillStyle = "rgba(15,53,85,0.35)";
+        ctx.font = "700 14px " + (getComputedStyle(document.documentElement).getPropertyValue("--va-font") || "Inter, sans-serif");
+        ctx.fillText("Strategic Bet", w * 0.65, h * 0.25);
+        ctx.fillText("Trap", w * 0.15, h * 0.25);
+        ctx.fillText("Hobby", w * 0.15, h * 0.75);
+        ctx.fillText("Quick Win", w * 0.65, h * 0.75);
+
+        const maxImpact = Math.max(...tasks.map((t) => calculateTaskMetrics(t).annualCost), 1);
+        matrixDots = [];
+
+        tasks.forEach((task) => {
+          const metrics = calculateTaskMetrics(task);
+          const impactRatio = Math.min(1, Math.max(0, metrics.annualCost / maxImpact));
+          const { score } = getReadinessScore(task.readiness || {});
+          const effortRatio = Math.min(1, Math.max(0, (1 - score) + (10 - task.pain) / 25));
+          const { badgeClass, label, note } = getDecisionMeta(metrics.annualCost, score);
+
+          const x = padding + impactRatio * (w - padding * 2);
+          const y = padding + (1 - effortRatio) * (h - padding * 2);
+
+          ctx.beginPath();
+          ctx.arc(x, y, 8, 0, Math.PI * 2);
+          ctx.fillStyle =
+            badgeClass === "quick"
+              ? "#2f9e44"
+              : badgeClass === "bet"
+              ? "#1b689e"
+              : badgeClass === "hobby"
+              ? "#f58220"
+              : "#c94b4b";
+          ctx.fill();
+          ctx.strokeStyle = "#fff";
+          ctx.lineWidth = 2;
+          ctx.stroke();
+
+          matrixDots.push({
+            x,
+            y,
+            r: 10,
+            task: task.task,
+            label,
+            note,
+            metrics,
+          });
+        });
+
+        const handleHover = (evt) => {
+          const rect = canvas.getBoundingClientRect();
+          const x = evt.clientX - rect.left;
+          const y = evt.clientY - rect.top;
+          let hit = null;
+          for (const dot of matrixDots) {
+            const dx = x - dot.x;
+            const dy = y - dot.y;
+            if (Math.sqrt(dx * dx + dy * dy) <= dot.r + 2) {
+              hit = dot;
+              break;
+            }
+          }
+          if (hit) {
+            tooltip.style.display = "block";
+            tooltip.style.left = `${hit.x}px`;
+            tooltip.style.top = `${hit.y - 14}px`;
+            tooltip.innerHTML = `<strong>${hit.task}</strong><div style="font-size:0.85rem;margin-top:4px;">${hit.label}</div><div style="font-size:0.85rem;color:#dfe6ee;">Annual: ${formatCurrency(hit.metrics.annualCost)} · Weekly: ${hit.metrics.weeklyHours.toFixed(1)} hrs · Savings 50%: ${formatCurrency(hit.metrics.savings)}</div><div style="font-size:0.8rem;color:#dfe6ee;margin-top:4px;">${hit.note}</div>`;
+          } else {
+            tooltip.style.display = "none";
+          }
+        };
+
+        if (!canvas._hoverBound) {
+          canvas.addEventListener("mousemove", handleHover);
+          canvas.addEventListener("mouseleave", () => {
+            const tooltip = els.matrixPlot.querySelector(".va-tooltip");
+            if (tooltip) tooltip.style.display = "none";
+          });
+          canvas._hoverBound = true;
+        }
+      }
+
+      function renderClassificationTable(tasks) {
+        els.classificationTable.innerHTML = "";
+        const hasTasks = tasks.length > 0;
+        els.classificationEmpty.style.display = hasTasks ? "none" : "block";
+        if (!hasTasks) return;
+
+        tasks.forEach((task) => {
+          const metrics = calculateTaskMetrics(task);
+          const { score } = getReadinessScore(task.readiness || {});
+          const { label, impactLevel, effortLevel, badgeClass } = getDecisionMeta(metrics.annualCost, score);
+          const row = document.createElement("div");
+          row.className = "va-table-row";
+          row.innerHTML = `
+            <span><strong>${task.task || "Untitled task"}</strong><small>${task.freq || 0}x/wk · ${task.minutes || 0} min</small></span>
+            <span>${task.role || "Owner"}</span>
+            <span>${impactLevel}</span>
+            <span>${effortLevel}</span>
+            <span style="font-weight:700;color:var(--va-danger);">${formatCurrency(metrics.annualCost)}</span>
+            <span style="font-weight:700;color:var(--va-success);">${formatCurrency(metrics.savings)}</span>
+            <span><span class="priority-pill ${badgeClass}">${label}</span></span>
+          `;
+          els.classificationTable.appendChild(row);
+        });
+      }
+
+      function update() {
+        if (!validateNumbers()) return;
+        const tasks = getPortfolioTasks();
+        const totals = renderROI(tasks);
+        renderTaskTable(tasks, totals);
+        renderMatrix(tasks);
+        renderClassificationTable(tasks);
+        saveState();
+      }
+
+      function attachEvents() {
+        Object.values(els.fields).forEach((input) => {
+          input.addEventListener("input", update);
+        });
+        els.painChips.forEach((chip) => {
+          chip.addEventListener("click", () => {
+            setPainValue(Number(chip.dataset.pain));
+          });
+        });
+
+        els.saveTaskBtn.addEventListener("click", () => {
+          if (!validateForSave()) return;
+          const task = { ...getFormTask(), id: state.editingId || (crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random())) };
+          if (state.editingId) {
+            state.tasks = state.tasks.map((t) => (t.id === state.editingId ? task : t));
+          } else {
+            state.tasks.push(task);
+          }
+          renderTaskList();
+          resetForm();
+          update();
+        });
+
+        window.addEventListener("resize", () => {
+          renderMatrix(getPortfolioTasks());
+        });
+      }
+
+      // Initialize
+      restoreState();
+      setPainValue(Number(els.painInput.value) || 5, true);
+      renderTaskReadinessForm();
+      renderTaskList();
+      setSaveMode();
+      attachEvents();
+      update();
+    })();
+  </script>
+</body>
+</html>
