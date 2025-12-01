@@ -4,32 +4,47 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Automation ROI Calculator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    /* Scoped styling tuned to Valid Agenda brand */
-    #va-roi-calculator {
-      --va-primary: #0f3555;
-      --va-secondary: #1c4e71;
-      --va-accent: #f58220;
-      --va-accent-soft: #ffb067;
-      --va-cream: #f9f4ec;
+    /* ===== Valid Agenda Brand Settings ===== */
+    :root {
+      --va-primary: #134061;
+      --va-secondary: #0f2b45;
+      --va-accent: #f48847;
+      --va-accent-soft: #f9a66c;
+      --va-bg: #0f1f33;
+      --va-text: #0d2236;
+      --va-border: #d9e1ea;
       --va-panel: #ffffff;
-      --va-muted: #4f6373;
-      --va-line: #e7edf3;
+      --va-muted: #526880;
+      --va-cream: #f5f7fa;
+      --va-line: var(--va-border);
       --va-danger: #c94b4b;
-      --va-success: #2f9e44;
-      --va-shadow: 0 26px 90px rgba(13, 55, 85, 0.16);
+      --va-success: #1c9b6c;
+      --va-shadow: 0 26px 90px rgba(19, 64, 97, 0.18);
       --va-radius: 16px;
       --va-spacing: 16px;
-      --va-font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-      background: #ffffff;
-      color: #111827;
+      --va-font-heading: "Poppins", "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      --va-font-body: "Manrope", "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      --va-font: var(--va-font-body);
+    }
+
+    /* Scoped styling tuned to Valid Agenda brand */
+    #va-roi-calculator {
+      background: linear-gradient(135deg, rgba(19, 64, 97, 0.92), rgba(19, 64, 97, 0.82) 18%, rgba(15, 31, 51, 0.88)),
+        radial-gradient(circle at 20% 20%, rgba(244, 136, 71, 0.15), transparent 40%),
+        radial-gradient(circle at 80% 0%, rgba(255, 255, 255, 0.08), transparent 26%);
+      color: var(--va-text);
       padding: 24px 0;
+      font-family: var(--va-font-body);
     }
 
     #va-roi-calculator .va-roi {
-      font-family: var(--va-font);
-      background: linear-gradient(165deg, rgba(12, 57, 92, 0.08), transparent 45%), var(--va-cream);
-      color: var(--va-primary);
+      font-family: var(--va-font-body);
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(244, 136, 71, 0.08)), var(--va-bg);
+      color: var(--va-text);
       min-height: 100vh;
       margin: 0;
       padding: 48px 18px 80px;
@@ -43,13 +58,14 @@
       max-width: 1180px;
       margin: 0 auto 90px;
       background: var(--va-panel);
-      border: 1px solid var(--va-line);
-      box-shadow: 0 30px 60px rgba(15, 53, 85, 0.1);
+      border: 1px solid rgba(217, 225, 234, 0.9);
+      box-shadow: var(--va-shadow);
       border-radius: 24px;
       padding: 36px;
       position: relative;
       overflow: hidden;
       isolation: isolate;
+      backdrop-filter: blur(4px);
     }
 
     #va-roi-calculator .va-shell::before {
@@ -57,8 +73,8 @@
       position: absolute;
       inset: 0;
       background:
-        linear-gradient(120deg, rgba(12, 57, 92, 0.12), transparent 42%, rgba(245, 130, 32, 0.08) 100%),
-        linear-gradient(-8deg, rgba(12, 57, 92, 0.08), transparent 50%);
+        linear-gradient(120deg, rgba(19, 64, 97, 0.12), transparent 42%, rgba(244, 136, 71, 0.09) 100%),
+        linear-gradient(-8deg, rgba(19, 64, 97, 0.08), transparent 50%);
       opacity: 0.7;
       z-index: 0;
       pointer-events: none;
@@ -67,6 +83,15 @@
     #va-roi-calculator .va-shell > * {
       position: relative;
       z-index: 1;
+    }
+
+    #va-roi-calculator .va-hero {
+      max-width: 1180px;
+      margin: 0 auto 28px;
+      padding: 0 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
     }
 
     #va-roi-calculator .va-header {
@@ -78,10 +103,56 @@
       margin-bottom: 18px;
     }
 
+    #va-roi-calculator .va-hero .va-title {
+      color: #fff;
+    }
+
+    #va-roi-calculator .va-hero .va-lede {
+      color: rgba(255, 255, 255, 0.82);
+    }
+
+    #va-roi-calculator .va-hero .va-tagline {
+      color: rgba(255, 255, 255, 0.72);
+    }
+
+    #va-roi-calculator .va-hero .va-tag {
+      color: #fff;
+      border-color: rgba(244, 136, 71, 0.6);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+    }
+
+    #va-roi-calculator .va-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    #va-roi-calculator .va-logo {
+      width: 180px;
+      height: auto;
+      display: block;
+      padding: 10px 14px;
+      border-radius: 14px;
+      background: linear-gradient(120deg, rgba(19, 64, 97, 0.08), rgba(244, 136, 71, 0.08));
+      filter: drop-shadow(0 10px 24px rgba(19, 64, 97, 0.14));
+      object-fit: contain;
+    }
+
+    #va-roi-calculator .va-tagline {
+      margin: 0 0 4px;
+      font-size: 0.95rem;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      color: var(--va-muted);
+      font-weight: 700;
+    }
+
     #va-roi-calculator .va-title {
       margin: 0;
       font-size: 2.2rem;
       letter-spacing: -0.4px;
+      font-family: var(--va-font-heading);
       color: var(--va-primary);
     }
 
@@ -94,8 +165,8 @@
 
     #va-roi-calculator .va-tag {
       padding: 8px 14px;
-      background: rgba(245, 130, 32, 0.12);
-      border: 1px solid rgba(245, 130, 32, 0.4);
+      background: rgba(244, 136, 71, 0.16);
+      border: 1px solid rgba(244, 136, 71, 0.38);
       color: var(--va-primary);
       border-radius: 999px;
       font-size: 0.95rem;
@@ -115,7 +186,49 @@
       border-radius: 20px;
       padding: 28px;
       border: 1px solid var(--va-line);
-      box-shadow: 0 18px 50px rgba(12, 55, 85, 0.08);
+      box-shadow: 0 18px 50px rgba(19, 64, 97, 0.12);
+    }
+
+    #va-roi-calculator .va-hero-card {
+      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.22);
+      border-color: rgba(255, 255, 255, 0.08);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.12)), rgba(15, 31, 51, 0.8);
+      color: #fff;
+    }
+
+    #va-roi-calculator .va-hero-card h3,
+    #va-roi-calculator .va-hero-card h4,
+    #va-roi-calculator .va-hero-card p {
+      color: #fff !important;
+    }
+
+    #va-roi-calculator .va-hero-card ul {
+      color: rgba(255, 255, 255, 0.86);
+    }
+
+    #va-roi-calculator .va-hero-card .va-info-card {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04));
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      color: #fff;
+    }
+
+    #va-roi-calculator .va-hero-card .va-info-card h4 {
+      color: #fff;
+    }
+
+    #va-roi-calculator .va-hero-card .va-info-card ul {
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    #va-roi-calculator .va-hero-card .va-info-card li::marker {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    #va-roi-calculator .va-hero-card .va-proceed {
+      background: linear-gradient(135deg, var(--va-accent), var(--va-accent-soft));
+      color: #fff;
+      border: none;
+      box-shadow: 0 14px 30px rgba(244, 136, 71, 0.32);
     }
 
     #va-roi-calculator .va-card h3 {
@@ -124,6 +237,7 @@
       color: var(--va-primary);
       font-weight: 800;
       letter-spacing: -0.2px;
+      font-family: var(--va-font-heading);
     }
 
     #va-roi-calculator .va-card p {
@@ -155,9 +269,9 @@
 
     #va-roi-calculator .va-input,
     #va-roi-calculator .va-select {
-      background: #f6f8fb;
+      background: var(--va-cream);
       border: 1px solid var(--va-line);
-      color: var(--va-primary);
+      color: var(--va-text);
       padding: 14px 16px;
       border-radius: 10px;
       font-size: 1rem;
@@ -168,8 +282,8 @@
     #va-roi-calculator .va-input:focus,
     #va-roi-calculator .va-select:focus {
       border-color: var(--va-accent);
-      background: #fff;
-      box-shadow: 0 0 0 3px rgba(245, 130, 32, 0.16);
+      background: var(--va-panel);
+      box-shadow: 0 0 0 3px rgba(244, 136, 71, 0.22);
     }
 
     #va-roi-calculator .va-toggle {
@@ -179,7 +293,7 @@
     }
 
     #va-roi-calculator .va-btn {
-      background: #f6f8fb;
+      background: var(--va-panel);
       border: 1px solid var(--va-line);
       color: var(--va-primary);
       padding: 10px 16px;
@@ -190,23 +304,23 @@
     }
 
     #va-roi-calculator .va-btn:hover {
-      background: #eef3f7;
+      background: rgba(19, 64, 97, 0.06);
     }
 
     #va-roi-calculator .va-btn.active {
       background: var(--va-accent);
       color: #fff;
       border-color: var(--va-accent);
-      box-shadow: 0 10px 25px rgba(245, 130, 32, 0.25);
+      box-shadow: 0 10px 25px rgba(244, 136, 71, 0.25);
     }
 
     #va-roi-calculator .va-highlight {
-      background: #f9fafb;
+      background: var(--va-cream);
       border: 1px solid var(--va-line);
       border-radius: 16px;
       padding: 18px;
       margin-top: 10px;
-      box-shadow: 0 12px 30px rgba(15, 53, 85, 0.05);
+      box-shadow: 0 12px 30px rgba(19, 64, 97, 0.08);
     }
 
     #va-roi-calculator .va-highlight strong {
@@ -226,7 +340,7 @@
       gap: 6px;
       padding: 6px 10px;
       border-radius: 999px;
-      background: #eef3f7;
+      background: rgba(19, 64, 97, 0.06);
       border: 1px solid var(--va-line);
       font-size: 0.9rem;
       color: var(--va-primary);
@@ -245,9 +359,9 @@
     }
 
     #va-roi-calculator .va-progress {
-      background: #f1f4f8;
+      background: rgba(19, 64, 97, 0.06);
       border-radius: 12px;
-      border: 1px solid var(--va-line);
+      border: 1px solid rgba(217, 225, 234, 0.9);
       overflow: hidden;
       height: 12px;
       position: relative;
@@ -263,7 +377,7 @@
     }
 
     #va-roi-calculator .va-chart {
-      background: #f6f8fb;
+      background: var(--va-cream);
       border-radius: 12px;
       border: 1px solid var(--va-line);
       padding: 12px;
@@ -280,7 +394,7 @@
     #va-roi-calculator .va-bar {
       height: 10px;
       border-radius: 999px;
-      background: rgba(15, 53, 85, 0.08);
+      background: rgba(19, 64, 97, 0.12);
       overflow: hidden;
       flex: 1;
     }
@@ -303,10 +417,10 @@
       display: inline-block;
     }
 
-    .va-badge.quick { background: rgba(47, 158, 68, 0.16); color: #2f9e44; border: 1px solid rgba(47, 158, 68, 0.6); }
-    .va-badge.bet { background: rgba(27, 104, 158, 0.14); color: #1b689e; border: 1px solid rgba(27, 104, 158, 0.6); }
-    .va-badge.hobby { background: rgba(245, 130, 32, 0.16); color: #b95c0a; border: 1px solid rgba(245, 130, 32, 0.55); }
-    .va-badge.trap { background: rgba(201, 75, 75, 0.18); color: #c94b4b; border: 1px solid rgba(201, 75, 75, 0.6); }
+    .va-badge.quick { background: rgba(244, 136, 71, 0.14); color: #c05c29; border: 1px solid rgba(244, 136, 71, 0.38); }
+    .va-badge.bet { background: rgba(19, 64, 97, 0.12); color: #134061; border: 1px solid rgba(19, 64, 97, 0.32); }
+    .va-badge.hobby { background: rgba(15, 31, 51, 0.06); color: var(--va-muted); border: 1px solid rgba(19, 64, 97, 0.16); }
+    .va-badge.trap { background: rgba(201, 75, 75, 0.14); color: #a03b3b; border: 1px solid rgba(201, 75, 75, 0.45); }
 
     #va-roi-calculator .va-footer {
       margin-top: 16px;
@@ -318,7 +432,7 @@
     }
 
     #va-roi-calculator .va-cta {
-      background: linear-gradient(135deg, var(--va-accent), #f49a3a);
+      background: linear-gradient(135deg, var(--va-accent), var(--va-accent-soft));
       color: #fff;
       border: none;
       padding: 12px 20px;
@@ -326,7 +440,7 @@
       font-weight: 700;
       cursor: pointer;
       letter-spacing: 0.2px;
-      box-shadow: 0 14px 34px rgba(245, 130, 32, 0.28);
+      box-shadow: 0 14px 34px rgba(244, 136, 71, 0.32);
     }
 
     #va-roi-calculator .va-proceed {
@@ -335,7 +449,7 @@
       gap: 8px;
       margin-top: 14px;
       padding: 10px 14px;
-      background: #f6f8fb;
+      background: var(--va-panel);
       border: 1px solid var(--va-line);
       border-radius: 12px;
       color: var(--va-primary);
@@ -345,10 +459,10 @@
     }
 
     #va-roi-calculator .va-proceed:hover {
-      background: #eef3f7;
+      background: rgba(19, 64, 97, 0.06);
       border-color: var(--va-accent);
       color: var(--va-accent);
-      box-shadow: 0 10px 24px rgba(12, 55, 85, 0.12);
+      box-shadow: 0 10px 24px rgba(19, 64, 97, 0.18);
     }
 
     #va-roi-calculator .va-table {
@@ -366,7 +480,7 @@
       grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
       gap: 6px;
       padding: 10px 14px;
-      background: #f6f8fb;
+      background: var(--va-cream);
       color: var(--va-primary);
       font-weight: 700;
       font-size: 0.95rem;
@@ -442,15 +556,15 @@
       text-align: center;
       font-weight: 700;
       font-size: 0.95rem;
-      color: rgba(15, 53, 85, 0.35);
+      color: rgba(19, 64, 97, 0.35);
       z-index: 0;
       pointer-events: none;
     }
 
-    #va-roi-calculator .va-zone.quick { background: rgba(47, 158, 68, 0.08); color: rgba(47, 158, 68, 0.55); }
-    #va-roi-calculator .va-zone.bet { background: rgba(27, 104, 158, 0.07); color: rgba(27, 104, 158, 0.6); }
-    #va-roi-calculator .va-zone.hobby { background: rgba(245, 130, 32, 0.08); color: rgba(185, 92, 10, 0.6); }
-    #va-roi-calculator .va-zone.trap { background: rgba(201, 75, 75, 0.08); color: rgba(201, 75, 75, 0.6); }
+    #va-roi-calculator .va-zone.quick { background: rgba(244, 136, 71, 0.16); color: rgba(244, 136, 71, 0.65); }
+    #va-roi-calculator .va-zone.bet { background: rgba(19, 64, 97, 0.12); color: rgba(19, 64, 97, 0.72); }
+    #va-roi-calculator .va-zone.hobby { background: rgba(15, 31, 51, 0.08); color: rgba(82, 104, 128, 0.8); }
+    #va-roi-calculator .va-zone.trap { background: rgba(201, 75, 75, 0.12); color: rgba(160, 59, 59, 0.8); }
 
     #va-roi-calculator .va-zone.quick { right: 0; bottom: 0; }
     #va-roi-calculator .va-zone.bet { right: 0; top: 0; }
@@ -465,7 +579,7 @@
     }
 
     #va-roi-calculator .va-info-card {
-      background: #f6f8fb;
+      background: var(--va-cream);
       border: 1px dashed var(--va-line);
       border-radius: var(--va-radius);
       padding: 14px;
@@ -493,7 +607,7 @@
 
     #va-roi-calculator .va-chip {
       border: 1px solid var(--va-line);
-      background: #f7f9fc;
+      background: var(--va-cream);
       color: var(--va-primary);
       padding: 10px 12px;
       border-radius: 999px;
@@ -505,16 +619,16 @@
     }
 
     #va-roi-calculator .va-chip:hover {
-      background: #eef3f7;
-      border-color: rgba(245, 130, 32, 0.4);
+      background: rgba(19, 64, 97, 0.06);
+      border-color: rgba(244, 136, 71, 0.4);
       color: var(--va-accent);
     }
 
     #va-roi-calculator .va-chip.active {
-      background: linear-gradient(135deg, var(--va-accent), #f8a44a);
+      background: linear-gradient(135deg, var(--va-accent), var(--va-accent-soft));
       color: #fff;
       border-color: var(--va-accent);
-      box-shadow: 0 10px 24px rgba(245, 130, 32, 0.28);
+      box-shadow: 0 10px 24px rgba(244, 136, 71, 0.28);
     }
 
     #va-roi-calculator .va-ready-list {
@@ -558,7 +672,7 @@
     }
 
     #va-roi-calculator .readiness-card {
-      background: #f9fafb;
+      background: var(--va-cream);
       border: 1px solid var(--va-line);
       border-radius: 12px;
       padding: 26px;
@@ -613,7 +727,7 @@
       color: var(--va-primary);
       font-size: 0.75rem;
       cursor: help;
-      background: #fff;
+      background: var(--va-panel);
     }
 
     #va-roi-calculator .va-switch {
@@ -622,7 +736,7 @@
       height: 26px;
       border-radius: 999px;
       border: none;
-      background: #cbd5e1;
+      background: rgba(19, 64, 97, 0.12);
       cursor: pointer;
       padding: 0;
       transition: all 0.2s ease;
@@ -642,8 +756,8 @@
     }
 
     #va-roi-calculator .va-switch.on {
-      background: linear-gradient(135deg, #1ac65d, #0fa64b);
-      box-shadow: 0 6px 18px rgba(26, 198, 93, 0.35);
+      background: linear-gradient(135deg, var(--va-accent), var(--va-accent-soft));
+      box-shadow: 0 6px 18px rgba(244, 136, 71, 0.35);
     }
 
     #va-roi-calculator .va-switch.on .va-switch-thumb {
@@ -655,10 +769,10 @@
     }
 
     #va-roi-calculator .soft-card {
-      background: #f9fafb;
+      background: var(--va-cream);
       border: 1px solid var(--va-line);
       border-radius: 16px;
-      box-shadow: 0 12px 30px rgba(15, 53, 85, 0.05);
+      box-shadow: 0 12px 30px rgba(19, 64, 97, 0.08);
     }
 
     #va-roi-calculator .priority-pill {
@@ -670,10 +784,10 @@
       font-size: 0.9rem;
       border: 1px solid transparent;
     }
-    #va-roi-calculator .priority-pill.quick { background: rgba(47, 158, 68, 0.16); color: #1f7c3a; border-color: rgba(47, 158, 68, 0.45); }
-    #va-roi-calculator .priority-pill.bet { background: rgba(27, 104, 158, 0.14); color: #1b689e; border-color: rgba(27, 104, 158, 0.45); }
-    #va-roi-calculator .priority-pill.hobby { background: rgba(245, 130, 32, 0.16); color: #b95c0a; border-color: rgba(245, 130, 32, 0.45); }
-    #va-roi-calculator .priority-pill.trap { background: rgba(201, 75, 75, 0.18); color: #a03b3b; border-color: rgba(201, 75, 75, 0.45); }
+    #va-roi-calculator .priority-pill.quick { background: rgba(244, 136, 71, 0.14); color: #c05c29; border-color: rgba(244, 136, 71, 0.38); }
+    #va-roi-calculator .priority-pill.bet { background: rgba(19, 64, 97, 0.12); color: #134061; border-color: rgba(19, 64, 97, 0.32); }
+    #va-roi-calculator .priority-pill.hobby { background: rgba(15, 31, 51, 0.06); color: var(--va-muted); border-color: rgba(19, 64, 97, 0.16); }
+    #va-roi-calculator .priority-pill.trap { background: rgba(201, 75, 75, 0.14); color: #a03b3b; border-color: rgba(201, 75, 75, 0.45); }
 
     #va-roi-calculator .classification-table .va-table-head,
     #va-roi-calculator .classification-table .va-table-row {
@@ -687,14 +801,14 @@
       top: 120%;
       left: 50%;
       transform: translateX(-50%);
-      background: #0f3555;
+      background: var(--va-primary);
       color: #fff;
       padding: 6px 8px;
       border-radius: 8px;
       font-size: 0.8rem;
       line-height: 1.3;
       width: 180px;
-      box-shadow: 0 10px 24px rgba(15, 53, 85, 0.2);
+      box-shadow: 0 10px 24px rgba(19, 64, 97, 0.24);
       z-index: 10;
       pointer-events: none;
     }
@@ -710,7 +824,7 @@
       margin: 0;
       height: 10px;
       border-radius: 999px;
-      background: #e5e7eb;
+      background: rgba(217, 225, 234, 0.85);
       outline: none;
     }
 
@@ -720,8 +834,8 @@
       width: 22px;
       height: 22px;
       border-radius: 50%;
-      background: linear-gradient(135deg, var(--va-accent), #f8a44a);
-      box-shadow: 0 6px 12px rgba(245, 130, 32, 0.35);
+      background: linear-gradient(135deg, var(--va-accent), var(--va-accent-soft));
+      box-shadow: 0 6px 12px rgba(244, 136, 71, 0.35);
       cursor: pointer;
       border: 2px solid #fff;
     }
@@ -730,8 +844,8 @@
       width: 22px;
       height: 22px;
       border-radius: 50%;
-      background: linear-gradient(135deg, var(--va-accent), #f8a44a);
-      box-shadow: 0 6px 12px rgba(245, 130, 32, 0.35);
+      background: linear-gradient(135deg, var(--va-accent), var(--va-accent-soft));
+      box-shadow: 0 6px 12px rgba(244, 136, 71, 0.35);
       cursor: pointer;
       border: 2px solid #fff;
     }
@@ -762,17 +876,22 @@
 <body>
   <div id="va-roi-calculator">
   <div class="va-roi">
-  <div class="va-shell">
+  <div class="va-hero">
     <div class="va-header">
-      <div>
-        <h1 class="va-title">Automation ROI Calculator</h1>
-        <p class="va-lede">
-          Quickly size the time and cost of recurring work to decide if automation is worth it.
-        </p>
+      <div class="va-brand">
+        <img src="assets/va-logo-wide.png" alt="Valid Agenda logo" class="va-logo" />
+        <div>
+          <p class="va-tagline">Valid Agenda ROI Toolkit</p>
+          <h1 class="va-title">Automation ROI Calculator</h1>
+          <p class="va-lede">
+            Quickly size the time and cost of recurring work to decide if automation is worth it.
+          </p>
+        </div>
       </div>
+      <div class="va-tag">AI that pays back</div>
     </div>
 
-    <div class="va-card" id="part-1">
+    <div class="va-card va-hero-card" id="part-1">
       <h3>How this works</h3>
       <div class="va-ready-layout">
         <div class="va-info-card" style="grid-column: span 2;">
@@ -787,6 +906,9 @@
       </div>
       <a class="va-proceed" href="#part-2">Start adding tasks</a>
     </div>
+  </div>
+
+  <div class="va-shell">
 
     <div class="va-card" id="part-2" style="margin-top:16px;">
       <h3>Workflow Inventory</h3>
@@ -884,7 +1006,7 @@
         </div>
         <div class="va-chart-bar">
           <span style="width:120px;color:var(--va-muted);font-size:0.9rem;">If automated (50%)</span>
-          <div class="va-bar"><span id="savings-bar" style="background:#34d399;"></span></div>
+          <div class="va-bar"><span id="savings-bar" style="background:var(--va-accent);"></span></div>
         </div>
         <div style="color:var(--va-muted);font-size:0.9rem;">Estimated savings at 50% automation: <strong id="savings-figure">$0</strong></div>
       </div>
@@ -1254,14 +1376,14 @@
           row.style.alignItems = "center";
           row.style.justifyContent = "space-between";
           row.style.gap = "10px";
-          row.style.border = `1px solid ${getComputedStyle(document.documentElement).getPropertyValue("--va-line") || "#dfe6ee"}`;
+          row.style.border = `1px solid ${getComputedStyle(document.documentElement).getPropertyValue("--va-line") || "#d9e1ea"}`;
           row.style.borderRadius = "14px";
           row.style.padding = "12px 14px";
-          row.style.background = "#fff";
-          row.style.boxShadow = "0 10px 28px rgba(12,55,85,0.08)";
+          row.style.background = "var(--va-panel)";
+          row.style.boxShadow = "0 10px 28px rgba(19,64,97,0.12)";
 
           const left = document.createElement("div");
-          left.innerHTML = `<strong style="font-size:1.05rem;">${task.task}</strong><div style="color:var(--va-muted);font-size:0.9rem;margin-top:2px;">${task.role || "Owner"}</div><div style="color:#1b7b4d;font-weight:700;margin-top:6px;">${metrics.weeklyHours.toFixed(1)} hrs/wk · ${formatCurrency(metrics.annualCost)}/yr · ${formatCurrency(metrics.savings)} est. savings</div>`;
+          left.innerHTML = `<strong style="font-size:1.05rem;">${task.task}</strong><div style="color:var(--va-muted);font-size:0.9rem;margin-top:2px;">${task.role || "Owner"}</div><div style="color:var(--va-accent);font-weight:700;margin-top:6px;">${metrics.weeklyHours.toFixed(1)} hrs/wk · ${formatCurrency(metrics.annualCost)}/yr · ${formatCurrency(metrics.savings)} est. savings</div>`;
 
           const actions = document.createElement("div");
           actions.style.display = "flex";
@@ -1351,9 +1473,9 @@
           row.innerHTML = `
             <span><strong>${task.task || "Untitled task"}</strong><small>${task.freq || 0}x/wk · ${task.minutes || 0} min each</small></span>
             <span>${task.role || "Owner"}</span>
-            <span style="font-weight:700;color:#1b7b4d;">${metrics.weeklyHours.toFixed(1)}</span>
+            <span style="font-weight:700;color:var(--va-accent);">${metrics.weeklyHours.toFixed(1)}</span>
             <span>${metrics.annualHours.toFixed(1)}</span>
-            <span style="font-weight:700;color:#1b7b4d;">${formatCurrency(metrics.annualCost)}</span>
+            <span style="font-weight:700;color:var(--va-accent);">${formatCurrency(metrics.annualCost)}</span>
             <span>${formatCurrency(metrics.savings)}</span>
           `;
           els.taskTableBody.appendChild(row);
@@ -1381,10 +1503,10 @@
           tooltip.style.position = "absolute";
           tooltip.style.padding = "10px 12px";
           tooltip.style.borderRadius = "10px";
-          tooltip.style.background = "#0f3555";
+          tooltip.style.background = getComputedStyle(document.documentElement).getPropertyValue("--va-primary") || "#134061";
           tooltip.style.color = "#fff";
           tooltip.style.fontSize = "0.9rem";
-          tooltip.style.boxShadow = "0 12px 30px rgba(15,53,85,0.25)";
+          tooltip.style.boxShadow = "0 12px 30px rgba(19,64,97,0.25)";
           tooltip.style.pointerEvents = "none";
           tooltip.style.display = "none";
           tooltip.style.zIndex = "5";
@@ -1403,23 +1525,25 @@
         const padding = 24;
 
         // Quadrants
-        ctx.fillStyle = "rgba(201,75,75,0.08)";
+        ctx.fillStyle = "rgba(201,75,75,0.12)";
         ctx.fillRect(0, 0, w / 2, h / 2);
-        ctx.fillStyle = "rgba(27,104,158,0.07)";
+        ctx.fillStyle = "rgba(19,64,97,0.12)";
         ctx.fillRect(w / 2, 0, w / 2, h / 2);
-        ctx.fillStyle = "rgba(245,130,32,0.08)";
+        ctx.fillStyle = "rgba(15,31,51,0.08)";
         ctx.fillRect(0, h / 2, w / 2, h / 2);
-        ctx.fillStyle = "rgba(47,158,68,0.08)";
+        ctx.fillStyle = "rgba(244,136,71,0.16)";
         ctx.fillRect(w / 2, h / 2, w / 2, h / 2);
 
-        ctx.fillStyle = "rgba(15,53,85,0.35)";
+        ctx.fillStyle = "rgba(19,64,97,0.45)";
         ctx.font = "700 14px " + (getComputedStyle(document.documentElement).getPropertyValue("--va-font") || "Inter, sans-serif");
         ctx.fillText("Strategic Bet", w * 0.65, h * 0.25);
         ctx.fillText("Trap", w * 0.15, h * 0.25);
         ctx.fillText("Hobby", w * 0.15, h * 0.75);
         ctx.fillText("Quick Win", w * 0.65, h * 0.75);
 
-        const maxImpact = Math.max(...tasks.map((t) => calculateTaskMetrics(t).annualCost), 1);
+        // Use a fixed floor so single low-value tasks don't always pin to the far right.
+        const IMPACT_FLOOR = 20000;
+        const maxImpact = Math.max(...tasks.map((t) => calculateTaskMetrics(t).annualCost), IMPACT_FLOOR);
         matrixDots = [];
 
         tasks.forEach((task) => {
@@ -1436,11 +1560,11 @@
           ctx.arc(x, y, 8, 0, Math.PI * 2);
           ctx.fillStyle =
             badgeClass === "quick"
-              ? "#2f9e44"
+              ? "#f48847"
               : badgeClass === "bet"
-              ? "#1b689e"
+              ? "#134061"
               : badgeClass === "hobby"
-              ? "#f58220"
+              ? "rgba(82,104,128,0.9)"
               : "#c94b4b";
           ctx.fill();
           ctx.strokeStyle = "#fff";
@@ -1473,9 +1597,24 @@
           }
           if (hit) {
             tooltip.style.display = "block";
-            tooltip.style.left = `${hit.x}px`;
-            tooltip.style.top = `${hit.y - 14}px`;
-            tooltip.innerHTML = `<strong>${hit.task}</strong><div style="font-size:0.85rem;margin-top:4px;">${hit.label}</div><div style="font-size:0.85rem;color:#dfe6ee;">Annual: ${formatCurrency(hit.metrics.annualCost)} · Weekly: ${hit.metrics.weeklyHours.toFixed(1)} hrs · Savings 50%: ${formatCurrency(hit.metrics.savings)}</div><div style="font-size:0.8rem;color:#dfe6ee;margin-top:4px;">${hit.note}</div>`;
+            tooltip.innerHTML = `<strong>${hit.task}</strong><div style="font-size:0.85rem;margin-top:4px;">${hit.label}</div><div style="font-size:0.85rem;color:rgba(255,255,255,0.85);">Annual: ${formatCurrency(hit.metrics.annualCost)} · Weekly: ${hit.metrics.weeklyHours.toFixed(1)} hrs · Savings 50%: ${formatCurrency(hit.metrics.savings)}</div><div style="font-size:0.8rem;color:rgba(255,255,255,0.7);margin-top:4px;">${hit.note}</div>`;
+
+            // Flip tooltip to the left when hovering near the right edge to avoid clipping
+            const offset = 12;
+            const tooltipWidth = tooltip.offsetWidth || 260;
+            const tooltipHeight = tooltip.offsetHeight || 120;
+            let left = hit.x + offset;
+            const maxLeft = canvas.width - tooltipWidth - offset;
+            if (left > maxLeft) {
+              left = hit.x - tooltipWidth - offset;
+            }
+            left = Math.max(8, Math.min(left, maxLeft));
+
+            let top = hit.y - tooltipHeight / 2;
+            top = Math.max(8, Math.min(top, canvas.height - tooltipHeight - 8));
+
+            tooltip.style.left = `${left}px`;
+            tooltip.style.top = `${top}px`;
           } else {
             tooltip.style.display = "none";
           }
