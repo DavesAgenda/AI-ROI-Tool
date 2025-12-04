@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Automation ROI Calculator</title>
+  <link rel="icon" type="image/png" href="assets/va-logo-circle.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
@@ -29,6 +30,123 @@
       --va-font-heading: "Poppins", "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
       --va-font-body: "Manrope", "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
       --va-font: var(--va-font-body);
+    }
+
+    /* Footer styling */
+    .va-site-footer {
+      max-width: 1180px;
+      margin: 48px auto 0;
+      padding: 28px 32px 32px;
+      background: linear-gradient(120deg, rgba(19, 64, 97, 0.12), rgba(15, 31, 51, 0.85));
+      border: 1px solid rgba(217, 225, 234, 0.6);
+      border-radius: 20px;
+      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.18);
+      color: #f4f7fb;
+    }
+
+    .va-site-footer-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 22px 36px;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+
+    .va-site-footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 240px;
+    }
+
+    .va-site-footer-brand img {
+      width: 62px;
+      height: 62px;
+      object-fit: contain;
+      border-radius: 16px;
+      background: #ffffff;
+      box-shadow: 0 12px 28px rgba(19, 64, 97, 0.18);
+      padding: 10px;
+    }
+
+    .va-site-footer-title {
+      margin: 0;
+      font-family: var(--va-font-heading);
+      font-size: 1.1rem;
+      letter-spacing: 0.2px;
+      color: #ffffff;
+    }
+
+    .va-site-footer-tagline {
+      margin: 4px 0 0;
+      color: rgba(244, 247, 251, 0.75);
+      font-size: 0.95rem;
+    }
+
+    .va-site-footer-columns {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 18px 28px;
+      flex: 1;
+      min-width: 320px;
+    }
+
+    .va-site-footer h4 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+      letter-spacing: 0.2px;
+      color: #ffffff;
+    }
+
+    .va-site-footer p {
+      margin: 4px 0;
+      color: rgba(244, 247, 251, 0.85);
+      line-height: 1.5;
+    }
+
+    .va-site-footer a {
+      color: var(--va-accent-soft);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .va-site-footer a:hover {
+      color: var(--va-accent);
+      text-decoration: underline;
+    }
+
+    .va-site-footer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(217, 225, 234, 0.35);
+      color: rgba(244, 247, 251, 0.75);
+      flex-wrap: wrap;
+    }
+
+    .va-site-footer-social {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .va-site-footer-meta {
+      margin: 0;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 640px) {
+      .va-site-footer {
+        padding: 24px;
+      }
+      .va-site-footer-bottom {
+        flex-direction: column;
+        align-items: flex-start;
+      }
     }
 
     /* Scoped styling tuned to Valid Agenda brand */
@@ -1182,6 +1300,42 @@
   </div>
   </div>
   </div>
+
+  <footer class="va-site-footer">
+    <div class="va-site-footer-row">
+      <div class="va-site-footer-brand">
+        <img src="assets/va-logo-circle.png" alt="Valid Agenda logo">
+        <div>
+          <p class="va-site-footer-title">Valid Agenda</p>
+          <p class="va-site-footer-tagline">AI that pays back—fast.</p>
+        </div>
+      </div>
+      <div class="va-site-footer-columns">
+        <div>
+          <h4>Contact</h4>
+          <p>David Pengelley, Founder</p>
+          <p><a href="tel:+61256570400">+61 2 5657 0400</a></p>
+          <p><a href="https://www.validagenda.com/contact" target="_blank" rel="noopener noreferrer">Contact form</a></p>
+        </div>
+        <div>
+          <h4>Location</h4>
+          <p>Sydney, NSW</p>
+        </div>
+        <div>
+          <h4>Links</h4>
+          <p><a href="https://www.validagenda.com/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Policy</a></p>
+          <p><a href="https://www.validagenda.com/terms-of-service" target="_blank" rel="noopener noreferrer">Terms of Service</a></p>
+        </div>
+      </div>
+    </div>
+    <div class="va-site-footer-bottom">
+      <div class="va-site-footer-social">
+        <a href="https://www.linkedin.com/in/davidpen/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        <a href="https://www.youtube.com/@ValidAgenda" target="_blank" rel="noopener noreferrer">YouTube</a>
+      </div>
+      <p class="va-site-footer-meta">© 2025 Valid Agenda Pty Ltd. All Rights Reserved.</p>
+    </div>
+  </footer>
 
   <script>
     // Encapsulate logic to avoid globals
