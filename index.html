@@ -454,12 +454,26 @@
       display: grid;
       grid-template-columns: 1.2fr 1fr;
       gap: 16px;
-      align-items: end;
+      align-items: start;
     }
 
     #va-roi-calculator .va-download-grid .va-field-role,
     #va-roi-calculator .va-download-grid .va-field-email {
       grid-column: 1 / -1;
+    }
+
+    #va-roi-calculator .va-field.va-consent {
+      align-items: flex-start;
+    }
+
+    #va-roi-calculator .va-field.va-consent .va-checkbox {
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    #va-roi-calculator .va-field.va-consent .va-checkbox span {
+      display: block;
+      text-align: left;
     }
 
     #va-roi-calculator .va-download-note {
@@ -1289,10 +1303,10 @@
             <input class="va-input" id="lead-email" name="email" type="email" placeholder="you@company.com" required />
           </div>
         </div>
-        <div class="va-field">
+        <div class="va-field va-consent">
           <label class="va-checkbox" for="lead-consent" style="color:#fff;">
             <input id="lead-consent" type="checkbox" />
-            <span style="color:#fff;" >I agree to receive communications from Valid Agenda about automation ROI and services.</span>
+            <span style="color:#fff;">I agree to receive communications from Valid Agenda about automation ROI and services.</span>
           </label>
         </div>
         <div class="va-lead-actions">
