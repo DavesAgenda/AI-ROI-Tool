@@ -23,7 +23,7 @@ const buildPriorityNote = (priority) => {
 
 const topTasks = (tasks = []) => [...tasks].sort((a, b) => (b.metrics?.savings || 0) - (a.metrics?.savings || 0)).slice(0, 2);
 
-async function renderPdf(payload) {
+async function renderPdf(payload, origin) {
   const h = React.createElement;
   const { tasks = [], totals = {}, lead = {}, matrixDataUrl, qrDataUrl, logoUrl, meetingUrl } = payload || {};
   const accent = "#F48847";
@@ -117,6 +117,13 @@ async function renderPdf(payload) {
       ]
     );
 
+  const resolvedLogo =
+    logoUrl && (logoUrl.startsWith("http") || logoUrl.startsWith("data:"))
+      ? logoUrl
+      : origin
+      ? `${origin}/assets/va-logo-wide.png`
+      : null;
+
   const doc = h(
     Document,
     null,
@@ -128,7 +135,7 @@ async function renderPdf(payload) {
           View,
           { style: styles.header },
           [
-            logoUrl ? h(Image, { src: logoUrl, style: styles.logo }) : null,
+            resolvedLogo ? h(Image, { src: resolvedLogo, style: styles.logo }) : null,
             h(
               View,
               { style: styles.titleBox },
@@ -204,7 +211,7 @@ async function renderPdf(payload) {
   );
 
   const pdfBuf = await pdf(doc).toBuffer();
-  return Buffer.from(pdfBuf);
+  return pdfBuf;
 }
 
 module.exports = async function handler(req, res) {
@@ -214,7 +221,10 @@ module.exports = async function handler(req, res) {
   }
   try {
     const payload = typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body;
-    const pdfBuffer = await renderPdf(payload || {});
+    const proto = (req.headers["x-forwarded-proto"] || "https").split(",")[0];
+    const host = (req.headers["x-forwarded-host"] || req.headers.host || "").split(",")[0];
+    const origin = host ? `${proto}://${host}` : null;
+    const pdfBuffer = await renderPdf(payload || {}, origin);
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", "attachment; filename=Valid-Agenda-Automation-ROI-Report.pdf");
     res.status(200).send(pdfBuffer);
