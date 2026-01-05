@@ -1595,6 +1595,8 @@
       const WEBHOOK_URL = "https://hooks.validagenda.dev/webhook/eb31e5cf-774c-4aa1-b914-8b5fa20be96c";
       const MEETING_URL = "https://validagenda.com/book";
       const LOGO_DATA = "assets/va-logo-wide.png";
+      let reactPdfLib = null;
+      let reactLib = null;
 
       const readinessChecks = [
         { id: "documented", label: "Easy to explain", tip: "" },
@@ -1825,6 +1827,32 @@
         return bytes;
       }
 
+      async function loadReactPdfLib() {
+        if (reactPdfLib && reactLib) return { reactPdfLib, reactLib };
+        try {
+          const [react, reactPdf] = await Promise.all([
+            import("https://esm.sh/react@18.2.0"),
+            import("https://esm.sh/@react-pdf/renderer@3.2.0?bundle&target=es2020"),
+          ]);
+          reactLib = react?.default || react;
+          reactPdfLib = reactPdf?.default || reactPdf;
+          return { reactPdfLib, reactLib };
+        } catch (err) {
+          console.error("React PDF import failed", err);
+          throw err;
+        }
+      }
+
+      async function buildQrDataUrl(url, size = 180) {
+        const img = await loadQrImage(url);
+        if (!img) return null;
+        const c = document.createElement("canvas");
+        c.width = size;
+        c.height = size;
+        c.getContext("2d").drawImage(img, 0, 0, size, size);
+        return c.toDataURL("image/png");
+      }
+
       async function toPngBytes(dataUrl) {
         try {
           const img = await loadImage(dataUrl);
@@ -1933,6 +1961,197 @@
         const annots = page.node.lookupMaybe(PDFName.of("Annots"), PDFArray) || ctx.obj([]);
         annots.push(linkAnnot);
         page.node.set(PDFName.of("Annots"), annots);
+      }
+
+      async function buildReportPdfReact(tasksWithMeta, totals, leadMeta) {
+        const { reactPdfLib, reactLib } = await loadReactPdfLib();
+        const { pdf, Document, Page, View, Text, Image, Link, StyleSheet } = reactPdfLib;
+        const React = reactLib;
+        const h = React.createElement;
+        const accent = "#F48847";
+        const dark = "#134061";
+        const muted = "#4a5b6d";
+        const light = "#eef3f8";
+        const leadName = [leadMeta.firstName, leadMeta.lastName, leadMeta.email].filter(Boolean).join(" ").trim() || "your team";
+        const dateStr = new Date().toLocaleDateString();
+        const matrixDataUrl = await createMatrixPreview(tasksWithMeta, 720, 420);
+        const qrDataUrl = await buildQrDataUrl(MEETING_URL);
+        const topTasks = buildOpportunities(tasksWithMeta);
+
+        const styles = StyleSheet.create({
+          page: { padding: 28, fontSize: 11, fontFamily: "Helvetica", backgroundColor: "#f7f9fc" },
+          header: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 12 },
+          logo: { width: 140, height: 46, objectFit: "contain" },
+          titleBox: { alignItems: "flex-end" },
+          title: { fontSize: 16, color: dark, fontWeight: 700 },
+          meta: { fontSize: 11, color: muted },
+          section: { marginBottom: 14 },
+          sectionTitle: { fontSize: 14, color: dark, fontWeight: 700, marginBottom: 8, borderLeftColor: accent, borderLeftWidth: 4, paddingLeft: 8 },
+          tiles: { flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", marginBottom: 10 },
+          tile: { backgroundColor: "#fff", padding: 10, borderRadius: 10, borderColor: light, borderWidth: 1, width: "48%", marginBottom: 8 },
+          tileLabel: { fontSize: 11, color: dark, fontWeight: 700, marginBottom: 4 },
+          tileValue: { fontSize: 14, color: dark, fontWeight: 700 },
+          tileValueAccent: { color: accent },
+          oppGrid: { flexDirection: "row", justifyContent: "space-between" },
+          oppCard: { backgroundColor: "#fff", padding: 10, borderRadius: 10, borderColor: light, borderWidth: 1, width: "48%" },
+          oppTitle: { fontSize: 12.5, color: dark, fontWeight: 700, marginBottom: 4 },
+          oppMeta: { fontSize: 11, color: muted, marginBottom: 6 },
+          oppNote: { fontSize: 11, color: dark, lineHeight: 1.4 },
+          pill: { borderColor: accent, borderWidth: 1, color: accent, paddingHorizontal: 6, paddingVertical: 3, borderRadius: 6, fontSize: 10, alignSelf: "flex-start" },
+          table: { borderRadius: 10, borderColor: light, borderWidth: 1, overflow: "hidden" },
+          tableRow: { flexDirection: "row", paddingHorizontal: 10, paddingVertical: 6, alignItems: "center" },
+          tableHead: { backgroundColor: "#eef3f8" },
+          tableCell: { fontSize: 10, color: dark, flex: 1 },
+          cellTight: { flex: 0.8, textAlign: "right" },
+          cellWide: { flex: 1.4 },
+          mutedText: { fontSize: 10, color: muted, marginTop: 4 },
+          matrixImg: { width: "100%", height: 240, objectFit: "cover", marginTop: 6, marginBottom: 4 },
+          callout: { backgroundColor: "#fff", padding: 10, borderRadius: 10, borderColor: light, borderWidth: 1 },
+          body: { fontSize: 11, color: dark, marginBottom: 4, lineHeight: 1.4 },
+          cta: { backgroundColor: dark, color: "#fff", padding: 14, borderRadius: 12, marginTop: 10, flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
+          ctaText: { color: "#fff", fontSize: 13, fontWeight: 700, marginBottom: 4 },
+          ctaLink: { color: accent, fontSize: 11, textDecoration: "underline" },
+          qr: { width: 70, height: 70, objectFit: "contain" },
+          pageBreak: { marginTop: 18 },
+        });
+
+        const tile = (label, value, accentValue = false) =>
+          h(
+            View,
+            { style: styles.tile },
+            h(Text, { style: styles.tileLabel }, label),
+            h(Text, { style: [styles.tileValue, accentValue && styles.tileValueAccent] }, value)
+          );
+
+        const oppCard = (task) =>
+          h(
+            View,
+            { style: styles.oppCard },
+            h(View, { style: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 4 } }, [
+              h(Text, { style: styles.oppTitle }, task.task || "Untitled task"),
+              h(Text, { style: styles.pill }, task.priority || "Priority"),
+            ]),
+            h(Text, { style: styles.oppMeta }, `Annual cost ${formatCurrency(task.metrics.annualCost)} · Savings ${formatCurrency(task.metrics.savings)}`),
+            h(Text, { style: styles.oppNote }, buildPriorityNote(task))
+          );
+
+        const headerRow = h(
+          View,
+          { style: [styles.tableRow, styles.tableHead] },
+          [
+            h(Text, { style: [styles.tableCell, styles.cellWide] }, "Task"),
+            h(Text, { style: styles.tableCell }, "Role"),
+            h(Text, { style: [styles.tableCell, styles.cellTight] }, "Weekly hours"),
+            h(Text, { style: [styles.tableCell, styles.cellTight] }, "Annual cost"),
+            h(Text, { style: [styles.tableCell, styles.cellTight] }, "Savings (50%)"),
+            h(Text, { style: [styles.tableCell, styles.cellTight] }, "Priority"),
+          ]
+        );
+
+        const row = (t, idx) =>
+          h(
+            View,
+            { key: t.task + idx, style: [styles.tableRow, idx % 2 === 0 && { backgroundColor: "#f9fbfd" }] },
+            [
+              h(Text, { style: [styles.tableCell, styles.cellWide] }, t.task || "Untitled"),
+              h(Text, { style: styles.tableCell }, t.role || "Owner"),
+              h(Text, { style: [styles.tableCell, styles.cellTight] }, t.metrics.weeklyHours.toFixed(1)),
+              h(Text, { style: [styles.tableCell, styles.cellTight] }, formatCurrency(t.metrics.annualCost)),
+              h(Text, { style: [styles.tableCell, styles.cellTight] }, formatCurrency(t.metrics.savings)),
+              h(Text, { style: [styles.tableCell, styles.cellTight] }, t.priority || ""),
+            ]
+          );
+
+        const report = h(
+          Document,
+          null,
+          h(
+            Page,
+            { size: "A4", style: styles.page },
+            [
+              h(
+                View,
+                { style: styles.header },
+                [
+                  h(Image, { src: LOGO_DATA, style: styles.logo }),
+                  h(
+                    View,
+                    { style: styles.titleBox },
+                    [
+                      h(Text, { style: styles.title }, "Automation ROI Report"),
+                      h(Text, { style: styles.meta }, `Prepared for ${leadName}`),
+                      h(Text, { style: styles.meta }, `Date: ${dateStr}`),
+                    ]
+                  ),
+                ]
+              ),
+              h(
+                View,
+                { style: styles.tiles },
+                [
+                  tile("Current annual cost", formatCurrency(totals.annualCost), true),
+                  tile("Potential savings (50%)", formatCurrency(totals.savings), true),
+                  tile("Weekly hours captured", `${totals.weeklyHours.toFixed(1)} hrs`),
+                  tile("Capacity returned (weekly)", `${(totals.weeklyHours * 0.5).toFixed(1)} hrs`),
+                ]
+              ),
+              h(
+                View,
+                { style: styles.section },
+                [
+                  h(Text, { style: styles.sectionTitle }, "Top opportunities"),
+                  h(View, { style: styles.oppGrid }, topTasks.map((t) => oppCard(t))),
+                ]
+              ),
+              h(
+                View,
+                { style: styles.section },
+                [
+                  h(Text, { style: styles.sectionTitle }, "What you captured"),
+                  h(View, { style: styles.table }, [headerRow, ...tasksWithMeta.slice(0, 8).map((t, idx) => row(t, idx))]),
+                  tasksWithMeta.length > 8
+                    ? h(Text, { style: styles.mutedText }, `+${tasksWithMeta.length - 8} more tasks not shown`)
+                    : null,
+                ]
+              ),
+              h(
+                View,
+                { style: styles.section },
+                [
+                  h(Text, { style: styles.sectionTitle }, "Portfolio view"),
+                  matrixDataUrl ? h(Image, { src: matrixDataUrl, style: styles.matrixImg }) : null,
+                  h(Text, { style: styles.mutedText }, "Impact uses annual cost. Effort uses readiness toggles."),
+                ]
+              ),
+              h(
+                View,
+                { style: styles.section },
+                [
+                  h(Text, { style: styles.sectionTitle }, "If you do nothing"),
+                  h(View, { style: styles.callout }, [
+                    h(Text, { style: styles.body }, `You are currently spending ~${formatCurrency(totals.annualCost)} per year on these tasks.`),
+                    h(Text, { style: styles.body }, `At 50% automation, you could reclaim ~${(totals.annualHours * 0.5).toFixed(1)} hours per year.`),
+                  ]),
+                ]
+              ),
+              h(
+                View,
+                { style: [styles.section, styles.cta] },
+                [
+                  h(View, null, [
+                    h(Text, { style: styles.ctaText }, "Book an Evaluate Session"),
+                    h(Text, { style: { color: "#dfe9f5", fontSize: 11, marginBottom: 6 } }, "Confirm your top Quick Win and leave with a 30/60/90 plan."),
+                    h(Link, { src: MEETING_URL, style: styles.ctaLink }, MEETING_URL),
+                  ]),
+                  qrDataUrl ? h(Image, { src: qrDataUrl, style: styles.qr }) : null,
+                ]
+              ),
+            ]
+          )
+        );
+
+        const pdfBlob = await pdf(report).toBlob();
+        return pdfBlob;
       }
 
       async function buildReportPdf(tasksWithMeta, totals, leadMeta) {
@@ -2874,7 +3093,7 @@
         let pdfBase64 = null;
         // Generate + download PDF while preparing webhook payload
         try {
-          const pdfBlob = await buildReportPdf(tasksWithMeta, totals, {
+          const pdfBlob = await buildReportPdfReact(tasksWithMeta, totals, {
             firstName,
             lastName,
             role: leadRole,
