@@ -1,7 +1,7 @@
 // Serverless PDF generator for Vercel using @react-pdf/renderer.
 
 export const config = {
-  runtime: "nodejs18.x",
+  runtime: "nodejs",
 };
 
 const formatCurrency = (value) =>
