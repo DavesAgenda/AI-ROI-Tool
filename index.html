@@ -561,6 +561,215 @@
       font-size: 1.1rem;
     }
 
+    /* ===== PDF Template Styles ===== */
+    #pdf-root {
+      position: fixed;
+      left: -9999px;
+      top: 0;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+      font-family: "Manrope", "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    }
+
+    .pdf-page {
+      width: 900px;
+      min-height: 1200px;
+      padding: 40px 48px;
+      box-sizing: border-box;
+      background: #f7f9fb;
+      color: #0d2236;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .pdf-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 16px;
+      background: #134061;
+      color: #fff;
+      border-radius: 14px;
+    }
+
+    .pdf-header img {
+      height: 36px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .pdf-subheader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: #526880;
+    }
+
+    .pdf-hero {
+      background: #ffffff;
+      border: 1px solid #e1e7ef;
+      border-radius: 16px;
+      padding: 18px 20px;
+    }
+
+    .pdf-title {
+      margin: 0 0 6px;
+      font-size: 22px;
+      color: #134061;
+      font-weight: 800;
+    }
+
+    .pdf-lede {
+      margin: 0;
+      color: #526880;
+      font-size: 14px;
+    }
+
+    .pdf-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .pdf-card {
+      background: #fff;
+      border: 1px solid #e1e7ef;
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .pdf-card h4 {
+      margin: 0 0 4px;
+      font-size: 14px;
+      color: #134061;
+    }
+
+    .pdf-card .metric {
+      font-size: 20px;
+      font-weight: 800;
+      color: #f48847;
+    }
+
+    .pdf-section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 16px;
+      font-weight: 800;
+      color: #134061;
+      margin: 8px 0 6px;
+    }
+
+    .pdf-section-title::before {
+      content: "";
+      display: inline-block;
+      width: 8px;
+      height: 22px;
+      background: #f48847;
+      border-radius: 4px;
+    }
+
+    .pdf-opportunities {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 12px;
+    }
+
+    .pdf-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(244, 136, 71, 0.1);
+      color: #f48847;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .pdf-cta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      background: #134061;
+      color: #fff;
+      border-radius: 16px;
+      padding: 18px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .pdf-button {
+      display: inline-block;
+      background: #f48847;
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-weight: 800;
+      text-decoration: none;
+      font-size: 13px;
+    }
+
+    .pdf-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: #526880;
+      margin-top: auto;
+    }
+
+    .pdf-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border: 1px solid #e1e7ef;
+      border-radius: 12px;
+      overflow: hidden;
+      font-size: 12px;
+    }
+
+    .pdf-table th {
+      background: #f5f7fa;
+      text-align: left;
+      padding: 10px;
+      color: #134061;
+      font-weight: 800;
+      border-bottom: 1px solid #e1e7ef;
+    }
+
+    .pdf-table td {
+      padding: 10px;
+      border-bottom: 1px solid #eef2f7;
+      color: #0d2236;
+    }
+
+    .pdf-table tr:nth-child(even) td {
+      background: #f9fbfd;
+    }
+
+    .pdf-callout {
+      background: #fff;
+      border: 1px solid #e1e7ef;
+      border-radius: 12px;
+      padding: 12px;
+      color: #0d2236;
+      font-size: 12px;
+    }
+
+    .pdf-matrix img {
+      width: 100%;
+      height: auto;
+      border: 1px solid #e1e7ef;
+      border-radius: 12px;
+      background: #fff;
+    }
     #va-roi-calculator .va-matrix {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -1109,8 +1318,9 @@
 </head>
 <body>
   <div id="va-roi-calculator">
-  <div class="va-roi">
-  <div class="va-hero">
+    <div class="va-roi">
+      <div id="pdf-root" aria-hidden="true"></div>
+      <div class="va-hero">
     <div class="va-header">
       <div class="va-brand">
         <img src="assets/va-logo-wide.png" alt="Valid Agenda logo" class="va-logo" />
@@ -1384,8 +1594,7 @@
     (() => {
       const WEBHOOK_URL = "https://hooks.validagenda.dev/webhook/eb31e5cf-774c-4aa1-b914-8b5fa20be96c";
       const MEETING_URL = "https://validagenda.com/book";
-      const LOGO_DATA =
-        "data:image/png;base64,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AQAAAIAEAAADoAQAAQAAAKABAAAAAAAAWE1QIHoDAAA8P3hwYWNrZXQgYmVnaW49J++7vycgaWQ9J1c1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCc/Pgo8eDp4bXBtZXRhIHhtbG5zOng9J2Fkb2JlOm5zOm1ldGEvJyB4OnhtcHRrPSdJbWFnZTo6RXhpZlRvb2wgMTIuNTcnPgo8cmRmOlJERiB4bWxuczpyZGY9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMnPgoKIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PScnCiAgeG1sbnM6QXR0cmliPSdodHRwOi8vbnMuYXR0cmlidXRpb24uY29tL2Fkcy8xLjAvJz4KICA8QXR0cmliOkFkcz4KICAgPHJkZjpTZXE+CiAgICA8cmRmOmxpIHJkZjpwYXJzZVR5cGU9J1Jlc291cmNlJz4KICAgICA8QXR0cmliOkNyZWF0ZWQ+MjAyNS0xMS0yNjwvQXR0cmliOkNyZWF0ZWQ+CiAgICAgPEF0dHJpYjpFeHRJZD42ZWM1N2Q4Ny1mYTRmLTQwZDMtYmU2NC1jM2NlNzRiMTRlMjA8L0F0dHJpYjpFeHRJZD4KICAgICA8QXR0cmliOkZiSWQ+NTI1MjY1OTE0MTc5NTgwPC9BdHRyaWI6RmJJZD4KICAgICA8QXR0cmliOlRvdWNoVHlwZT4yPC9BdHRyaWI6VG91Y2hUeXBlPgogICAgPC9yZGY6bGk+CiAgIDwvcmRmOlNlcT4KICA8L0F0dHJpYjpBZHM+CiA8L3JkZjpEZXNjcmlwdGlvbj4KCiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0nJwogIHhtbG5zOmRjPSdodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyc+CiAgPGRjOnRpdGxlPgogICA8cmRmOkFsdD4KICAgIDxyZGY6bGkgeG1sOmxhbmc9J3gtZGVmYXVsdCc+VmFsaWQgQWdlbmRhIFlvdVR1YmUgVGh1bWJuYWlscyAtIDE8L3JkZjpsaT4KICAgPC9yZGY6QWx0PgogIDwvZGM6dGl0bGU+CiA8L3JkZjpEZXNjcmlwdGlvbj4KPC9yZGY6UkRGPgo8L3g6eG1wbWV0YT4KPD94cGFja2V0IGVuZD0ncic/Pg==";
+      const LOGO_DATA = "assets/va-logo-wide.png";
 
       const readinessChecks = [
         { id: "documented", label: "Easy to explain", tip: "" },
@@ -1616,6 +1825,23 @@
         return bytes;
       }
 
+      async function toPngBytes(dataUrl) {
+        try {
+          const img = await loadImage(dataUrl);
+          if (!img) return null;
+          const canvas = document.createElement("canvas");
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0);
+          const pngUrl = canvas.toDataURL("image/png");
+          return dataUrlToUint8(pngUrl);
+        } catch (err) {
+          console.warn("PNG conversion failed", err);
+          return null;
+        }
+      }
+
       async function createMatrixPreview(tasksWithMeta, width = 520, height = 360) {
         const canvas = document.createElement("canvas");
         canvas.width = width;
@@ -1627,196 +1853,367 @@
         return canvas.toDataURL("image/png");
       }
 
+      function buildOpportunities(tasksWithMeta) {
+        return [...tasksWithMeta].sort((a, b) => b.metrics.savings - a.metrics.savings).slice(0, 2);
+      }
+
+      function buildPriorityNote(task) {
+        const priority = task.priority || "";
+        if (priority === "Quick Win") return "Fast to deliver with low/no-code. Unlock savings quickly.";
+        if (priority === "Strategic Bet") return "Higher effort, higher upside. Best planned as a scoped project.";
+        if (priority === "Hobby") return "Good learning opportunity, lower business impact.";
+        if (priority === "Trap") return "Complexity outweighs value. Do not automate first.";
+        return "Reviewed against readiness and pain.";
+      }
+
+      function wrapLinesPdf(text, font, size, maxWidth) {
+        const words = String(text || "").split(" ");
+        const lines = [];
+        let current = "";
+        words.forEach((word) => {
+          const test = current ? `${current} ${word}` : word;
+          if (font.widthOfTextAtSize(test, size) > maxWidth && current) {
+            lines.push(current);
+            current = word;
+          } else {
+            current = test;
+          }
+        });
+        if (current) lines.push(current);
+        return lines;
+      }
+
+      function hexToRgb(hex) {
+        const parsed = hex.replace("#", "");
+        const bigint = parseInt(parsed, 16);
+        const r = (bigint >> 16) & 255;
+        const g = (bigint >> 8) & 255;
+        const b = bigint & 255;
+        return { r: r / 255, g: g / 255, b: b / 255 };
+      }
+
+      async function fetchFontBytes(urls) {
+        const list = Array.isArray(urls) ? urls : [urls];
+        for (const url of list) {
+          try {
+            const res = await fetch(url);
+            if (!res.ok) throw new Error("font fetch failed");
+            const buf = await res.arrayBuffer();
+            return new Uint8Array(buf);
+          } catch (err) {
+            console.warn("Font fetch failed", err);
+          }
+        }
+        return null;
+      }
+
+      function drawTextRight(page, text, xRight, y, size, font, color) {
+        const width = font.widthOfTextAtSize(String(text), size);
+        page.drawText(String(text), { x: xRight - width, y, size, font, color });
+      }
+
+      function addLinkAnnotation(doc, page, x, yTop, w, h, url) {
+        if (!url) return;
+        const { PDFName, PDFArray, PDFNumber, PDFString } = PDFLib;
+        const ctx = doc.context;
+        const yBottom = yTop - h;
+        const rect = ctx.obj([x, yBottom, x + w, yTop]);
+        const action = ctx.obj({
+          Type: PDFName.of("Action"),
+          S: PDFName.of("URI"),
+          URI: PDFString.of(url),
+        });
+        const linkAnnot = ctx.obj({
+          Type: PDFName.of("Annot"),
+          Subtype: PDFName.of("Link"),
+          Rect: rect,
+          Border: ctx.obj([0, 0, 0]),
+          A: action,
+        });
+        const annots = page.node.lookupMaybe(PDFName.of("Annots"), PDFArray) || ctx.obj([]);
+        annots.push(linkAnnot);
+        page.node.set(PDFName.of("Annots"), annots);
+      }
+
       async function buildReportPdf(tasksWithMeta, totals, leadMeta) {
         const pdfLib = window.PDFLib;
-        if (!pdfLib || !pdfLib.PDFDocument) throw new Error("PDF library not loaded");
-        const { PDFDocument, rgb, StandardFonts } = pdfLib;
+        const { PDFDocument, rgb, PDFName, PDFArray, PDFNumber, PDFString } = pdfLib;
         const doc = await PDFDocument.create();
-        const pageSize = { width: 612, height: 792 }; // US Letter
-        const margin = 46;
-        const logoBytes = dataUrlToUint8(LOGO_DATA);
-        const logoImage = await doc.embedPng(logoBytes);
-        const fontRegular = await doc.embedFont(StandardFonts.Helvetica);
-        const fontBold = await doc.embedFont(StandardFonts.HelveticaBold);
-        const textColor = rgb(13 / 255, 34 / 255, 54 / 255);
-        const accent = rgb(244 / 255, 136 / 255, 71 / 255);
-        const primary = rgb(19 / 255, 64 / 255, 97 / 255);
+        const pageSize = { width: 595.28, height: 841.89 }; // A4 portrait
+        const margin = 36;
+        const grid = 8;
+        const headerH = 56;
+        const accentColor = hexToRgb("#F48847");
+        const darkColor = hexToRgb("#134061");
+        const lightBorder = rgb(0.88, 0.92, 0.96);
+        const pageBg = rgb(0.97, 0.98, 0.99);
+
+        // Use built-in fonts to avoid remote fetch failures
+        const fontRegular = await doc.embedFont(pdfLib.StandardFonts.Helvetica);
+        const fontBold = await doc.embedFont(pdfLib.StandardFonts.HelveticaBold);
+
+        const logoBytes = await toPngBytes(LOGO_DATA);
+        let logoImage = null;
+        if (logoBytes) {
+          try {
+            logoImage = await doc.embedPng(logoBytes);
+          } catch (err) {
+            console.warn("Logo embed failed", err);
+            logoImage = null;
+          }
+        }
 
         const addFooter = (page, pageNumber) => {
-          page.drawLine({ start: { x: margin, y: 36 }, end: { x: pageSize.width - margin, y: 36 }, color: rgb(0.85, 0.9, 0.95), thickness: 0.6 });
-          page.drawText("Valid Agenda • Automation ROI", { x: margin, y: 20, size: 9, font: fontRegular, color: rgb(0.4, 0.48, 0.56) });
-          page.drawText(`Page ${pageNumber}`, { x: pageSize.width - margin - 40, y: 20, size: 9, font: fontRegular, color: rgb(0.4, 0.48, 0.56) });
+          page.drawLine({ start: { x: margin, y: 32 }, end: { x: pageSize.width - margin, y: 32 }, color: rgb(0.86, 0.9, 0.94), thickness: 0.6 });
+          page.drawText("validagenda.com", { x: margin, y: 18, size: 10, font: fontRegular, color: rgb(0.42, 0.5, 0.6) });
+          page.drawText(`Page ${pageNumber} of 2`, { x: pageSize.width - margin - 70, y: 18, size: 10, font: fontRegular, color: rgb(0.42, 0.5, 0.6) });
         };
 
-        const drawStatBlock = (page, x, y, label, value) => {
-          page.drawRectangle({ x, y: y - 4, width: 138, height: 62, color: rgb(0.97, 0.98, 0.99), borderColor: rgb(0.85, 0.9, 0.95), borderWidth: 1, radius: 8 });
-          page.drawText(label, { x: x + 10, y: y + 36, size: 9.5, font: fontRegular, color: rgb(0.35, 0.42, 0.5) });
-          page.drawText(value, { x: x + 10, y: y + 16, size: 14, font: fontBold, color: accent });
-        };
-
-        const drawSectionTitle = (page, x, y, title) => {
-          page.drawRectangle({ x, y: y - 6, width: 8, height: 24, color: accent });
-          page.drawText(title, { x: x + 14, y: y, size: 16, font: fontBold, color: primary });
+        const drawSectionTitle = (page, y, title) => {
+          page.drawRectangle({ x: margin, y: y - 4, width: 8, height: 20, color: rgb(accentColor.r, accentColor.g, accentColor.b) });
+          page.drawText(title, { x: margin + 14, y, size: 15, font: fontBold, color: rgb(darkColor.r, darkColor.g, darkColor.b) });
           return y - 24;
         };
 
-        const paybackWeeks = totals.savings > 0 ? (totals.annualCost / totals.savings) * 52 : null;
-        const formattedPayback = paybackWeeks ? `${Math.max(1, paybackWeeks).toFixed(1)} wks est. payback` : "Payback not available";
-        const leadName = [leadMeta.firstName, leadMeta.lastName].filter(Boolean).join(" ").trim();
-        const preparedFor = leadName || "Your team";
-        const preparedRole = leadMeta.role ? ` • ${leadMeta.role}` : "";
-        const today = new Date();
-        const dateStr = today.toLocaleDateString();
+        const drawTile = (page, x, y, w, h, label, value, accentValue = false) => {
+          page.drawRectangle({ x, y, width: w, height: h, color: rgb(1, 1, 1), borderColor: lightBorder, borderWidth: 1, radius: 10 });
+          page.drawText(label, { x: x + 12, y: y + h - 18, size: 11, font: fontBold, color: rgb(darkColor.r, darkColor.g, darkColor.b) });
+          page.drawText(value, { x: x + 12, y: y + h - 36, size: 14, font: fontBold, color: accentValue ? rgb(accentColor.r, accentColor.g, accentColor.b) : rgb(darkColor.r, darkColor.g, darkColor.b) });
+        };
 
-        // Cover page
+        const drawOpportunityCard = (page, x, y, w, h, task) => {
+          page.drawRectangle({ x, y, width: w, height: h, color: rgb(1, 1, 1), borderColor: lightBorder, borderWidth: 1, radius: 10 });
+          page.drawText(task.task || "Untitled task", { x: x + 10, y: y + h - 18, size: 13, font: fontBold, color: rgb(darkColor.r, darkColor.g, darkColor.b) });
+          const priorityText = task.priority || "Priority";
+          const pillW = fontBold.widthOfTextAtSize(priorityText, 10) + 12;
+          page.drawRectangle({ x: x + w - pillW - 10, y: y + h - 26, width: pillW, height: 16, color: rgb(1, 1, 1), borderColor: rgb(accentColor.r, accentColor.g, accentColor.b), borderWidth: 1, radius: 8 });
+          page.drawText(priorityText, { x: x + w - pillW - 6, y: y + h - 20, size: 10, font: fontBold, color: rgb(accentColor.r, accentColor.g, accentColor.b) });
+          page.drawText(`Annual cost ${formatCurrency(task.metrics.annualCost)} · Savings ${formatCurrency(task.metrics.savings)}`, {
+            x: x + 10,
+            y: y + h - 36,
+            size: 11,
+            font: fontRegular,
+            color: rgb(darkColor.r, darkColor.g, darkColor.b),
+          });
+          const noteLines = wrapLinesPdf(buildPriorityNote(task), fontRegular, 11, w - 20).slice(0, 2);
+          noteLines.forEach((line, idx) => {
+            page.drawText(line, { x: x + 10, y: y + h - 50 - idx * 13, size: 11, font: fontRegular, color: rgb(darkColor.r, darkColor.g, darkColor.b) });
+          });
+        };
+
+        const drawCTA = async (page, y, height, isPrimary = true) => {
+          page.drawRectangle({ x: margin, y: y - height, width: pageSize.width - margin * 2, height, color: rgb(darkColor.r, darkColor.g, darkColor.b), borderColor: lightBorder, borderWidth: 0, radius: 14 });
+          page.drawText(isPrimary ? "Want a 15-minute walkthrough?" : "Book an Evaluate Session", {
+            x: margin + 14,
+            y: y - 20,
+            size: isPrimary ? 14 : 13,
+            font: fontBold,
+            color: rgb(1, 1, 1),
+          });
+          if (isPrimary) {
+            const bullets = [
+              "Confirm your top Quick Win",
+              "Map the simplest low-maintenance workflow",
+              "Leave with a 30/60/90 plan and a costed estimate",
+            ];
+            bullets.forEach((b, idx) => {
+              page.drawText("•", { x: margin + 14, y: y - 36 - idx * 14, size: 11, font: fontBold, color: rgb(0.92, 0.96, 1) });
+              page.drawText(b, { x: margin + 22, y: y - 36 - idx * 14, size: 11, font: fontRegular, color: rgb(0.92, 0.96, 1) });
+            });
+            page.drawText("No jargon. No big-bang rebuild. Just measurable outcomes.", { x: margin + 14, y: y - 62 - bullets.length * 14, size: 10.5, font: fontRegular, color: rgb(0.9, 0.95, 1) });
+          } else {
+            page.drawText("Reply with your top task if you want a quick sanity check.", { x: margin + 14, y: y - 36, size: 11, font: fontRegular, color: rgb(0.92, 0.96, 1) });
+            page.drawText(MEETING_URL, { x: margin + 14, y: y - 52, size: 11, font: fontBold, color: rgb(accentColor.r, accentColor.g, accentColor.b) });
+            addLinkAnnotation(doc, page, margin + 12, y - 16, pageSize.width / 2, 20, MEETING_URL);
+          }
+          const buttonWidth = 190;
+          const buttonHeight = 38;
+          const buttonX = pageSize.width - margin - buttonWidth - 20;
+          const buttonY = y - (isPrimary ? height - 22 : height - 22);
+          page.drawRectangle({ x: buttonX, y: buttonY, width: buttonWidth, height: buttonHeight, color: rgb(accentColor.r, accentColor.g, accentColor.b), radius: 10 });
+          page.drawText("Book an Evaluate Session", { x: buttonX + 12, y: buttonY + 12, size: 12, font: fontBold, color: rgb(1, 1, 1) });
+          addLinkAnnotation(doc, page, buttonX, buttonY + buttonHeight, buttonWidth, buttonHeight, MEETING_URL);
+
+          const qr = await loadQrImage(MEETING_URL);
+          if (qr) {
+            const c = document.createElement("canvas");
+            c.width = 110;
+            c.height = 110;
+            c.getContext("2d").drawImage(qr, 0, 0, 110, 110);
+            const qrBytes = dataUrlToUint8(c.toDataURL("image/png"));
+            if (qrBytes) {
+              try {
+                const qrImg = await doc.embedPng(qrBytes);
+                page.drawImage(qrImg, { x: buttonX + buttonWidth - 60, y: buttonY - 60, width: 50, height: 50 });
+                addLinkAnnotation(doc, page, buttonX + buttonWidth - 60, buttonY - 10, 50, 50, MEETING_URL);
+              } catch (err) {
+                console.warn("QR embed failed", err);
+              }
+            }
+          }
+        };
+
+        const drawMatrix = (page, x, y, w, h, tasks) => {
+          const pad = 14;
+          page.drawRectangle({ x, y: y - h, width: w, height: h, color: rgb(1, 1, 1), borderColor: lightBorder, borderWidth: 1, radius: 10 });
+          const quadW = w / 2;
+          const quadH = h / 2;
+          page.drawRectangle({ x: x, y: y - quadH, width: quadW, height: quadH, color: rgb(1, 0.92, 0.92) }); // Trap
+          page.drawRectangle({ x: x + quadW, y: y - quadH, width: quadW, height: quadH, color: rgb(0.9, 0.95, 1) }); // Strategic Bet
+          page.drawRectangle({ x: x, y: y - h, width: quadW, height: quadH, color: rgb(0.93, 0.95, 0.97) }); // Hobby
+          page.drawRectangle({ x: x + quadW, y: y - h, width: quadW, height: quadH, color: rgb(1, 0.95, 0.92) }); // Quick Win
+          page.drawLine({ start: { x: x + quadW, y: y }, end: { x: x + quadW, y: y - h }, color: lightBorder, thickness: 1 });
+          page.drawLine({ start: { x: x, y: y - quadH }, end: { x: x + w, y: y - quadH }, color: lightBorder, thickness: 1 });
+          page.drawText("Trap", { x: x + pad, y: y - quadH + quadH / 2, size: 11, font: fontBold, color: rgb(darkColor.r, darkColor.g, darkColor.b) });
+          page.drawText("Strategic Bet", { x: x + quadW + pad, y: y - quadH + quadH / 2, size: 11, font: fontBold, color: rgb(darkColor.r, darkColor.g, darkColor.b) });
+          page.drawText("Hobby", { x: x + pad, y: y - h + quadH / 2, size: 11, font: fontBold, color: rgb(darkColor.r, darkColor.g, darkColor.b) });
+          page.drawText("Quick Win", { x: x + quadW + pad, y: y - h + quadH / 2, size: 11, font: fontBold, color: rgb(darkColor.r, darkColor.g, darkColor.b) });
+          page.drawText("Effort up", { x: x + 4, y: y - 12, size: 10, font: fontRegular, color: rgb(0.4, 0.48, 0.56) });
+          page.drawText("Impact right", { x: x + w - 80, y: y - h + 6, size: 10, font: fontRegular, color: rgb(0.4, 0.48, 0.56) });
+
+          const maxImpact = Math.max(...tasks.map((t) => t.metrics.annualCost), 1);
+          const innerW = w - pad * 2;
+          const innerH = h - pad * 2;
+
+          const mapEffort = (eff) => {
+            const level = (eff || "").toLowerCase();
+            if (level === "low") return 0.2;
+            if (level === "medium") return 0.5;
+            return 0.8;
+          };
+
+          tasks.slice(0, 6).forEach((t) => {
+            const impactRatio = Math.min(1, Math.max(0, t.metrics.annualCost / maxImpact));
+            const effortRatio = mapEffort(t.readinessEffort);
+            const px = x + pad + impactRatio * innerW;
+            const py = y - pad - (1 - effortRatio) * innerH;
+            page.drawCircle({ x: px, y: py, size: 5, color: rgb(accentColor.r, accentColor.g, accentColor.b), borderColor: rgb(1, 1, 1), borderWidth: 1.5 });
+          });
+        };
+
+        const capacityWeekly = totals.weeklyHours * 0.5;
+        const capacityAnnual = totals.annualHours * 0.5;
+        const leadName = [leadMeta.firstName, leadMeta.lastName, leadMeta.email].find((v) => v) || "your team";
+        const role = leadMeta.role ? ` · ${leadMeta.role}` : "";
+        const dateStr = new Date().toLocaleDateString();
+        const topTasks = buildOpportunities(tasksWithMeta);
+
+        // Page 1
         {
           const page = doc.addPage([pageSize.width, pageSize.height]);
-          page.drawRectangle({ x: 0, y: pageSize.height - 170, width: pageSize.width, height: 170, color: primary });
-          page.drawRectangle({ x: 0, y: pageSize.height - 190, width: pageSize.width, height: 20, color: accent });
-          page.drawText("Automation ROI Report", { x: margin, y: pageSize.height - 80, size: 28, font: fontBold, color: rgb(1, 1, 1) });
-          page.drawText(`Prepared for ${preparedFor}${preparedRole}`, { x: margin, y: pageSize.height - 110, size: 13, font: fontRegular, color: rgb(0.95, 0.97, 1) });
-          page.drawText(`Date: ${dateStr}`, { x: margin, y: pageSize.height - 130, size: 11, font: fontRegular, color: rgb(0.9, 0.95, 1) });
-          page.drawText("Valid Agenda • ROI-first automation", { x: margin, y: pageSize.height - 150, size: 11, font: fontRegular, color: rgb(0.88, 0.93, 1) });
-          const logoW = 160;
-          const logoH = (logoW / logoImage.width) * logoImage.height;
-          page.drawImage(logoImage, { x: pageSize.width - logoW - margin, y: pageSize.height - 110, width: logoW, height: logoH });
-          page.drawRectangle({ x: margin, y: pageSize.height - 260, width: pageSize.width - margin * 2, height: 150, color: rgb(0.98, 0.99, 1), borderColor: rgb(0.9, 0.94, 0.98), borderWidth: 1.2, radius: 12 });
-          page.drawText("What you’ll see inside", { x: margin + 14, y: pageSize.height - 230, size: 14, font: fontBold, color: textColor });
-          page.drawText("• Executive summary & savings headline", { x: margin + 14, y: pageSize.height - 250, size: 11, font: fontRegular, color: textColor });
-          page.drawText("• Top quick wins with next actions", { x: margin + 14, y: pageSize.height - 268, size: 11, font: fontRegular, color: textColor });
-          page.drawText("• Decision matrix and ROI detail", { x: margin + 14, y: pageSize.height - 286, size: 11, font: fontRegular, color: textColor });
+          page.drawRectangle({ x: 0, y: 0, width: pageSize.width, height: pageSize.height, color: pageBg });
+
+          // Header
+          page.drawRectangle({ x: margin, y: pageSize.height - margin - headerH, width: pageSize.width - margin * 2, height: headerH, color: rgb(darkColor.r, darkColor.g, darkColor.b), borderRadius: 12 });
+          if (logoImage) {
+            const logoW = 120;
+            const logoH = (logoW / logoImage.width) * logoImage.height;
+            page.drawImage(logoImage, { x: margin + 12, y: pageSize.height - margin - headerH + 10, width: logoW, height: logoH });
+          }
+          page.drawText("Automation ROI Report", { x: pageSize.width - margin - 200, y: pageSize.height - margin - headerH + 32, size: 16, font: fontBold, color: rgb(1, 1, 1) });
+          page.drawText(`Date: ${dateStr}`, { x: pageSize.width - margin - 200, y: pageSize.height - margin - headerH + 16, size: 11, font: fontRegular, color: rgb(0.9, 0.95, 1) });
+
+          let y = pageSize.height - margin - headerH - grid;
+          page.drawText(`Prepared for ${leadName}${role}`, { x: margin, y: y, size: 12, font: fontRegular, color: rgb(darkColor.r, darkColor.g, darkColor.b) });
+          page.drawText("validagenda.com", { x: pageSize.width - margin - 100, y: y, size: 12, font: fontBold, color: rgb(accentColor.r, accentColor.g, accentColor.b) });
+          y -= grid * 2;
+
+          // Hero card
+          const heroH = 72;
+          page.drawRectangle({ x: margin, y: y - heroH, width: pageSize.width - margin * 2, height: heroH, color: rgb(1, 1, 1), borderColor: lightBorder, borderWidth: 1, radius: 12 });
+          page.drawText("Your biggest time and cost leaks - quantified", { x: margin + 12, y: y - 20, size: 16, font: fontBold, color: rgb(darkColor.r, darkColor.g, darkColor.b) });
+          const heroLines = wrapLinesPdf(
+            "This report summarises the recurring work you captured and what 50% automation could return in time and dollars.",
+            fontRegular,
+            12,
+            pageSize.width - margin * 2 - 24
+          );
+          heroLines.forEach((line, idx) => page.drawText(line, { x: margin + 12, y: y - 36 - idx * 14, size: 12, font: fontRegular, color: rgb(0.35, 0.42, 0.5) }));
+          y -= heroH + grid * 2;
+
+          // Metrics 2x2
+          const cardW = (pageSize.width - margin * 2 - grid * 2) / 2;
+          const cardH = 62;
+          drawTile(page, margin, y - cardH, cardW, cardH, "Current annual cost", formatCurrency(totals.annualCost), true);
+          drawTile(page, margin + cardW + grid * 2, y - cardH, cardW, cardH, "Potential savings (50%)", formatCurrency(totals.savings), true);
+          drawTile(page, margin, y - cardH * 2 - grid, cardW, cardH, "Weekly hours captured", `${totals.weeklyHours.toFixed(1)} hrs`);
+          drawTile(page, margin + cardW + grid * 2, y - cardH * 2 - grid, cardW, cardH, "Capacity returned (weekly)", `${capacityWeekly.toFixed(1)} hrs`);
+          y -= cardH * 2 + grid * 3;
+
+          // Opportunities
+          y = drawSectionTitle(page, y, "Top opportunities");
+          const oppW = (pageSize.width - margin * 2 - grid * 2) / 2;
+          const oppH = 96;
+          topTasks.forEach((t, idx) => {
+            const ox = margin + idx * (oppW + grid * 2);
+            drawOpportunityCard(page, ox, y - oppH, oppW, oppH, t);
+          });
+          y -= oppH + grid * 2;
+          page.drawText("Quick Wins are typically the fastest to implement with low/no-code tools.", { x: margin, y, size: 10.5, font: fontRegular, color: rgb(0.45, 0.52, 0.62) });
+          y -= grid * 3;
+
+          // CTA
+          await drawCTA(page, y, 120, true);
+
           addFooter(page, 1);
         }
 
-        // Executive summary page
+        // Page 2
         {
           const page = doc.addPage([pageSize.width, pageSize.height]);
-          let y = pageSize.height - margin - 8;
-          y = drawSectionTitle(page, margin, y, "Executive Summary");
-          const statsY = y - 8;
-          const statX = [margin, margin + 150, margin + 300, margin + 450];
-          drawStatBlock(page, statX[0], statsY, "Annual cost", formatCurrency(totals.annualCost));
-          drawStatBlock(page, statX[1], statsY, "Estimated savings (50%)", formatCurrency(totals.savings));
-          drawStatBlock(page, statX[2], statsY, "Weekly hours", `${totals.weeklyHours.toFixed(1)} hrs`);
-          drawStatBlock(page, statX[3], statsY, "Annual hours", `${totals.annualHours.toFixed(1)} hrs`);
-          y = statsY - 90;
-          page.drawText("Narrative", { x: margin, y, size: 12, font: fontBold, color: primary });
-          const bullets = [
-            "We applied a 50% automation savings factor across your workflows.",
-            "The decision matrix scores effort via readiness toggles and pain level.",
-            "Quick Wins are high impact with low effort; Strategic Bets need sequencing.",
-            formattedPayback,
+          page.drawRectangle({ x: 0, y: 0, width: pageSize.width, height: pageSize.height, color: pageBg });
+          let y = pageSize.height - margin;
+
+          y = drawSectionTitle(page, y, "What you captured");
+          const tableW = pageSize.width - margin * 2;
+          const tableH = 8 * 18 + 32;
+          page.drawRectangle({ x: margin, y: y - tableH, width: tableW, height: tableH, color: rgb(1, 1, 1), borderColor: lightBorder, borderWidth: 1, radius: 12 });
+          const columns = [
+            { label: "Task", x: margin + 12, align: "left" },
+            { label: "Role", x: margin + 170, align: "left" },
+            { label: "Weekly hours", x: margin + 320, align: "right" },
+            { label: "Annual cost", x: margin + 430, align: "right" },
+            { label: "Savings (50%)", x: margin + 520, align: "right" },
+            { label: "Priority", x: margin + 560, align: "right" },
           ];
-          let bulletY = y - 18;
-          bullets.forEach((b) => {
-            page.drawText("•", { x: margin, y: bulletY, size: 11, font: fontBold, color: textColor });
-            page.drawText(b, { x: margin + 12, y: bulletY, size: 11, font: fontRegular, color: textColor });
-            bulletY -= 16;
-          });
-          addFooter(page, doc.getPageCount());
-        }
+          columns.forEach((col) => page.drawText(col.label, { x: col.x, y: y - 16, size: 10, font: fontBold, color: rgb(darkColor.r, darkColor.g, darkColor.b) }));
 
-        // Priority actions page
-        {
-          const page = doc.addPage([pageSize.width, pageSize.height]);
-          let y = pageSize.height - margin - 8;
-          y = drawSectionTitle(page, margin, y, "Priority Actions");
-          const quickWins = tasksWithMeta
-            .filter((t) => t.priorityClass === "quick")
-            .sort((a, b) => b.metrics.savings - a.metrics.savings)
-            .slice(0, 3);
-          const fillers = quickWins.length ? [] : tasksWithMeta.slice(0, 3);
-          const cards = quickWins.length ? quickWins : fillers;
-          const cardHeight = 120;
-          cards.forEach((task, idx) => {
-            const cardY = y - 16 - idx * (cardHeight + 10);
-            page.drawRectangle({ x: margin, y: cardY - cardHeight, width: pageSize.width - margin * 2, height: cardHeight, color: rgb(0.98, 0.99, 1), borderColor: rgb(0.88, 0.92, 0.96), borderWidth: 1.1, radius: 10 });
-            page.drawText(task.task || "Untitled task", { x: margin + 12, y: cardY - 16, size: 13, font: fontBold, color: primary });
-            page.drawText(task.role || "Owner", { x: margin + 12, y: cardY - 34, size: 10.5, font: fontRegular, color: textColor });
-            page.drawText(`${task.freq || 0}x/wk • ${task.minutes || 0} min • ${formatCurrency(task.metrics.annualCost)} /yr`, { x: margin + 12, y: cardY - 50, size: 10.5, font: fontRegular, color: textColor });
-            page.drawText(`Savings: ${formatCurrency(task.metrics.savings)}`, { x: margin + 12, y: cardY - 66, size: 10.5, font: fontBold, color: accent });
-            page.drawText(`Priority: ${task.priority}`, { x: margin + 280, y: cardY - 16, size: 11, font: fontBold, color: primary });
-            page.drawText(`Readiness: ${(task.readinessScore * 100).toFixed(0)}%`, { x: margin + 280, y: cardY - 34, size: 10.5, font: fontRegular, color: textColor });
-            page.drawText("Next action: Map the workflow and quick-win scope.", { x: margin + 280, y: cardY - 50, size: 10.5, font: fontRegular, color: textColor });
+          const rowHeight = 18;
+          const rows = tasksWithMeta.slice(0, 8);
+          rows.forEach((t, idx) => {
+            const rowY = y - 32 - idx * rowHeight;
+            if (idx % 2 === 0) page.drawRectangle({ x: margin, y: rowY - rowHeight + 4, width: tableW, height: rowHeight, color: rgb(0.985, 0.99, 0.995) });
+            page.drawText(t.task || "Untitled", { x: columns[0].x, y: rowY, size: 10, font: fontRegular, color: rgb(darkColor.r, darkColor.g, darkColor.b) });
+            page.drawText(t.role || "Owner", { x: columns[1].x, y: rowY, size: 10, font: fontRegular, color: rgb(darkColor.r, darkColor.g, darkColor.b) });
+            drawTextRight(page, t.metrics.weeklyHours.toFixed(1), columns[2].x, rowY, 10, fontRegular, rgb(darkColor.r, darkColor.g, darkColor.b));
+            drawTextRight(page, formatCurrency(t.metrics.annualCost), columns[3].x, rowY, 10, fontRegular, rgb(darkColor.r, darkColor.g, darkColor.b));
+            drawTextRight(page, formatCurrency(t.metrics.savings), columns[4].x, rowY, 10, fontRegular, rgb(accentColor.r, accentColor.g, accentColor.b));
+            drawTextRight(page, t.priority || "", columns[5].x, rowY, 10, fontBold, rgb(darkColor.r, darkColor.g, darkColor.b));
           });
-          page.drawText("Why it matters", { x: margin, y: margin + 120, size: 12, font: fontBold, color: primary });
-          page.drawText("Quick Wins build confidence and fund the bigger Strategic Bets. Schedule a walkthrough to sequence them into a 30/60/90 delivery plan.", {
-            x: margin,
-            y: margin + 102,
-            size: 11,
-            font: fontRegular,
-            color: textColor,
-          });
-          addFooter(page, doc.getPageCount());
-        }
-
-        // ROI detail table (paginate)
-        const tableHeaders = ["Task", "Owner", "Annual Cost", "Savings", "Priority"];
-        const colX = [margin, margin + 190, margin + 300, margin + 400, margin + 500];
-        const rowsPerPage = 18;
-        let remaining = [...tasksWithMeta];
-        while (remaining.length) {
-          const page = doc.addPage([pageSize.width, pageSize.height]);
-          let y = pageSize.height - margin - 8;
-          y = drawSectionTitle(page, margin, y, "ROI Detail");
-          page.drawRectangle({ x: margin, y: y - 18, width: pageSize.width - margin * 2, height: 22, color: rgb(0.95, 0.97, 0.99) });
-          tableHeaders.forEach((h, i) => {
-            page.drawText(h, { x: colX[i], y: y - 10, size: 10, font: fontBold, color: primary });
-          });
-          y -= 32;
-          const current = remaining.splice(0, rowsPerPage);
-          current.forEach((row, idx) => {
-            const rowY = y - idx * 18;
-            const isEven = idx % 2 === 0;
-            if (isEven) {
-              page.drawRectangle({ x: margin, y: rowY - 6, width: pageSize.width - margin * 2, height: 18, color: rgb(0.985, 0.99, 0.995) });
-            }
-            page.drawText(row.task || "Untitled", { x: colX[0], y: rowY, size: 10, font: fontRegular, color: textColor });
-            page.drawText(row.role || "Owner", { x: colX[1], y: rowY, size: 10, font: fontRegular, color: textColor });
-            page.drawText(formatCurrency(row.metrics.annualCost), { x: colX[2], y: rowY, size: 10, font: fontRegular, color: textColor });
-            page.drawText(formatCurrency(row.metrics.savings), { x: colX[3], y: rowY, size: 10, font: fontRegular, color: accent });
-            page.drawText(row.priority, { x: colX[4], y: rowY, size: 10, font: fontBold, color: primary });
-          });
-          addFooter(page, doc.getPageCount());
-        }
-
-        // Matrix + CTA page
-        {
-          const page = doc.addPage([pageSize.width, pageSize.height]);
-          let y = pageSize.height - margin - 8;
-          y = drawSectionTitle(page, margin, y, "Decision Matrix");
-          const matrixDataUrl = await createMatrixPreview(tasksWithMeta);
-          const matrixBytes = dataUrlToUint8(matrixDataUrl);
-          const matrixImg = await doc.embedPng(matrixBytes);
-          const imgW = pageSize.width - margin * 2;
-          const imgH = (matrixImg.height / matrixImg.width) * imgW;
-          page.drawImage(matrixImg, { x: margin, y: y - imgH - 10, width: imgW, height: imgH });
-          page.drawText("Interpretation: Quick Wins are high-impact with low effort; Strategic Bets have upside but need sequencing and change management.", {
-            x: margin,
-            y: y - imgH - 24,
-            size: 11,
-            font: fontRegular,
-            color: textColor,
-          });
-          const ctaY = margin + 120;
-          page.drawRectangle({ x: margin, y: ctaY, width: pageSize.width - margin * 2, height: 110, color: rgb(0.98, 0.99, 1), borderColor: rgb(0.88, 0.92, 0.96), borderWidth: 1, radius: 10 });
-          page.drawText("Next 30/60/90", { x: margin + 12, y: ctaY + 84, size: 12, font: fontBold, color: primary });
-          page.drawText("30: Validate scope + quick wins", { x: margin + 12, y: ctaY + 64, size: 10.5, font: fontRegular, color: textColor });
-          page.drawText("60: Build and deploy priority automations", { x: margin + 12, y: ctaY + 46, size: 10.5, font: fontRegular, color: textColor });
-          page.drawText("90: Measure outcomes + scale playbooks", { x: margin + 12, y: ctaY + 28, size: 10.5, font: fontRegular, color: textColor });
-          page.drawText("Book a walkthrough:", { x: margin + 300, y: ctaY + 64, size: 12, font: fontBold, color: primary });
-          page.drawText(MEETING_URL, { x: margin + 300, y: ctaY + 46, size: 10.5, font: fontRegular, color: accent });
-          const qr = await loadQrImage(MEETING_URL);
-          if (qr) {
-            const qrCanvas = document.createElement("canvas");
-            qrCanvas.width = 200;
-            qrCanvas.height = 200;
-            qrCanvas.getContext("2d").drawImage(qr, 0, 0, 200, 200);
-            const qrBytes = dataUrlToUint8(qrCanvas.toDataURL("image/png"));
-            const qrImg = await doc.embedPng(qrBytes);
-            page.drawImage(qrImg, { x: pageSize.width - margin - 80, y: ctaY + 20, width: 60, height: 60 });
+          if (tasksWithMeta.length > rows.length) {
+            page.drawText(`+${tasksWithMeta.length - rows.length} more tasks not shown`, { x: margin + 10, y: y - 32 - rows.length * rowHeight - 10, size: 10, font: fontRegular, color: rgb(0.45, 0.52, 0.62) });
           }
-          addFooter(page, doc.getPageCount());
+          y = y - tableH - grid * 2;
+
+          // Matrix
+          y = drawSectionTitle(page, y, "Portfolio view");
+          drawMatrix(page, margin, y - 260, tableW, 260, tasksWithMeta);
+          y = y - 260 - grid * 2;
+          page.drawText("Impact uses annual cost. Effort uses readiness toggles.", { x: margin, y, size: 10, font: fontRegular, color: rgb(0.45, 0.52, 0.62) });
+          y -= grid * 3;
+
+          // If you do nothing
+          y = drawSectionTitle(page, y, "If you do nothing");
+          const calloutH = 54;
+          page.drawRectangle({ x: margin, y: y - calloutH, width: tableW, height: calloutH, color: rgb(1, 1, 1), borderColor: lightBorder, borderWidth: 1, radius: 10 });
+          page.drawText(`You are currently spending ~${formatCurrency(totals.annualCost)} per year on these tasks.`, { x: margin + 12, y: y - 20, size: 11, font: fontRegular, color: rgb(darkColor.r, darkColor.g, darkColor.b) });
+          page.drawText(`At 50% automation, you could reclaim ~${capacityAnnual.toFixed(1)} hours per year.`, { x: margin + 12, y: y - 36, size: 11, font: fontRegular, color: rgb(darkColor.r, darkColor.g, darkColor.b) });
+          y -= calloutH + grid * 3;
+
+          // CTA repeat
+          await drawCTA(page, y, 94, false);
+
+          addFooter(page, 2);
         }
 
         const pdfBytes = await doc.save();

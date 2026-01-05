@@ -1,6 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Manrope:wght@400;600;700&display=swap');
 
-:root {
+/* Scoped to .va-n8n-scope or .n8n-form so it won't leak into host pages. */
+
+:where(.va-n8n-scope, .n8n-form) {
 	--va-primary: #134061;
 	--va-secondary: #0f2b45;
 	--va-accent: #f48847;
@@ -83,27 +85,28 @@
 	--opacity-placeholder: 0.5;
 }
 
-body {
-	margin: 0;
-	padding: 0;
+:where(.va-n8n-scope, .n8n-form) {
 	font-family: var(--font-family);
 	font-size: var(--font-size-body);
 	color: var(--va-text);
 	background: var(--color-background);
 	line-height: 1.6;
+	margin: 0;
+	padding: 0;
 }
 
-h1, h2, h3, h4, h5, h6 {
+:where(.va-n8n-scope h1, .n8n-form h1, .va-n8n-scope h2, .n8n-form h2, .va-n8n-scope h3, .n8n-form h3, .va-n8n-scope h4, .n8n-form h4, .va-n8n-scope h5, .n8n-form h5, .va-n8n-scope h6, .n8n-form h6) {
 	font-family: "Poppins", var(--font-family);
 	color: var(--va-primary);
 	margin: 0 0 12px;
 }
 
-a {
+:where(.va-n8n-scope a, .n8n-form a) {
 	color: var(--color-link);
 }
 
-form {
+:where(.va-n8n-scope) form,
+:where(.n8n-form) {
 	background: var(--color-card-bg);
 	border: 1px solid var(--color-card-border);
 	border-radius: var(--va-radius);
@@ -112,7 +115,7 @@ form {
 	box-sizing: border-box;
 }
 
-label {
+:where(.va-n8n-scope label, .n8n-form label) {
 	display: block;
 	font-weight: 600;
 	font-size: var(--font-size-label);
@@ -120,9 +123,7 @@ label {
 	margin-bottom: 6px;
 }
 
-input,
-textarea,
-select {
+:where(.va-n8n-scope input, .n8n-form input, .va-n8n-scope textarea, .n8n-form textarea, .va-n8n-scope select, .n8n-form select) {
 	width: 100%;
 	box-sizing: border-box;
 	font: inherit;
@@ -136,21 +137,18 @@ select {
 	transition: border-color 150ms ease, box-shadow 150ms ease;
 }
 
-input:focus,
-textarea:focus,
-select:focus {
+:where(.va-n8n-scope input, .n8n-form input, .va-n8n-scope textarea, .n8n-form textarea, .va-n8n-scope select, .n8n-form select):focus {
 	border-color: var(--color-focus-border);
 	box-shadow: 0 0 0 3px rgba(244, 136, 71, 0.2);
 }
 
-input::placeholder,
-textarea::placeholder {
+:where(.va-n8n-scope input, .n8n-form input)::placeholder,
+:where(.va-n8n-scope textarea, .n8n-form textarea)::placeholder {
 	color: var(--va-muted);
 	opacity: var(--opacity-placeholder);
 }
 
-button,
-input[type="submit"] {
+:where(.va-n8n-scope button, .n8n-form button, .va-n8n-scope input[type="submit"], .n8n-form input[type="submit"]) {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
@@ -166,47 +164,39 @@ input[type="submit"] {
 	transition: transform 120ms ease, box-shadow 150ms ease, background 150ms ease;
 }
 
-button:hover,
-input[type="submit"]:hover {
+:where(.va-n8n-scope button, .n8n-form button, .va-n8n-scope input[type="submit"], .n8n-form input[type="submit"]):hover {
 	background: #0f2b45;
 	transform: translateY(-1px);
 	box-shadow: 0 16px 34px rgba(19, 64, 97, 0.34);
 }
 
-button:active,
-input[type="submit"]:active {
+:where(.va-n8n-scope button, .n8n-form button, .va-n8n-scope input[type="submit"], .n8n-form input[type="submit"]):active {
 	transform: translateY(0);
 	box-shadow: 0 8px 22px rgba(19, 64, 97, 0.22);
 }
 
-.n8n-form__title,
-form h1,
-form h2 {
+:where(.va-n8n-scope .n8n-form__title, .n8n-form .n8n-form__title, .va-n8n-scope form h1, .n8n-form h1, .va-n8n-scope form h2, .n8n-form h2) {
 	font-size: 22px;
 	margin-bottom: 6px;
 	text-align: center;
 }
 
-.n8n-form__description {
+:where(.va-n8n-scope .n8n-form__description, .n8n-form .n8n-form__description) {
 	color: var(--color-header-subtext);
 	font-size: 15px;
 	margin: 0 0 18px;
 	text-align: center;
 }
 
-.n8n-form__field,
-.form-group,
-.form-row {
+:where(.va-n8n-scope .n8n-form__field, .n8n-form .n8n-form__field, .va-n8n-scope .form-group, .n8n-form .form-group, .va-n8n-scope .form-row, .n8n-form .form-row) {
 	margin-bottom: 16px;
 }
 
-.n8n-form__required,
-label .required,
-label .req {
+:where(.va-n8n-scope .n8n-form__required, .n8n-form .n8n-form__required, .va-n8n-scope label .required, .n8n-form label .required, .va-n8n-scope label .req, .n8n-form label .req) {
 	color: var(--color-required);
 }
 
-.n8n-form__footer {
+:where(.va-n8n-scope .n8n-form__footer, .n8n-form .n8n-form__footer) {
 	margin-top: 18px;
 	display: flex;
 	justify-content: flex-end;
