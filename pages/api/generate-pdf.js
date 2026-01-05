@@ -1,29 +1,9 @@
 // Serverless PDF generator for Vercel using @react-pdf/renderer.
 
-const { pdf, Document, Page, View, Text, Image, Link, StyleSheet } = require("@react-pdf/renderer");
-const React = require("react");
+import React from "react";
+import { pdf, Document, Page, View, Text, Image, Link, StyleSheet } from "@react-pdf/renderer";
 
-module.exports = async function handler(req, res) {
-  if (req.method !== "POST") {
-    res.setHeader("Allow", "POST");
-    return res.status(405).json({ error: "Method not allowed" });
-  }
-  try {
-    const payload = typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body;
-    const proto = (req.headers["x-forwarded-proto"] || "https").split(",")[0];
-    const host = (req.headers["x-forwarded-host"] || req.headers.host || "").split(",")[0];
-    const origin = host ? `${proto}://${host}` : null;
-    const pdfBuffer = await renderPdf(payload || {}, origin);
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", "attachment; filename=Valid-Agenda-Automation-ROI-Report.pdf");
-    res.status(200).send(pdfBuffer);
-  } catch (err) {
-    console.error("PDF generation failed", err);
-    res.status(500).json({ error: "PDF generation failed" });
-  }
-};
-
-module.exports.config = {
+export const config = {
   runtime: "nodejs",
 };
 
@@ -235,7 +215,7 @@ async function renderPdf(payload, origin) {
   return pdfBuf;
 }
 
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
     return res.status(405).json({ error: "Method not allowed" });
