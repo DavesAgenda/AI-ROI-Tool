@@ -1829,18 +1829,30 @@
 
       async function loadReactPdfLib() {
         if (reactPdfLib && reactLib) return { reactPdfLib, reactLib };
-        try {
-          const [react, reactPdf] = await Promise.all([
-            import("https://esm.sh/react@18.2.0"),
-            import("https://esm.sh/@react-pdf/renderer@3.2.0?bundle&target=es2020"),
-          ]);
-          reactLib = react?.default || react;
-          reactPdfLib = reactPdf?.default || reactPdf;
-          return { reactPdfLib, reactLib };
-        } catch (err) {
-          console.error("React PDF import failed", err);
-          throw err;
+        const sources = [
+          {
+            react: "https://esm.sh/react@18.2.0",
+            pdf: "https://esm.sh/@react-pdf/renderer@3.2.0?bundle&target=es2020",
+          },
+          {
+            react: "https://cdn.skypack.dev/react@18.2.0",
+            pdf: "https://cdn.skypack.dev/@react-pdf/renderer@3.2.0",
+          },
+        ];
+        let lastErr = null;
+        for (const src of sources) {
+          try {
+            const [react, reactPdf] = await Promise.all([import(src.react), import(src.pdf)]);
+            reactLib = react?.default || react;
+            reactPdfLib = reactPdf?.default || reactPdf;
+            return { reactPdfLib, reactLib };
+          } catch (err) {
+            lastErr = err;
+            console.warn("React PDF import failed for source", src, err);
+          }
         }
+        console.error("React PDF import failed", lastErr);
+        throw lastErr || new Error("React PDF import failed");
       }
 
       async function buildQrDataUrl(url, size = 180) {
