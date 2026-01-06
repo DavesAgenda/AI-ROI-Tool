@@ -9,15 +9,15 @@ export const constants = {
 
 export const tokens = {
   colors: {
-    accent: "#F48847",
-    dark: "#134061",
-    muted: "#4a5b6d",
-    lightBg: "#f7f9fc",
+    accent: "#F48847", // Brand Orange
+    dark: "#0A0A0A",   // Brand Black
+    muted: "#64748b",
+    lightBg: "#F7F7F7", // Light Gray
     cardBg: "#ffffff",
-    border: "#e6edf5",
-    tableHeaderBg: "#eef4fb",
-    pillBg: "#fff3ec",
-    pillBorder: "#f6c3aa",
+    border: "#e5e7eb",
+    tableHeaderBg: "#F4F4F4",
+    pillBg: "#FFF1E7", // Light Orange
+    pillBorder: "#F48847",
   },
   radii: {
     card: 10,

@@ -5,11 +5,12 @@ import { GlassCard, Button, Input, Label, Badge, cn } from './UI';
 import { DecisionMatrix } from './DecisionMatrix';
 import { TaskWizard } from './TaskWizard';
 import { Plus, Trash2, Edit2, activity, ArrowRight, Save, X, CheckCircle, AlertCircle, FileText, Download } from 'lucide-react';
+import html2canvas from 'html2canvas';
 
 // Constants
 const WORKING_DAYS = 261;
 const STORAGE_KEY = 'va-roi-state';
-const WEBHOOK_URL = "https://hook.eu1.n8n.cloud/webhook/valid-agenda-roi-submission"; // From original code
+const WEBHOOK_URL = "https://hooks.validagenda.dev/webhook/roi-calculator";
 
 const READINESS_FACTORS = [
     { id: 'process', label: 'Process is clearly defined', weight: 5 },
@@ -129,10 +130,26 @@ export default function Calculator() {
         setIsSubmitting(true);
         setLeadStatus({ msg: 'Generating your report...', type: 'info' });
 
+        // Capture Matrix Image
+        let matrixImage = null;
+        try {
+            const matrixEl = document.getElementById('decision-matrix-container');
+            if (matrixEl) {
+                const canvas = await html2canvas(matrixEl, {
+                    backgroundColor: '#0f172a', // Slate 900 to match background
+                    scale: 2 // High res
+                });
+                matrixImage = canvas.toDataURL('image/png');
+            }
+        } catch (e) {
+            console.error("Failed to capture matrix", e);
+        }
+
         const payload = {
             tasks,
             totals,
-            lead
+            lead,
+            matrixImage
         };
 
         try {
@@ -232,7 +249,7 @@ export default function Calculator() {
 
             {/* Matrix Grid - Full Width now */}
             <div className="w-full">
-                <GlassCard className="p-6">
+                <GlassCard id="decision-matrix-container" className="p-6 h-[600px] flex flex-col">
                     <DecisionMatrix tasks={tasks} />
                     <div className="mt-4 flex justify-center text-sm text-slate-400 gap-8">
                         <span className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-emerald-400" /> Quick Payback</span>

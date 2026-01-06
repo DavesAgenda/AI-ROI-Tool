@@ -61,8 +61,8 @@ function buildReportData(payload, origin) {
     logoUrl && (logoUrl.startsWith("http") || logoUrl.startsWith("data:"))
       ? logoUrl
       : origin
-      ? `${origin}/assets/va-logo-wide.png`
-      : null;
+        ? `${origin}/assets/va-logo-wide.png`
+        : null;
 
   return {
     preparedForName: [lead.firstName, lead.lastName].filter(Boolean).join(" ").trim() || "your team",
@@ -75,7 +75,7 @@ function buildReportData(payload, origin) {
     capacityReturnedWeekly: weeklyHours * 0.5,
     opportunities: mapOpportunities(tasks),
     tasks: mapTasks(tasks),
-    matrixImageSrc: matrixDataUrl || null,
+    matrixImageSrc: payload.matrixImage || null,
     matrixCaption: "Impact vs effort portfolio view",
     doNothingAnnualCost: totals.annualCost || 0,
     doNothingHoursPerYear: annualHours * 0.5,
