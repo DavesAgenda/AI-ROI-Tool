@@ -82,6 +82,19 @@ export const styles = StyleSheet.create({
     alignItems: "flex-end",
     justifyContent: "center",
   },
+  headerRight: {
+    width: "60%",
+    flexDirection: "column",
+    alignItems: "flex-end",
+    justifyContent: "center",
+  },
+  headerTitleRight: {
+    fontSize: 14,
+    fontWeight: 600,
+    lineHeight: 16,
+    color: "#ffffff",
+    textAlign: "right",
+  },
   section: {
     marginBottom: 10,
   },

@@ -4,7 +4,6 @@ import { styles, tokens } from "../styles";
 import { truncate } from "../utils/truncate";
 
 export function Header({ logoSrc, preparedForName, preparedForEmail, reportDate }) {
-  const preparedLine = preparedForEmail ? `${preparedForName} · ${preparedForEmail}` : preparedForName;
   return (
     <>
       <View style={styles.headerBar} fixed />
@@ -14,8 +13,8 @@ export function Header({ logoSrc, preparedForName, preparedForEmail, reportDate 
         ) : (
           <Text style={{ fontSize: 12, color: "#fff" }}>Valid Agenda</Text>
         )}
-        <View style={styles.headerTitleBlock}>
-          <Text style={{ fontSize: 14, fontWeight: 600, lineHeight: 16, color: "#ffffff", textAlign: "right" }}>Your Automation ROI Report</Text>
+        <View style={styles.headerRight}>
+          <Text style={styles.headerTitleRight}>Your Automation ROI Report</Text>
         </View>
       </View>
     </>
