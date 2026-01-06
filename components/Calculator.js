@@ -45,7 +45,11 @@ export default function Calculator() {
         if (saved) {
             try {
                 const parsed = JSON.parse(saved);
-                if (parsed.tasks) setTasks(parsed.tasks);
+                if (parsed.tasks && Array.isArray(parsed.tasks)) {
+                    // Filter out invalid tasks to prevent crashes
+                    const validTasks = parsed.tasks.filter(t => t && t.metrics);
+                    setTasks(validTasks);
+                }
             } catch (e) {
                 console.error("Failed to load state", e);
             }
@@ -74,11 +78,14 @@ export default function Calculator() {
         return total === 0 ? 0 : score / total;
     };
 
-    const totals = tasks.reduce((acc, t) => ({
-        hours: acc.hours + t.metrics.annualHours,
-        cost: acc.cost + t.metrics.annualCost,
-        count: acc.count + 1
-    }), { hours: 0, cost: 0, count: 0 });
+    const totals = tasks.reduce((acc, t) => {
+        if (!t || !t.metrics) return acc;
+        return {
+            hours: acc.hours + (t.metrics.annualHours || 0),
+            cost: acc.cost + (t.metrics.annualCost || 0),
+            count: acc.count + 1
+        };
+    }, { hours: 0, cost: 0, count: 0 });
 
     // --- Handlers ---
     const handleSaveTask = (values) => {
