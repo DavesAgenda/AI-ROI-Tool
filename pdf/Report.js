@@ -8,6 +8,7 @@ import { MatrixSection } from "./components/MatrixSection";
 import { DoNothingCallout } from "./components/DoNothingCallout";
 import { CTA } from "./components/CTA";
 import { DecisionSummary } from "./components/DecisionSummary";
+import { SectionHeader } from "./components/SectionHeader";
 import { styles, tokens } from "./styles";
 import { formatCurrency, formatHours, formatDate } from "./utils/format";
 import { truncate } from "./utils/truncate";
@@ -58,11 +59,6 @@ export function Report({ data }) {
   const preparedForName = data.preparedForName || "your team";
   const preparedForEmail = data.preparedForEmail || "";
   const reportDate = formatDate(data.reportDate);
-  const chip = (label) => (
-    <View style={styles.chip}>
-      <Text style={{ fontSize: tokens.type.tiny.fontSize, color: tokens.colors.accent }}>{label}</Text>
-    </View>
-  );
 
   return (
     <Document>
@@ -70,19 +66,19 @@ export function Report({ data }) {
         <View style={styles.pageBg} fixed />
         <Header logoSrc={data.logoSrc} preparedForName={preparedForName} preparedForEmail={preparedForEmail} reportDate={reportDate} />
         <View style={styles.section}>
-          {chip("SUMMARY")}
+          <SectionHeader chipLabel="SUMMARY" title="" first />
           <SummaryTiles tiles={tiles} />
         </View>
         <View style={styles.section}>
-          {chip("DECISION SUMMARY")}
+          <SectionHeader chipLabel="DECISION SUMMARY" title="" />
           <DecisionSummary weeklyHours={data.weeklyHoursCaptured} potentialSavings={data.potentialSavings} bestOpportunityTitle={opps[0]?.title} />
         </View>
         <View style={styles.section}>
-          {chip("TOP OPPORTUNITIES")}
+          <SectionHeader chipLabel="TOP OPPORTUNITIES" title="" />
           <Opportunities items={opps} />
         </View>
         <View style={styles.section}>
-          {chip("TASK BREAKDOWN")}
+          <SectionHeader chipLabel="TASK BREAKDOWN" title="" />
           <TaskTable rows={rows} footnote={footnote} />
         </View>
       </Page>
@@ -91,15 +87,15 @@ export function Report({ data }) {
         <View style={styles.pageBg} fixed />
         <Header logoSrc={data.logoSrc} preparedForName={preparedForName} preparedForEmail={preparedForEmail} reportDate={reportDate} />
         <View style={styles.section}>
-          {chip("PORTFOLIO")}
+          <SectionHeader chipLabel="PORTFOLIO" title="" first />
           <MatrixSection imageSrc={data.matrixImageSrc} caption={data.matrixCaption || "Impact vs effort portfolio view"} />
         </View>
         <View style={styles.section}>
-          {chip("RISK OF INACTION")}
+          <SectionHeader chipLabel="RISK OF INACTION" title="" />
           <DoNothingCallout annualCost={data.doNothingAnnualCost} hoursPerYear={data.doNothingHoursPerYear} />
         </View>
         <View style={[styles.section, { padding: 0 }]} wrap={false}>
-          {chip("NEXT STEP")}
+          <SectionHeader chipLabel="NEXT STEP" title="" />
           <CTA bookingUrl={data.bookingUrl} qrDataUri={data.bookingQrDataUri} />
         </View>
       </Page>

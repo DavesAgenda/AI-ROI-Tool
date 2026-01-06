@@ -1,5 +1,12 @@
 import { StyleSheet } from "@react-pdf/renderer";
 
+export const constants = {
+  PAGE_PAD_X: 28,
+  PAGE_PAD_BOTTOM: 24,
+  HEADER_BAR_H: 56,
+  HEADER_SAFE_Y: 10,
+};
+
 export const tokens = {
   colors: {
     accent: "#F48847",
@@ -18,23 +25,23 @@ export const tokens = {
     image: 8,
   },
   spacing: {
-    pageX: 28,
-    pageY: 24,
+    pageX: constants.PAGE_PAD_X,
+    pageY: constants.PAGE_PAD_BOTTOM,
     gap: 12,
     columnGap: 16,
   },
   type: {
-    h1: { fontSize: 18, fontWeight: 600 },
-    h2: { fontSize: 12.5, fontWeight: 600 },
-    body: { fontSize: 10.5, fontWeight: 400 },
-    small: { fontSize: 9, fontWeight: 400 },
-    tiny: { fontSize: 8, fontWeight: 400 },
+    h1: { fontSize: 18, fontWeight: 600, lineHeight: 20 },
+    h2: { fontSize: 12.5, fontWeight: 600, lineHeight: 16 },
+    body: { fontSize: 10.5, fontWeight: 400, lineHeight: 14 },
+    small: { fontSize: 9, fontWeight: 400, lineHeight: 12 },
+    tiny: { fontSize: 8, fontWeight: 400, lineHeight: 10 },
   },
 };
 
 export const styles = StyleSheet.create({
   page: {
-    paddingTop: tokens.spacing.pageY + 56,
+    paddingTop: constants.HEADER_BAR_H + tokens.spacing.pageY + 14,
     paddingBottom: tokens.spacing.pageY,
     paddingHorizontal: tokens.spacing.pageX,
     fontSize: tokens.type.body.fontSize,
@@ -54,21 +61,26 @@ export const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    height: 56,
+    height: constants.HEADER_BAR_H,
     backgroundColor: tokens.colors.dark,
   },
   headerContent: {
     position: "absolute",
     top: 0,
-    left: tokens.spacing.pageX,
-    right: tokens.spacing.pageX,
-    height: 56,
+    left: 0,
+    right: 0,
+    height: constants.HEADER_BAR_H,
+    paddingLeft: constants.PAGE_PAD_X,
+    paddingRight: constants.PAGE_PAD_X,
+    paddingTop: constants.HEADER_SAFE_Y,
+    paddingBottom: constants.HEADER_SAFE_Y - 2,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
   headerTitleBlock: {
     alignItems: "flex-end",
+    justifyContent: "center",
   },
   section: {
     marginBottom: tokens.spacing.gap,
