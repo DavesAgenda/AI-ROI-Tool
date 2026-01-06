@@ -90,11 +90,11 @@ export function Report({ data }) {
           <SectionHeader chipLabel="PORTFOLIO" title="" first />
           <MatrixSection imageSrc={data.matrixImageSrc} caption={data.matrixCaption || "Impact vs effort portfolio view"} />
         </View>
-        <View style={styles.section}>
+        <View style={[styles.section, { marginBottom: 8 }]}>
           <SectionHeader chipLabel="RISK OF INACTION" title="" />
           <DoNothingCallout annualCost={data.doNothingAnnualCost} hoursPerYear={data.doNothingHoursPerYear} />
         </View>
-        <View style={[styles.section, { padding: 0 }]} wrap={false}>
+        <View style={[styles.section, { marginBottom: 0, padding: 0 }]} wrap={false}>
           <SectionHeader chipLabel="NEXT STEP" title="" />
           <CTA bookingUrl={data.bookingUrl} qrDataUri={data.bookingQrDataUri} />
         </View>
