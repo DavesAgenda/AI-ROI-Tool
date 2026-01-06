@@ -1,10 +1,10 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 /* Custom Base Styles */
 body {
-    background-color: #0f172a; /* Slate 900 */
-    color: #f8fafc; /* Slate 50 */
+    background-color: #0f172a;
+    /* Slate 900 */
+    color: #f8fafc;
+    /* Slate 50 */
     min-height: 100vh;
 }
