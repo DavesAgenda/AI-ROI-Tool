@@ -16,7 +16,7 @@ const headerCells = [
 const pillStyles = {
   Quick: { bg: tokens.colors.pillBg, border: tokens.colors.pillBorder, text: tokens.colors.accent },
   "Quick Win": { bg: tokens.colors.pillBg, border: tokens.colors.pillBorder, text: tokens.colors.accent },
-  "Strategic Bet": { bg: tokens.colors.tableHeaderBg, border: "#cfe0f3", text: tokens.colors.dark },
+  "Strategic Bet": { bg: tokens.colors.tableHeaderBg, border: tokens.colors.border, text: tokens.colors.dark },
   Trap: { bg: "#fbecee", border: "#f3c7cf", text: "#8a2f3d" },
   Hobby: { bg: "#f1f1f1", border: "#d7d7d7", text: tokens.colors.muted },
 };

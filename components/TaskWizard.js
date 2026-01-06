@@ -63,17 +63,17 @@ export function TaskWizard({ isOpen, onClose, onSave, initialValues, readinessFa
         <Modal isOpen={isOpen} onClose={onClose}>
             <div className="flex flex-col h-full max-h-[90vh]">
                 {/* Header */}
-                <div className="p-6 border-b border-white/10 flex justify-between items-center bg-slate-900">
+                <div className="p-6 border-b border-slate-200 flex justify-between items-center bg-white">
                     <div>
-                        <h3 className="text-xl font-bold text-white">
+                        <h3 className="text-xl font-bold text-slate-900">
                             {initialValues ? 'Edit Audit Item' : 'New Audit Item'}
                         </h3>
-                        <p className="text-sm text-slate-400">Step {step + 1} of {STEPS.length}: {STEPS[step].title}</p>
+                        <p className="text-sm text-slate-500">Step {step + 1} of {STEPS.length}: {STEPS[step].title}</p>
                     </div>
                     {annualCost > 0 && (
                         <div className="text-right">
-                            <div className="text-xs text-slate-500 uppercase tracking-wide">Est. Potential</div>
-                            <div className="text-emerald-400 font-bold font-mono">
+                            <div className="text-xs text-slate-400 uppercase tracking-wide">Est. Potential</div>
+                            <div className="text-brand-orange font-bold font-mono">
                                 {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(annualCost)}
                             </div>
                         </div>
@@ -81,16 +81,16 @@ export function TaskWizard({ isOpen, onClose, onSave, initialValues, readinessFa
                 </div>
 
                 {/* Progress Bar */}
-                <div className="h-1 bg-slate-800 w-full relative">
+                <div className="h-1 bg-slate-100 w-full relative">
                     <motion.div
-                        className="absolute h-full bg-gradient-to-r from-orange-500 to-amber-400"
+                        className="absolute h-full bg-brand-orange"
                         initial={{ width: 0 }}
                         animate={{ width: `${((step + 1) / STEPS.length) * 100}%` }}
                     />
                 </div>
 
                 {/* Body */}
-                <div className="p-6 md:p-8 overflow-y-auto flex-1 bg-slate-800/20">
+                <div className="p-6 md:p-8 overflow-y-auto flex-1 bg-slate-50">
                     <AnimatePresence mode="wait">
                         <motion.div
                             key={step}
@@ -163,13 +163,13 @@ export function TaskWizard({ isOpen, onClose, onSave, initialValues, readinessFa
                                     <div className="space-y-3">
                                         <div className="flex justify-between items-end">
                                             <Label>Pain / Friction Score</Label>
-                                            <span className="text-orange-400 font-bold text-xl">{values.pain}/10</span>
+                                            <span className="text-brand-orange font-bold text-xl">{values.pain}/10</span>
                                         </div>
                                         <input
                                             type="range" min="1" max="10"
                                             value={values.pain}
                                             onChange={e => updateValue('pain', parseInt(e.target.value))}
-                                            className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-orange-500"
+                                            className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-brand-orange"
                                         />
                                         <div className="flex justify-between text-xs text-slate-500">
                                             <span>Minor Annoyance</span>
@@ -181,14 +181,14 @@ export function TaskWizard({ isOpen, onClose, onSave, initialValues, readinessFa
                                         <Label>Payback Viability (Guardrails)</Label>
                                         <div className="grid grid-cols-1 gap-2">
                                             {readinessFactors.map(factor => (
-                                                <label key={factor.id} className="flex items-center space-x-3 p-3 rounded-lg border border-slate-700/50 bg-slate-800/50 hover:bg-slate-700/50 transition cursor-pointer group">
+                                                <label key={factor.id} className="flex items-center space-x-3 p-3 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 transition cursor-pointer group">
                                                     <input
                                                         type="checkbox"
                                                         checked={values.readiness?.[factor.id]}
                                                         onChange={() => toggleReadiness(factor.id)}
-                                                        className="w-5 h-5 rounded border-slate-600 text-emerald-500 focus:ring-emerald-500/20 bg-slate-700 accent-emerald-500"
+                                                        className="w-5 h-5 rounded border-slate-300 text-brand-orange focus:ring-brand-orange/20 bg-white accent-brand-orange"
                                                     />
-                                                    <span className="text-sm text-slate-300 group-hover:text-slate-100">{factor.label}</span>
+                                                    <span className="text-sm text-slate-600 group-hover:text-slate-900">{factor.label}</span>
                                                 </label>
                                             ))}
                                         </div>
@@ -200,9 +200,9 @@ export function TaskWizard({ isOpen, onClose, onSave, initialValues, readinessFa
                 </div>
 
                 {/* Footer */}
-                <div className="p-6 border-t border-white/10 bg-slate-900 flex justify-between items-center">
+                <div className="p-6 border-t border-slate-200 bg-white flex justify-between items-center">
                     {step > 0 ? (
-                        <Button variant="ghost" onClick={handleBack} className="text-slate-400 hover:text-white">
+                        <Button variant="ghost" onClick={handleBack} className="text-slate-500 hover:text-slate-900">
                             <ArrowLeft className="w-4 h-4 mr-2" /> Back
                         </Button>
                     ) : (
@@ -214,7 +214,7 @@ export function TaskWizard({ isOpen, onClose, onSave, initialValues, readinessFa
                             Next Step <ArrowRight className="w-4 h-4 ml-2" />
                         </Button>
                     ) : (
-                        <Button variant="primary" onClick={handleSave} className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:to-emerald-400 border-0 shadow-emerald-500/20">
+                        <Button variant="primary" onClick={handleSave} className="shadow-orange-500/20">
                             <CheckCircle className="w-4 h-4 mr-2" />
                             {initialValues ? 'Save Changes' : 'Add to Audit'}
                         </Button>

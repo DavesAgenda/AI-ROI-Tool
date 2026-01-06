@@ -11,13 +11,13 @@ export function GlassCard({ children, className, ...props }) {
     return (
         <div
             className={cn(
-                "relative overflow-hidden rounded-2xl border border-white/10 bg-slate-900/60 p-6 backdrop-blur-xl",
-                "shadow-2xl shadow-black/20",
+                "relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6",
+                "shadow-xl shadow-slate-200/50",
                 className
             )}
             {...props}
         >
-            <div className="absolute inset-0 -z-10 bg-gradient-to-br from-white/5 to-transparent opacity-50 pointer-events-none" />
+            <div className="absolute inset-0 -z-10 bg-gradient-to-br from-orange-50/50 to-transparent opacity-50 pointer-events-none" />
             {children}
         </div>
     );
@@ -25,9 +25,9 @@ export function GlassCard({ children, className, ...props }) {
 
 export function Button({ children, variant = 'primary', size = 'md', className, ...props }) {
     const variants = {
-        primary: "bg-gradient-to-br from-orange-400 to-orange-500 text-white shadow-lg shadow-orange-500/20 hover:shadow-orange-500/30 hover:to-orange-400 active:scale-[0.98]",
-        secondary: "bg-slate-800/50 text-slate-100 border border-white/10 hover:bg-slate-800/80 hover:border-white/20 active:scale-[0.98]",
-        ghost: "bg-transparent text-slate-400 hover:text-slate-100 hover:bg-white/5"
+        primary: "bg-brand-orange text-white shadow-lg shadow-orange-500/20 hover:shadow-orange-500/30 hover:bg-orange-600 active:scale-[0.98]",
+        secondary: "bg-slate-100 text-slate-900 border border-slate-200 hover:bg-slate-200 hover:border-slate-300 active:scale-[0.98]",
+        ghost: "bg-transparent text-slate-500 hover:text-brand-orange hover:bg-orange-50"
     };
 
     const sizes = {
@@ -55,8 +55,8 @@ export function Input({ className, ...props }) {
     return (
         <input
             className={cn(
-                "w-full rounded-xl border border-slate-700 bg-slate-800/50 px-4 py-3 text-slate-100 placeholder-slate-500 outline-none transition-all",
-                "focus:border-orange-500/50 focus:bg-slate-800 focus:ring-4 focus:ring-orange-500/10",
+                "w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 placeholder-slate-400 outline-none transition-all",
+                "focus:border-brand-orange focus:ring-4 focus:ring-brand-orange/10",
                 className
             )}
             {...props}
@@ -66,7 +66,7 @@ export function Input({ className, ...props }) {
 
 export function Label({ children, className, ...props }) {
     return (
-        <label className={cn("block text-sm font-semibold text-slate-300 mb-2", className)} {...props}>
+        <label className={cn("block text-sm font-semibold text-slate-700 mb-2", className)} {...props}>
             {children}
         </label>
     )
@@ -74,10 +74,10 @@ export function Label({ children, className, ...props }) {
 
 export function Badge({ children, variant = 'default', className }) {
     const variants = {
-        default: "bg-slate-800 text-slate-300 border-slate-700",
-        success: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-        warning: "bg-orange-500/10 text-orange-400 border-orange-500/20",
-        danger: "bg-rose-500/10 text-rose-400 border-rose-500/20",
+        default: "bg-slate-100 text-slate-600 border-slate-200",
+        success: "bg-emerald-50 text-emerald-600 border-emerald-200",
+        warning: "bg-orange-50 text-orange-600 border-orange-200",
+        danger: "bg-rose-50 text-rose-600 border-rose-200",
     }
     return (
         <span className={cn("inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2", variants[variant], className)}>

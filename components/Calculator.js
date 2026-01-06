@@ -200,32 +200,33 @@ export default function Calculator() {
         <div className="space-y-12">
 
             {/* Top Summary / Hero */}
-            <div className="text-center space-y-4">
-                <h2 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-orange-400 via-amber-200 to-orange-400 bg-clip-text text-transparent pb-2">
-                    Automation Payback Audit
+            <div className="text-center space-y-6 mb-12">
+                <h2 className="text-5xl md:text-6xl font-bold text-slate-900 tracking-tight">
+                    Payback-first AI. <br />
+                    <span className="text-brand-orange">No science projects.</span>
                 </h2>
-                <p className="text-slate-400 max-w-2xl mx-auto text-lg">
-                    Quantify your <span className="text-emerald-400 font-semibold">capital recovery potential</span> and identify high-priority automation targets.
+                <p className="text-slate-600 max-w-2xl mx-auto text-lg leading-relaxed">
+                    Quantify your <span className="text-brand-orange font-semibold">recurring savings potential</span> and identify the workflows that actually matter.
                 </p>
             </div>
 
             {/* Main Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <GlassCard className="text-center py-8 border-emerald-500/20 bg-emerald-900/10">
-                    <Label className="uppercase tracking-wider text-slate-400 mb-2">Capital Potential</Label>
-                    <div className="text-5xl font-bold text-emerald-400">
+                <GlassCard className="text-center py-8 border-orange-100 bg-orange-50/50">
+                    <Label className="uppercase tracking-wider text-slate-500 mb-2">Cost of Inaction</Label>
+                    <div className="text-5xl font-bold text-brand-orange">
                         {formatCurrency(totals.cost)}
                     </div>
                 </GlassCard>
                 <GlassCard className="text-center py-8">
-                    <Label className="uppercase tracking-wider text-slate-400 mb-2">Hours Returned</Label>
-                    <div className="text-5xl font-bold text-blue-400">
+                    <Label className="uppercase tracking-wider text-slate-500 mb-2">Hours Returned</Label>
+                    <div className="text-5xl font-bold text-slate-900">
                         {formatNumber(totals.hours)}
                     </div>
                 </GlassCard>
                 <GlassCard className="text-center py-8">
-                    <Label className="uppercase tracking-wider text-slate-400 mb-2">Audit Opportunities</Label>
-                    <div className="text-5xl font-bold text-orange-400">
+                    <Label className="uppercase tracking-wider text-slate-500 mb-2">Audit Opportunities</Label>
+                    <div className="text-5xl font-bold text-slate-900">
                         {totals.count}
                     </div>
                 </GlassCard>
@@ -262,7 +263,7 @@ export default function Calculator() {
             {/* Task List */}
             {tasks.length > 0 && (
                 <div className="space-y-4">
-                    <h3 className="text-2xl font-bold text-slate-200">Audit Inventory</h3>
+                    <h3 className="text-2xl font-bold text-slate-900">Audit Inventory</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                         <AnimatePresence>
                             {tasks.map(task => (
@@ -276,20 +277,20 @@ export default function Calculator() {
                                     <GlassCard className="h-full flex flex-col justify-between group hover:border-orange-500/30 transition-colors">
                                         <div>
                                             <div className="flex justify-between items-start mb-3">
-                                                <h4 className="font-bold text-slate-100 text-lg">{task.task}</h4>
+                                                <h4 className="font-bold text-slate-900 text-lg">{task.task}</h4>
                                                 <Badge variant={task.metrics.annualCost > 10000 ? 'success' : 'default'}>
                                                     {formatCurrency(task.metrics.annualCost)}
                                                 </Badge>
                                             </div>
-                                            <div className="text-sm text-slate-400 space-y-1 mb-4">
-                                                <div className="flex justify-between border-b border-white/5 pb-1">
-                                                    <span>Role</span> <span className="text-slate-300">{task.role}</span>
+                                            <div className="text-sm text-slate-500 space-y-1 mb-4">
+                                                <div className="flex justify-between border-b border-slate-100 pb-1">
+                                                    <span>Role</span> <span className="text-slate-700">{task.role}</span>
                                                 </div>
-                                                <div className="flex justify-between border-b border-white/5 pb-1">
-                                                    <span>Hours Returned</span> <span className="text-slate-300 font-mono">{formatNumber(task.metrics.annualHours)}</span>
+                                                <div className="flex justify-between border-b border-slate-100 pb-1">
+                                                    <span>Hours Returned</span> <span className="text-slate-700 font-mono">{formatNumber(task.metrics.annualHours)}</span>
                                                 </div>
                                                 <div className="flex justify-between pt-1">
-                                                    <span>Viability</span> <span className="text-slate-300">{Math.round(task.readinessScore * 100)}%</span>
+                                                    <span>Viability</span> <span className="text-slate-700">{Math.round(task.readinessScore * 100)}%</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -298,7 +299,7 @@ export default function Calculator() {
                                             <Button variant="secondary" size="sm" onClick={() => handleEdit(task)}>
                                                 <Edit2 className="w-4 h-4" />
                                             </Button>
-                                            <Button variant="ghost" size="sm" onClick={() => handleDelete(task.id)} className="text-rose-400 hover:text-rose-300 hover:bg-rose-500/10">
+                                            <Button variant="ghost" size="sm" onClick={() => handleDelete(task.id)} className="text-rose-500 hover:text-rose-600 hover:bg-rose-50">
                                                 <Trash2 className="w-4 h-4" />
                                             </Button>
                                         </div>
@@ -312,35 +313,35 @@ export default function Calculator() {
 
             {/* Lead Form */}
             {tasks.length > 0 && (
-                <GlassCard className="max-w-4xl mx-auto p-8 md:p-12 relative overflow-hidden border-emerald-500/30 shadow-2xl shadow-emerald-900/20">
-                    <div className="absolute top-0 right-0 p-40 bg-emerald-500/10 blur-[120px] rounded-full pointer-events-none" />
-                    <div className="absolute bottom-0 left-0 p-32 bg-blue-500/10 blur-[100px] rounded-full pointer-events-none" />
+                <GlassCard className="max-w-4xl mx-auto p-8 md:p-12 relative overflow-hidden border-orange-200 shadow-2xl shadow-orange-500/10">
+                    <div className="absolute top-0 right-0 p-40 bg-orange-500/5 blur-[120px] rounded-full pointer-events-none" />
+                    <div className="absolute bottom-0 left-0 p-32 bg-slate-900/5 blur-[100px] rounded-full pointer-events-none" />
 
                     <div className="relative z-10 grid md:grid-cols-2 gap-12 items-center">
                         <div className="text-left space-y-6">
-                            <h3 className="text-3xl md:text-4xl font-bold text-white bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
-                                Unlock Your Payment Blueprint
+                            <h3 className="text-3xl md:text-3xl font-bold text-slate-900">
+                                Unlock Your Payback Blueprint
                             </h3>
-                            <p className="text-slate-400 text-lg leading-relaxed">
+                            <p className="text-slate-600 text-lg leading-relaxed">
                                 Get a professional breakdown of your capital recovery potential, complete with a prioritized roadmap and next steps.
                             </p>
-                            <ul className="space-y-3 text-slate-300">
+                            <ul className="space-y-3 text-slate-600">
                                 <li className="flex items-center gap-3">
-                                    <div className="p-1 rounded bg-emerald-500/20 text-emerald-400"><CheckCircle className="w-4 h-4" /></div>
+                                    <div className="p-1 rounded bg-brand-orange/10 text-brand-orange"><CheckCircle className="w-4 h-4" /></div>
                                     Full Capital Recovery Analysis
                                 </li>
                                 <li className="flex items-center gap-3">
-                                    <div className="p-1 rounded bg-emerald-500/20 text-emerald-400"><CheckCircle className="w-4 h-4" /></div>
+                                    <div className="p-1 rounded bg-brand-orange/10 text-brand-orange"><CheckCircle className="w-4 h-4" /></div>
                                     Priority Implementation Matrix
                                 </li>
                                 <li className="flex items-center gap-3">
-                                    <div className="p-1 rounded bg-emerald-500/20 text-emerald-400"><CheckCircle className="w-4 h-4" /></div>
+                                    <div className="p-1 rounded bg-brand-orange/10 text-brand-orange"><CheckCircle className="w-4 h-4" /></div>
                                     PDF Report for Stakeholders
                                 </li>
                             </ul>
                         </div>
 
-                        <form onSubmit={handleLeadSubmit} className="space-y-5 bg-slate-900/50 p-6 rounded-2xl border border-white/5">
+                        <form onSubmit={handleLeadSubmit} className="space-y-5 bg-slate-50 p-6 rounded-2xl border border-slate-200">
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-1">
                                     <Label className="text-xs uppercase">First Name</Label>
@@ -381,20 +382,20 @@ export default function Calculator() {
                                 />
                             </div>
 
-                            <label className="flex items-start gap-3 p-3 rounded-lg border border-slate-700 bg-slate-800/30 cursor-pointer hover:bg-slate-800/50 transition">
+                            <label className="flex items-start gap-3 p-3 rounded-lg border border-slate-200 bg-white cursor-pointer hover:bg-slate-50 transition">
                                 <input
                                     type="checkbox"
                                     required
-                                    className="mt-1 w-4 h-4 rounded border-slate-600 text-emerald-500 focus:ring-emerald-500/20 bg-slate-700 accent-emerald-500"
+                                    className="mt-1 w-4 h-4 rounded border-slate-300 text-brand-orange focus:ring-brand-orange/20 bg-white accent-brand-orange"
                                     checked={lead.consent}
                                     onChange={(e) => setLead(p => ({ ...p, consent: e.target.checked }))}
                                 />
-                                <span className="text-xs text-slate-400">
+                                <span className="text-xs text-slate-500">
                                     I agree to receive the report and related payback insights. No spam.
                                 </span>
                             </label>
 
-                            <Button disabled={isSubmitting} variant="primary" size="lg" className="w-full text-base font-bold bg-gradient-to-r from-emerald-500 to-emerald-600 hover:to-emerald-500 shadow-emerald-500/20 border-0">
+                            <Button disabled={isSubmitting} variant="primary" size="lg" className="w-full text-base font-bold">
                                 {isSubmitting ? (
                                     <span className="flex items-center gap-2">
                                         <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />

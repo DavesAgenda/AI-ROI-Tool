@@ -12,15 +12,18 @@ export const tokens = {
     accent: "#F48847", // Brand Orange
     dark: "#0A0A0A",   // Brand Black
     muted: "#64748b",
-    lightBg: "#F7F7F7", // Light Gray
-    cardBg: "#ffffff",
-    border: "#e5e7eb",
-    tableHeaderBg: "#F4F4F4",
-    pillBg: "#FFF1E7", // Light Orange
-    pillBorder: "#F48847",
+    lightBg: "#FFFFFF", // White background for print
+    cardBg: "#FFFFFF",
+    border: "#e2e8f0",
+    tableHeaderBg: "#F8FAFC",
+    pillBg: "#FFF7ED", // Orange 50
+    pillBorder: "#FDBA74", // Orange 300
+    success: "#10B981", // Emerald 500
+    successBg: "#ECFDF5", // Emerald 50
+    successBorder: "#6EE7B7", // Emerald 300
   },
   radii: {
-    card: 10,
+    card: 12,
     pill: 999,
     image: 8,
   },
@@ -31,9 +34,9 @@ export const tokens = {
     columnGap: 16,
   },
   type: {
-    h1: { fontSize: 18, fontWeight: 600, lineHeight: 20 },
-    h2: { fontSize: 12.5, fontWeight: 600, lineHeight: 16 },
-    body: { fontSize: 10.5, fontWeight: 400, lineHeight: 14 },
+    h1: { fontSize: 24, fontWeight: 700, lineHeight: 28 },
+    h2: { fontSize: 14, fontWeight: 700, lineHeight: 18 },
+    body: { fontSize: 10, fontWeight: 400, lineHeight: 14 },
     small: { fontSize: 9, fontWeight: 400, lineHeight: 12 },
     tiny: { fontSize: 8, fontWeight: 400, lineHeight: 10 },
   },

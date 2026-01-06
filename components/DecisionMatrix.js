@@ -48,11 +48,11 @@ export function DecisionMatrix({ tasks }) {
         if (active && payload && payload.length) {
             const data = payload[0].payload;
             return (
-                <div className="bg-slate-900/90 border border-white/10 p-3 rounded-lg shadow-xl backdrop-blur-md">
-                    <p className="font-bold text-slate-100">{data.task}</p>
-                    <div className="text-xs text-slate-400 mt-1 space-y-1">
-                        <p>Annual Savings: <span className="text-emerald-400">${data.metrics.annualCost.toLocaleString()}</span></p>
-                        <p>Viability Score: <span className="text-orange-400">{Math.round(data.y)}/100</span></p>
+                <div className="bg-white/95 border border-slate-200 p-3 rounded-lg shadow-xl backdrop-blur-md">
+                    <p className="font-bold text-slate-900">{data.task}</p>
+                    <div className="text-xs text-slate-500 mt-1 space-y-1">
+                        <p>Annual Savings: <span className="text-brand-orange font-semibold">${data.metrics.annualCost.toLocaleString()}</span></p>
+                        <p>Viability Score: <span className="text-slate-700">{Math.round(data.y)}/100</span></p>
                     </div>
                 </div>
             );
@@ -63,18 +63,18 @@ export function DecisionMatrix({ tasks }) {
     return (
         <GlassCard className="h-[500px] w-full flex flex-col">
             <div className="mb-4 flex justify-between items-center">
-                <h3 className="text-xl font-bold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
+                <h3 className="text-xl font-bold text-slate-900">
                     Decision Matrix
                 </h3>
-                <div className="text-xs text-slate-400 flex gap-4">
-                    <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-emerald-400"></div> Quick Wins</span>
-                    <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-blue-400"></div> Major Projects</span>
+                <div className="text-xs text-slate-500 flex gap-4">
+                    <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-brand-orange"></div> Quick Wins</span>
+                    <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-slate-800"></div> Major Projects</span>
                 </div>
             </div>
 
             <div className="flex-1 w-full relative">
                 {data.length === 0 && (
-                    <div className="absolute inset-0 z-20 flex items-center justify-center text-slate-500 text-sm">
+                    <div className="absolute inset-0 z-20 flex items-center justify-center text-slate-400 text-sm">
                         Add tasks to visualize priorities
                     </div>
                 )}
@@ -83,16 +83,16 @@ export function DecisionMatrix({ tasks }) {
                         {/* Quadrant Backgrounds */}
 
                         {/* Top Right: High Impact, High Viability -> Quick Wins */}
-                        <ReferenceArea x1={50} x2={100} y1={50} y2={100} fill="#10B981" fillOpacity={0.05} />
+                        <ReferenceArea x1={50} x2={100} y1={50} y2={100} fill="#F48847" fillOpacity={0.05} />
 
                         {/* Top Left: Low Impact, High Viability -> Low Hanging Fruit */}
-                        <ReferenceArea x1={0} x2={50} y1={50} y2={100} fill="#3B82F6" fillOpacity={0.05} />
+                        <ReferenceArea x1={0} x2={50} y1={50} y2={100} fill="#64748B" fillOpacity={0.05} />
 
                         {/* Bottom Right: High Impact, Low Viability -> Major Projects/Long Term */}
-                        <ReferenceArea x1={50} x2={100} y1={0} y2={50} fill="#F59E0B" fillOpacity={0.05} />
+                        <ReferenceArea x1={50} x2={100} y1={0} y2={50} fill="#0A0A0A" fillOpacity={0.05} />
 
                         {/* Bottom Left: Low Impact, Low Viability -> Thankless Tasks */}
-                        <ReferenceArea x1={0} x2={50} y1={0} y2={50} fill="#64748B" fillOpacity={0.05} />
+                        <ReferenceArea x1={0} x2={50} y1={0} y2={50} fill="#E2E8F0" fillOpacity={0.1} />
 
                         <XAxis
                             type="number"
@@ -100,11 +100,11 @@ export function DecisionMatrix({ tasks }) {
                             name="Impact"
                             unit="%"
                             domain={[0, 100]}
-                            tick={{ fill: '#94a3b8', fontSize: 12 }}
+                            tick={{ fill: '#64748b', fontSize: 12 }}
                             tickLine={false}
-                            axisLine={{ stroke: '#334155' }}
+                            axisLine={{ stroke: '#cbd5e1' }}
                         >
-                            <Label value="Impact (Cost Savings)" offset={-10} position="insideBottom" fill="#94a3b8" style={{ fontSize: 12 }} />
+                            <Label value="Impact (Cost Savings)" offset={-10} position="insideBottom" fill="#64748b" style={{ fontSize: 12 }} />
                         </XAxis>
                         <YAxis
                             type="number"
@@ -112,23 +112,23 @@ export function DecisionMatrix({ tasks }) {
                             name="Viability"
                             unit="%"
                             domain={[0, 100]}
-                            tick={{ fill: '#94a3b8', fontSize: 12 }}
+                            tick={{ fill: '#64748b', fontSize: 12 }}
                             tickLine={false}
-                            axisLine={{ stroke: '#334155' }}
+                            axisLine={{ stroke: '#cbd5e1' }}
                         >
-                            <Label value="Viability (Readiness)" angle={-90} position="insideLeft" fill="#94a3b8" style={{ fontSize: 12 }} />
+                            <Label value="Viability (Readiness)" angle={-90} position="insideLeft" fill="#64748b" style={{ fontSize: 12 }} />
                         </YAxis>
                         <ZAxis type="number" dataKey="z" range={[60, 400]} />
 
-                        <Tooltip content={<CustomTooltip />} cursor={{ strokeDasharray: '3 3', stroke: '#ffffff30' }} />
+                        <Tooltip content={<CustomTooltip />} cursor={{ strokeDasharray: '3 3', stroke: '#94a3b8' }} />
 
                         <Scatter name="Tasks" data={data}>
                             {data.map((entry, index) => {
                                 // Color logic based on quadrant
-                                let color = "#64748B"; // Default slate
-                                if (entry.x >= 50 && entry.y >= 50) color = "#34D399"; // Emerald (Quick Win)
-                                else if (entry.x < 50 && entry.y >= 50) color = "#60A5FA"; // Blue (Low Hanging)
-                                else if (entry.x >= 50 && entry.y < 50) color = "#FBBF24"; // Amber (Major)
+                                let color = "#94a3b8"; // Default slate
+                                if (entry.x >= 50 && entry.y >= 50) color = "#F48847"; // Brand Orange (Quick Win)
+                                else if (entry.x < 50 && entry.y >= 50) color = "#64748B"; // Slate (Low Hanging)
+                                else if (entry.x >= 50 && entry.y < 50) color = "#0A0A0A"; // Black (Major)
 
                                 return <Cell key={`cell-${index}`} fill={color} stroke="white" strokeWidth={2} />;
                             })}
