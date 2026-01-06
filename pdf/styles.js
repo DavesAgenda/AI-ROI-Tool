@@ -41,7 +41,7 @@ export const tokens = {
 
 export const styles = StyleSheet.create({
   page: {
-    paddingTop: constants.HEADER_BAR_H + tokens.spacing.pageY + 14,
+    paddingTop: constants.HEADER_BAR_H + tokens.spacing.pageY + 6,
     paddingBottom: tokens.spacing.pageY,
     paddingHorizontal: tokens.spacing.pageX,
     fontSize: tokens.type.body.fontSize,
@@ -83,7 +83,7 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
   },
   section: {
-    marginBottom: tokens.spacing.gap,
+    marginBottom: 10,
   },
   sectionTitle: {
     fontSize: tokens.type.h2.fontSize,
