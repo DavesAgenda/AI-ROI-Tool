@@ -15,7 +15,7 @@ const tagStyle = {
   fontSize: tokens.type.tiny.fontSize,
 };
 
-function Card({ title, annualCost, savings, tag, description }) {
+function Card({ title, annualCost, savings, tag, reason, path }) {
   return (
     <View style={[styles.card, { width: "48%", padding: 12 }]} wrap={false}>
       <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
@@ -25,13 +25,11 @@ function Card({ title, annualCost, savings, tag, description }) {
       <Text style={{ fontSize: tokens.type.small.fontSize, color: tokens.colors.muted, marginBottom: 6 }}>
         Annual cost {formatCurrency(annualCost)} · Savings {formatCurrency(savings)}
       </Text>
-      <Text
-        style={{ fontSize: tokens.type.body.fontSize, color: tokens.colors.dark, lineHeight: 1.3 }}
-        wrap={true}
-        maxLines={2}
-        ellipsizeMode="tail"
-      >
-        {truncate(description || "Reviewed against readiness and pain.", limits.opportunityDesc)}
+      <Text style={{ fontSize: tokens.type.small.fontSize, color: tokens.colors.muted, marginBottom: 2 }} wrap={true} maxLines={1}>
+        Why it pays back: {truncate(reason || "Repeatable work with predictable savings.", limits.opportunityDesc)}
+      </Text>
+      <Text style={{ fontSize: tokens.type.small.fontSize, color: tokens.colors.muted }} wrap={true} maxLines={1}>
+        Lowest-risk path: {truncate(path || "Workflow first, low/no-code first.", limits.opportunityDesc)}
       </Text>
     </View>
   );

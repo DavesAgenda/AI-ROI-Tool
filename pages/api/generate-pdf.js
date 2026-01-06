@@ -31,7 +31,8 @@ function mapOpportunities(tasks = []) {
     annualCost: t.metrics?.annualCost || 0,
     savings: t.metrics?.savings || 0,
     tag: t.priority || "Priority",
-    description: buildPriorityNote(t.priority),
+    reason: buildPriorityNote(t.priority),
+    path: "Workflow first, low/no-code first.",
   }));
 }
 

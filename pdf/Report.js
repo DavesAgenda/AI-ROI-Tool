@@ -7,6 +7,7 @@ import { TaskTable } from "./components/TaskTable";
 import { MatrixSection } from "./components/MatrixSection";
 import { DoNothingCallout } from "./components/DoNothingCallout";
 import { CTA } from "./components/CTA";
+import { DecisionSummary } from "./components/DecisionSummary";
 import { styles, tokens } from "./styles";
 import { formatCurrency, formatHours, formatDate } from "./utils/format";
 import { truncate } from "./utils/truncate";
@@ -34,7 +35,8 @@ function normalizeOpportunities(list = []) {
     annualCost: t.annualCost || 0,
     savings: t.savings || 0,
     tag: t.tag || "Priority",
-    description: t.description || "",
+    reason: t.reason || "Repeatable work with predictable savings.",
+    path: t.path || "Workflow first, low/no-code first.",
   }));
 }
 
@@ -56,6 +58,11 @@ export function Report({ data }) {
   const preparedForName = data.preparedForName || "your team";
   const preparedForEmail = data.preparedForEmail || "";
   const reportDate = formatDate(data.reportDate);
+  const chip = (label) => (
+    <View style={styles.chip}>
+      <Text style={{ fontSize: tokens.type.tiny.fontSize, color: tokens.colors.accent }}>{label}</Text>
+    </View>
+  );
 
   return (
     <Document>
@@ -63,12 +70,19 @@ export function Report({ data }) {
         <View style={styles.pageBg} fixed />
         <Header logoSrc={data.logoSrc} preparedForName={preparedForName} preparedForEmail={preparedForEmail} reportDate={reportDate} />
         <View style={styles.section}>
+          {chip("SUMMARY")}
           <SummaryTiles tiles={tiles} />
         </View>
         <View style={styles.section}>
+          {chip("DECISION SUMMARY")}
+          <DecisionSummary weeklyHours={data.weeklyHoursCaptured} potentialSavings={data.potentialSavings} bestOpportunityTitle={opps[0]?.title} />
+        </View>
+        <View style={styles.section}>
+          {chip("TOP OPPORTUNITIES")}
           <Opportunities items={opps} />
         </View>
         <View style={styles.section}>
+          {chip("TASK BREAKDOWN")}
           <TaskTable rows={rows} footnote={footnote} />
         </View>
       </Page>
@@ -77,12 +91,15 @@ export function Report({ data }) {
         <View style={styles.pageBg} fixed />
         <Header logoSrc={data.logoSrc} preparedForName={preparedForName} preparedForEmail={preparedForEmail} reportDate={reportDate} />
         <View style={styles.section}>
+          {chip("PORTFOLIO")}
           <MatrixSection imageSrc={data.matrixImageSrc} caption={data.matrixCaption || "Impact vs effort portfolio view"} />
         </View>
         <View style={styles.section}>
+          {chip("RISK OF INACTION")}
           <DoNothingCallout annualCost={data.doNothingAnnualCost} hoursPerYear={data.doNothingHoursPerYear} />
         </View>
-        <View style={[styles.section, { backgroundColor: tokens.colors.dark, borderRadius: tokens.radii.card, padding: 0 }]} wrap={false}>
+        <View style={[styles.section, { padding: 0 }]} wrap={false}>
+          {chip("NEXT STEP")}
           <CTA bookingUrl={data.bookingUrl} qrDataUri={data.bookingQrDataUri} />
         </View>
       </Page>

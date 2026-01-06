@@ -6,12 +6,12 @@ export function MatrixSection({ imageSrc, caption }) {
   return (
     <View style={[styles.card, { padding: 12 }]} wrap={false}>
       {imageSrc ? (
-        <Image src={imageSrc} style={{ width: "100%", height: 300, objectFit: "contain", borderRadius: tokens.radii.image }} />
+        <Image src={imageSrc} style={{ width: "100%", height: 280, objectFit: "contain", borderRadius: tokens.radii.image }} />
       ) : (
         <View
           style={{
             width: "100%",
-            height: 300,
+            height: 280,
             borderRadius: tokens.radii.image,
             borderColor: tokens.colors.border,
             borderWidth: 1,

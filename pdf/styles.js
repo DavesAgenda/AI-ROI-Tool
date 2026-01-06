@@ -34,7 +34,7 @@ export const tokens = {
 
 export const styles = StyleSheet.create({
   page: {
-    paddingTop: tokens.spacing.pageY,
+    paddingTop: tokens.spacing.pageY + 56,
     paddingBottom: tokens.spacing.pageY,
     paddingHorizontal: tokens.spacing.pageX,
     fontSize: tokens.type.body.fontSize,
@@ -49,22 +49,26 @@ export const styles = StyleSheet.create({
     bottom: 0,
     backgroundColor: tokens.colors.lightBg,
   },
-  header: {
-    marginBottom: tokens.spacing.gap,
-    paddingBottom: 10,
+  headerBar: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 56,
+    backgroundColor: tokens.colors.dark,
   },
-  headerRow: {
+  headerContent: {
+    position: "absolute",
+    top: 0,
+    left: tokens.spacing.pageX,
+    right: tokens.spacing.pageX,
+    height: 56,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
   headerTitleBlock: {
     alignItems: "flex-end",
-  },
-  divider: {
-    height: 1,
-    backgroundColor: tokens.colors.border,
-    marginTop: 8,
   },
   section: {
     marginBottom: tokens.spacing.gap,
@@ -86,6 +90,18 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: tokens.radii.card,
     padding: 12,
+  },
+  chip: {
+    alignSelf: "flex-start",
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: tokens.radii.pill,
+    backgroundColor: tokens.colors.pillBg,
+    borderColor: tokens.colors.pillBorder,
+    borderWidth: 1,
+    color: tokens.colors.accent,
+    fontSize: tokens.type.tiny.fontSize,
+    marginBottom: 4,
   },
   muted: {
     color: tokens.colors.muted,

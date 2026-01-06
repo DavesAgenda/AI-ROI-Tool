@@ -77,11 +77,11 @@ export function TaskTable({ rows, footnote }) {
       {rows.map((row, idx) => (
         <TableRow key={`${row.task}-${idx}`} row={row} idx={idx} />
       ))}
-      {footnote ? (
-        <View style={{ paddingHorizontal: 10, paddingVertical: 6 }}>
-          <Text style={{ fontSize: tokens.type.tiny.fontSize, color: tokens.colors.muted }}>{footnote}</Text>
-        </View>
-      ) : null}
+      <View style={{ paddingHorizontal: 10, paddingVertical: 6 }}>
+        <Text style={{ fontSize: tokens.type.tiny.fontSize, color: tokens.colors.muted }}>
+          {footnote || "Savings assumes 50% automation of captured time. Sprint validates baseline and constraints."}
+        </Text>
+      </View>
     </View>
   );
 }

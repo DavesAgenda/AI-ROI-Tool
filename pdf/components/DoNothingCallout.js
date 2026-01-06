@@ -11,6 +11,7 @@ export function DoNothingCallout({ annualCost, hoursPerYear }) {
         {
           backgroundColor: tokens.colors.pillBg,
           borderColor: tokens.colors.pillBorder,
+          minHeight: 70,
         },
       ]}
       wrap={false}
