@@ -25,7 +25,7 @@ export function GlassCard({ children, className, ...props }) {
 
 export function Button({ children, variant = 'primary', size = 'md', className, ...props }) {
     const variants = {
-        primary: "bg-brand-orange text-white shadow-lg shadow-orange-500/20 hover:shadow-orange-500/30 hover:bg-orange-600 active:scale-[0.98]",
+        primary: "bg-[#F48847] text-white shadow-lg shadow-orange-500/20 hover:shadow-orange-500/30 hover:bg-[#e07b3e] active:scale-[0.98]",
         secondary: "bg-slate-100 text-slate-900 border border-slate-200 hover:bg-slate-200 hover:border-slate-300 active:scale-[0.98]",
         ghost: "bg-transparent text-slate-500 hover:text-brand-orange hover:bg-orange-50"
     };
@@ -56,7 +56,7 @@ export function Input({ className, ...props }) {
         <input
             className={cn(
                 "w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 placeholder-slate-400 outline-none transition-all",
-                "focus:border-brand-orange focus:ring-4 focus:ring-brand-orange/10",
+                "focus:border-[#F48847] focus:ring-4 focus:ring-[#F48847]/10",
                 className
             )}
             {...props}

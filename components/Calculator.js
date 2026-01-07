@@ -200,13 +200,18 @@ export default function Calculator() {
         <div className="space-y-12">
 
             {/* Top Summary / Hero */}
-            <div className="text-center space-y-6 mb-12">
+            <div className="text-center space-y-6 mb-12 relative z-10">
+                {/* Brand Header */}
+                <div className="flex justify-center mb-8">
+                    <img src="/assets/va-logo-wide.png" alt="Valid Agenda" className="h-12 w-auto" />
+                </div>
+
                 <h2 className="text-5xl md:text-6xl font-bold text-slate-900 tracking-tight">
                     Payback-first AI. <br />
-                    <span className="text-brand-orange">No science projects.</span>
+                    <span className="text-[#F48847]">No science projects.</span>
                 </h2>
                 <p className="text-slate-600 max-w-2xl mx-auto text-lg leading-relaxed">
-                    Quantify your <span className="text-brand-orange font-semibold">recurring savings potential</span> and identify the workflows that actually matter.
+                    Quantify your <span className="text-[#F48847] font-semibold">recurring savings potential</span> and identify the workflows that actually matter.
                 </p>
             </div>
 
@@ -233,10 +238,26 @@ export default function Calculator() {
             </div>
 
             {/* Call to Action for New Task */}
-            <div className="flex justify-center">
+            <div className="flex justify-center gap-4">
                 <Button size="lg" onClick={handleAddNew} className="text-lg px-8 py-4 shadow-2xl shadow-orange-500/20 hover:scale-105 transition-transform">
                     <Plus className="w-6 h-6 mr-2" /> Add Audit Opportunity
                 </Button>
+            </div>
+
+            {/* Final Book a Call CTA */}
+            <div className="mt-20 pt-12 border-t border-slate-200 text-center space-y-6">
+                <h3 className="text-2xl font-bold text-slate-900">Need help building your payback roadmap?</h3>
+                <p className="text-slate-600 max-w-xl mx-auto">
+                    We help finance and ops teams build their first payback-generating agents in 30 days.
+                </p>
+                <a
+                    href="https://validagenda.com/book"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center justify-center rounded-xl bg-slate-900 text-white px-8 py-4 text-lg font-bold hover:bg-slate-800 transition-colors shadow-xl"
+                >
+                    Book a Strategy Call <ArrowRight className="w-5 h-5 ml-2" />
+                </a>
             </div>
 
             {/* Wizard Modal */}

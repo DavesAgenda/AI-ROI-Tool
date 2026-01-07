@@ -14,7 +14,7 @@ export function Header({ logoSrc, preparedForName, preparedForEmail, reportDate 
           <Text style={{ fontSize: 12, color: "#fff" }}>Valid Agenda</Text>
         )}
         <View style={styles.headerRight}>
-          <Text style={styles.headerTitleRight}>Your Automation ROI Report</Text>
+          <Text style={styles.headerTitleRight}>Your Payback Blueprint</Text>
         </View>
       </View>
     </>

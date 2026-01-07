@@ -66,11 +66,11 @@ export function Report({ data }) {
         <View style={styles.pageBg} fixed />
         <Header logoSrc={data.logoSrc} preparedForName={preparedForName} preparedForEmail={preparedForEmail} reportDate={reportDate} />
         <View style={styles.section}>
-          <SectionHeader chipLabel="SUMMARY" title="" first />
+          <SectionHeader chipLabel="EXECUTIVE SUMMARY" title="" first />
           <SummaryTiles tiles={tiles} />
         </View>
         <View style={styles.section}>
-          <SectionHeader chipLabel="DECISION SUMMARY" title="" />
+          <SectionHeader chipLabel="PAYBACK ANALYSIS" title="" />
           <DecisionSummary weeklyHours={data.weeklyHoursCaptured} potentialSavings={data.potentialSavings} bestOpportunityTitle={opps[0]?.title} />
         </View>
         <View style={styles.section}>
@@ -91,7 +91,7 @@ export function Report({ data }) {
           <MatrixSection imageSrc={data.matrixImageSrc} caption={data.matrixCaption || "Impact vs effort portfolio view"} />
         </View>
         <View style={[styles.section, { marginBottom: 8 }]}>
-          <SectionHeader chipLabel="RISK OF INACTION" title="" />
+          <SectionHeader chipLabel="COST OF INACTION" title="" />
           <DoNothingCallout annualCost={data.doNothingAnnualCost} hoursPerYear={data.doNothingHoursPerYear} />
         </View>
         <View style={[styles.section, { marginBottom: 0, padding: 0 }]} wrap={false}>

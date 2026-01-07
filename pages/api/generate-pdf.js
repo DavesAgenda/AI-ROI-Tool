@@ -62,7 +62,7 @@ function buildReportData(payload, origin) {
       ? logoUrl
       : origin
         ? `${origin}/assets/va-logo-wide.png`
-        : null;
+        : "https://validagenda.com/wp-content/uploads/2024/01/va-logo-wide.png";
 
   return {
     preparedForName: [lead.firstName, lead.lastName].filter(Boolean).join(" ").trim() || "your team",

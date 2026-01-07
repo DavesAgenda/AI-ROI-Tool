@@ -10,6 +10,7 @@ module.exports = {
                 brand: {
                     orange: '#F48847',
                     black: '#0A0A0A',
+                    dark: '#0f172a', // Using Slate 900 as "Dark Blue" for now unless user specifies
                     gray: '#EFEFEF',
                 }
             },
