@@ -1,14 +1,18 @@
 import { StyleSheet, Font } from "@react-pdf/renderer";
 
-// Register fonts
+import path from "path";
+
+// Register fonts using local files for stability
+const fontsPath = path.join(process.cwd(), "public/fonts");
+
 Font.register({
   family: 'Manrope',
   fonts: [
-    { src: 'https://cdn.jsdelivr.net/gh/sharanda/manrope-font@3.0/fonts/ttf/Manrope-Regular.ttf', fontWeight: 400 },
-    { src: 'https://cdn.jsdelivr.net/gh/sharanda/manrope-font@3.0/fonts/ttf/Manrope-Medium.ttf', fontWeight: 500 },
-    { src: 'https://cdn.jsdelivr.net/gh/sharanda/manrope-font@3.0/fonts/ttf/Manrope-SemiBold.ttf', fontWeight: 600 },
-    { src: 'https://cdn.jsdelivr.net/gh/sharanda/manrope-font@3.0/fonts/ttf/Manrope-Bold.ttf', fontWeight: 700 },
-    { src: 'https://cdn.jsdelivr.net/gh/sharanda/manrope-font@3.0/fonts/ttf/Manrope-ExtraBold.ttf', fontWeight: 800 },
+    { src: path.join(fontsPath, "Manrope-Regular.ttf"), fontWeight: 400 },
+    { src: path.join(fontsPath, "Manrope-Regular.ttf"), fontWeight: 500 },
+    { src: path.join(fontsPath, "Manrope-Regular.ttf"), fontWeight: 600 },
+    { src: path.join(fontsPath, "Manrope-Bold.ttf"), fontWeight: 700 },
+    { src: path.join(fontsPath, "Manrope-Bold.ttf"), fontWeight: 800 },
   ]
 });
 
