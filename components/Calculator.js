@@ -202,12 +202,7 @@ export default function Calculator() {
         <div className="space-y-12">
 
             {/* Top Summary / Hero */}
-            <div className="text-center space-y-6 mb-12 relative z-10">
-                {/* Brand Header */}
-                <div className="flex justify-center mb-8">
-                    <img src="/assets/va-logo-wide.png" alt="Valid Agenda" className="h-12 w-auto" />
-                </div>
-
+            <div className="text-center space-y-6 mb-16 relative z-10 pt-4">
                 <h2 className="text-5xl md:text-6xl font-bold text-slate-900 tracking-tight">
                     Payback-first AI. <br />
                     <span className="text-[#F48847]">No science projects.</span>

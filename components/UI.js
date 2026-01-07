@@ -92,11 +92,11 @@ export function Modal({ isOpen, onClose, children, className }) {
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
             <div
-                className="absolute inset-0 bg-slate-900/80 backdrop-blur-sm transition-opacity"
+                className="absolute inset-0 bg-[#134061]/80 backdrop-blur-sm transition-opacity"
                 onClick={onClose}
             />
             <div className={cn(
-                "relative z-10 w-full max-w-2xl transform overflow-hidden rounded-2xl border border-white/10 bg-slate-900 shadow-2xl transition-all",
+                "relative z-10 w-full max-w-2xl transform overflow-hidden rounded-2xl border border-white/10 bg-[#134061] shadow-2xl transition-all",
                 className
             )}>
                 {children}

@@ -68,7 +68,7 @@ export function DecisionMatrix({ tasks }) {
                 </h3>
                 <div className="text-xs text-slate-500 flex gap-4">
                     <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-brand-orange"></div> Quick Wins</span>
-                    <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-slate-800"></div> Major Projects</span>
+                    <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-[#134061]"></div> Major Projects</span>
                 </div>
             </div>
 
@@ -89,7 +89,7 @@ export function DecisionMatrix({ tasks }) {
                         <ReferenceArea x1={0} x2={50} y1={50} y2={100} fill="#64748B" fillOpacity={0.05} />
 
                         {/* Bottom Right: High Impact, Low Viability -> Major Projects/Long Term */}
-                        <ReferenceArea x1={50} x2={100} y1={0} y2={50} fill="#0A0A0A" fillOpacity={0.05} />
+                        <ReferenceArea x1={50} x2={100} y1={0} y2={50} fill="#134061" fillOpacity={0.05} />
 
                         {/* Bottom Left: Low Impact, Low Viability -> Thankless Tasks */}
                         <ReferenceArea x1={0} x2={50} y1={0} y2={50} fill="#E2E8F0" fillOpacity={0.1} />
@@ -128,7 +128,7 @@ export function DecisionMatrix({ tasks }) {
                                 let color = "#94a3b8"; // Default slate
                                 if (entry.x >= 50 && entry.y >= 50) color = "#F48847"; // Brand Orange (Quick Win)
                                 else if (entry.x < 50 && entry.y >= 50) color = "#64748B"; // Slate (Low Hanging)
-                                else if (entry.x >= 50 && entry.y < 50) color = "#0A0A0A"; // Black (Major)
+                                else if (entry.x >= 50 && entry.y < 50) color = "#134061"; // Navy (Major)
 
                                 return <Cell key={`cell-${index}`} fill={color} stroke="white" strokeWidth={2} />;
                             })}
