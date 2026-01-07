@@ -66,7 +66,8 @@ export default function Calculator() {
         const dailyMinutes = (parseFloat(v.freq) || 0) * (parseFloat(v.minutes) || 0);
         const annualHours = (dailyMinutes * WORKING_DAYS) / 60;
         const annualCost = annualHours * (parseFloat(v.hourly) || 0);
-        return { dailyMinutes, annualHours, annualCost };
+        const savings = annualCost * 0.5; // Assume 50% savings
+        return { dailyMinutes, annualHours, annualCost, savings };
     };
 
     const calculateReadinessScore = (readinessMap) => {
@@ -84,9 +85,10 @@ export default function Calculator() {
         return {
             hours: acc.hours + (t.metrics.annualHours || 0),
             cost: acc.cost + (t.metrics.annualCost || 0),
+            savings: acc.savings + (t.metrics.savings || 0),
             count: acc.count + 1
         };
-    }, { hours: 0, cost: 0, count: 0 });
+    }, { hours: 0, cost: 0, savings: 0, count: 0 });
 
     // --- Handlers ---
     const handleSaveTask = (values) => {

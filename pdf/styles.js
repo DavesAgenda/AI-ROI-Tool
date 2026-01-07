@@ -10,7 +10,7 @@ export const constants = {
 export const tokens = {
   colors: {
     accent: "#F48847", // Brand Orange
-    dark: "#0A0A0A",   // Brand Black
+    dark: "#134061",   // Brand Navy
     muted: "#64748b",
     lightBg: "#FFFFFF", // White background for print
     cardBg: "#FFFFFF",
@@ -133,5 +133,15 @@ export const styles = StyleSheet.create({
   },
   muted: {
     color: tokens.colors.muted,
+  },
+  footerBar: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 30,
+    backgroundColor: tokens.colors.dark, // Brand Navy
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

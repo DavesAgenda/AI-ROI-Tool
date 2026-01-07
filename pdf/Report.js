@@ -9,6 +9,7 @@ import { DoNothingCallout } from "./components/DoNothingCallout";
 import { CTA } from "./components/CTA";
 import { DecisionSummary } from "./components/DecisionSummary";
 import { SectionHeader } from "./components/SectionHeader";
+import { Footer } from "./components/Footer";
 import { styles, tokens } from "./styles";
 import { formatCurrency, formatHours, formatDate } from "./utils/format";
 import { truncate } from "./utils/truncate";
@@ -65,6 +66,7 @@ export function Report({ data }) {
       <Page size="A4" style={styles.page}>
         <View style={styles.pageBg} fixed />
         <Header logoSrc={data.logoSrc} preparedForName={preparedForName} preparedForEmail={preparedForEmail} reportDate={reportDate} />
+        <Footer />
         <View style={styles.section}>
           <SectionHeader chipLabel="EXECUTIVE SUMMARY" title="" first />
           <SummaryTiles tiles={tiles} />
@@ -86,6 +88,7 @@ export function Report({ data }) {
       <Page size="A4" style={styles.page}>
         <View style={styles.pageBg} fixed />
         <Header logoSrc={data.logoSrc} preparedForName={preparedForName} preparedForEmail={preparedForEmail} reportDate={reportDate} />
+        <Footer />
         <View style={styles.section}>
           <SectionHeader chipLabel="PORTFOLIO" title="" first />
           <MatrixSection imageSrc={data.matrixImageSrc} caption={data.matrixCaption || "Impact vs effort portfolio view"} />
