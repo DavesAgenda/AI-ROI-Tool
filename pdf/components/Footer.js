@@ -5,7 +5,8 @@ import { styles, tokens } from "../styles";
 export function Footer() {
     return (
         <View style={styles.footerBar} fixed>
-            <Text style={{ color: "#fff", fontSize: 8 }}>© Valid Agenda {new Date().getFullYear()}</Text>
+            <Text>© {new Date().getFullYear()} Valid Agenda. All rights reserved.</Text>
+            <Text>validagenda.com</Text>
         </View>
     );
 }

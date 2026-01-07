@@ -2,12 +2,20 @@ import React from "react";
 import { View, Text } from "@react-pdf/renderer";
 import { styles, tokens } from "../styles";
 
-export function SectionHeader({ chipLabel, title, subtitle, first = false }) {
+export function SectionHeader({ chipLabel, title, first }) {
   return (
-    <View style={{ marginTop: first ? 0 : 0, marginBottom: 6 }} wrap={false}>
-      <Text style={styles.chip}>{chipLabel}</Text>
-      {title ? <Text style={{ fontSize: tokens.type.h2.fontSize, fontWeight: tokens.type.h2.fontWeight, color: tokens.colors.dark, lineHeight: tokens.type.h2.lineHeight }}>{title}</Text> : null}
-      {subtitle ? <Text style={{ fontSize: tokens.type.small.fontSize, color: tokens.colors.muted, lineHeight: tokens.type.small.lineHeight }}>{subtitle}</Text> : null}
+    <View style={{ marginBottom: 16, marginTop: first ? 0 : 12 }}>
+      <View style={{
+        backgroundColor: tokens.colors.dark,
+        paddingHorizontal: 8,
+        paddingVertical: 3,
+        borderRadius: 4,
+        alignSelf: 'flex-start',
+        marginBottom: 8
+      }}>
+        <Text style={{ fontSize: 7, fontWeight: 800, color: '#fff', letterSpacing: 1 }}>{chipLabel}</Text>
+      </View>
+      {title ? <Text style={{ fontSize: 18, fontWeight: 800, color: tokens.colors.dark }}>{title}</Text> : null}
     </View>
   );
 }

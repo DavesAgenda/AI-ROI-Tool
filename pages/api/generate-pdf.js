@@ -17,11 +17,11 @@ const priorityRank = {
 };
 
 const buildPriorityNote = (priority) => {
-  if (priority === "Quick Win") return "Fast to deliver with low/no-code. Unlock savings quickly.";
-  if (priority === "Strategic Bet") return "Higher effort, higher upside. Best planned as a scoped project.";
-  if (priority === "Hobby") return "Good learning opportunity, lower business impact.";
-  if (priority === "Trap") return "Complexity outweighs value. Do not automate first.";
-  return "Reviewed against readiness and pain.";
+  if (priority === "Quick Win") return "High recovery potential with minimal technical complexity. Immediate payback.";
+  if (priority === "Strategic Bet") return "Substantial upside with moderate complexity. Requires defined guardrails.";
+  if (priority === "Hobby") return "Low business impact. Not recommended for initial automation phases.";
+  if (priority === "Trap") return "High complexity with diminishing returns. Avoid for now.";
+  return "Standard repeatable workflow with measurable savings potential.";
 };
 
 function mapOpportunities(tasks = []) {
@@ -32,7 +32,6 @@ function mapOpportunities(tasks = []) {
     savings: t.metrics?.savings || 0,
     tag: t.priority || "Priority",
     reason: buildPriorityNote(t.priority),
-    path: "Workflow first, low/no-code first.",
   }));
 }
 

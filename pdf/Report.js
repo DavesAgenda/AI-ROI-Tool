@@ -1,104 +1,89 @@
 import React from "react";
 import { Document, Page, View, Text } from "@react-pdf/renderer";
+import { Cover } from "./components/Cover";
 import { Header } from "./components/Header";
+import { Footer } from "./components/Footer";
 import { SummaryTiles } from "./components/SummaryTiles";
 import { Opportunities } from "./components/Opportunities";
-import { TaskTable } from "./components/TaskTable";
 import { MatrixSection } from "./components/MatrixSection";
 import { DoNothingCallout } from "./components/DoNothingCallout";
+import { Philosophy } from "./components/Philosophy";
 import { CTA } from "./components/CTA";
-import { DecisionSummary } from "./components/DecisionSummary";
 import { SectionHeader } from "./components/SectionHeader";
-import { Footer } from "./components/Footer";
 import { styles, tokens } from "./styles";
 import { formatCurrency, formatHours, formatDate } from "./utils/format";
-import { truncate } from "./utils/truncate";
-
-const priorityRank = {
-  "Quick Win": 1,
-  "Strategic Bet": 2,
-  Trap: 3,
-  Hobby: 4,
-};
-
-function buildTiles(data) {
-  return [
-    { label: "Current annual cost", value: formatCurrency(data.currentAnnualCost), accent: true },
-    { label: "Potential savings (50%)", value: formatCurrency(data.potentialSavings), accent: true },
-    { label: "Weekly hours captured", value: formatHours(data.weeklyHoursCaptured) },
-    { label: "Capacity returned (weekly)", value: formatHours(data.capacityReturnedWeekly) },
-  ];
-}
-
-function normalizeOpportunities(list = []) {
-  const sorted = [...list].sort((a, b) => (b.savings || 0) - (a.savings || 0));
-  return sorted.slice(0, 2).map((t) => ({
-    title: t.title || "Untitled task",
-    annualCost: t.annualCost || 0,
-    savings: t.savings || 0,
-    tag: t.tag || "Priority",
-    reason: t.reason || "Repeatable work with predictable savings.",
-    path: t.path || "Workflow first, low/no-code first.",
-  }));
-}
-
-function normalizeTasks(tasks = []) {
-  const sorted = [...tasks].sort((a, b) => {
-    const rankA = priorityRank[a.priority] || 99;
-    const rankB = priorityRank[b.priority] || 99;
-    if (rankA !== rankB) return rankA - rankB;
-    return (b.savings || 0) - (a.savings || 0);
-  });
-  const sliced = sorted.slice(0, 8);
-  return { rows: sliced, footnote: tasks.length > 8 ? "Showing top 8 tasks. Full list available on request." : null };
-}
 
 export function Report({ data }) {
-  const tiles = buildTiles(data);
-  const opps = normalizeOpportunities(data.opportunities || []);
-  const { rows, footnote } = normalizeTasks(data.tasks || []);
   const preparedForName = data.preparedForName || "your team";
-  const preparedForEmail = data.preparedForEmail || "";
   const reportDate = formatDate(data.reportDate);
 
+  const tiles = [
+    { label: "Cost of Inaction", value: formatCurrency(data.currentAnnualCost), accent: true },
+    { label: "Reclaimable Capital", value: formatCurrency(data.potentialSavings), accent: true },
+    { label: "Expert Hours Wasted", value: formatHours(data.weeklyHoursCaptured * 52) },
+    { label: "Recovery Potential", value: "50%" },
+  ];
+
   return (
-    <Document>
+    <Document title={`AI Payback Blueprint - ${preparedForName}`}>
+      {/* Page 1: Cover */}
+      <Page size="A4" style={styles.page} padding={0}>
+        <Cover preparedForName={preparedForName} logoSrc={data.logoSrc} />
+      </Page>
+
+      {/* Page 2: Executive Summary & Cost of Inaction */}
       <Page size="A4" style={styles.page}>
         <View style={styles.pageBg} fixed />
-        <Header logoSrc={data.logoSrc} preparedForName={preparedForName} preparedForEmail={preparedForEmail} reportDate={reportDate} />
+        <Header logoSrc={data.logoSrc} preparedForName={preparedForName} reportDate={reportDate} />
         <Footer />
-        <View style={styles.section}>
-          <SectionHeader chipLabel="EXECUTIVE SUMMARY" title="" first />
+
+        <View style={{ marginTop: 20 }}>
+          <SectionHeader chipLabel="THE NUMBERS" title="The Capital Opportunity" first />
           <SummaryTiles tiles={tiles} />
         </View>
-        <View style={styles.section}>
-          <SectionHeader chipLabel="PAYBACK ANALYSIS" title="" />
-          <DecisionSummary weeklyHours={data.weeklyHoursCaptured} potentialSavings={data.potentialSavings} bestOpportunityTitle={opps[0]?.title} />
+
+        <View style={{ marginTop: 30 }}>
+          <SectionHeader chipLabel="THE STAKES" title="The Cost of Inaction" />
+          <DoNothingCallout annualCost={data.doNothingAnnualCost} hoursPerYear={data.doNothingHoursPerYear} />
         </View>
-        <View style={styles.section}>
-          <SectionHeader chipLabel="TOP OPPORTUNITIES" title="" />
-          <Opportunities items={opps} />
+
+        <Philosophy />
+      </Page>
+
+      {/* Page 3: The Portfolio View */}
+      <Page size="A4" style={styles.page}>
+        <View style={styles.pageBg} fixed />
+        <Header logoSrc={data.logoSrc} preparedForName={preparedForName} reportDate={reportDate} />
+        <Footer />
+
+        <View style={{ marginTop: 20 }}>
+          <SectionHeader chipLabel="THE PORTFOLIO" title="Strategic Priority Matrix" first />
+          <View style={{ height: 350, marginTop: 10 }}>
+            <MatrixSection imageSrc={data.matrixImageSrc} caption="Impact vs. Viability. We focus on the high-payback, high-readiness workflows in the top right." />
+          </View>
         </View>
-        <View style={styles.section}>
-          <SectionHeader chipLabel="TASK BREAKDOWN" title="" />
-          <TaskTable rows={rows} footnote={footnote} />
+
+        <View style={{ marginTop: 20, padding: 15, borderLeft: `2px solid ${tokens.colors.accent}`, backgroundColor: '#fff' }}>
+          <Text style={{ fontSize: 10, lineHeight: 1.6, color: tokens.colors.text }}>
+            <Text style={{ fontWeight: '800' }}>Outcomes beat activity.</Text> Most teams start with the "smartest" ideas. We start with the ones that pay back.
+            Our matrix categorizes tasks by their immediate recovery potential and technical readiness.
+          </Text>
         </View>
       </Page>
 
+      {/* Page 4: Roadmap & CTA */}
       <Page size="A4" style={styles.page}>
         <View style={styles.pageBg} fixed />
-        <Header logoSrc={data.logoSrc} preparedForName={preparedForName} preparedForEmail={preparedForEmail} reportDate={reportDate} />
+        <Header logoSrc={data.logoSrc} preparedForName={preparedForName} reportDate={reportDate} />
         <Footer />
-        <View style={styles.section}>
-          <SectionHeader chipLabel="PORTFOLIO" title="" first />
-          <MatrixSection imageSrc={data.matrixImageSrc} caption={data.matrixCaption || "Impact vs effort portfolio view"} />
+
+        <View style={{ marginTop: 20 }}>
+          <SectionHeader chipLabel="THE ROADMAP" title="Top Payback Opportunities" first />
+          <Opportunities items={data.opportunities || []} />
         </View>
-        <View style={[styles.section, { marginBottom: 8 }]}>
-          <SectionHeader chipLabel="COST OF INACTION" title="" />
-          <DoNothingCallout annualCost={data.doNothingAnnualCost} hoursPerYear={data.doNothingHoursPerYear} />
-        </View>
-        <View style={[styles.section, { marginBottom: 0, padding: 0 }]} wrap={false}>
-          <SectionHeader chipLabel="NEXT STEP" title="" />
+
+        <View style={{ bottom: 40, left: tokens.spacing.page, right: tokens.spacing.page, position: 'absolute' }}>
+          <SectionHeader chipLabel="NEXT STEPS" title="Move from estimates to outcomes" />
           <CTA bookingUrl={data.bookingUrl} qrDataUri={data.bookingQrDataUri} />
         </View>
       </Page>

@@ -1,147 +1,101 @@
 import { StyleSheet } from "@react-pdf/renderer";
 
-export const constants = {
-  PAGE_PAD_X: 28,
-  PAGE_PAD_BOTTOM: 24,
-  HEADER_BAR_H: 56,
-  HEADER_SAFE_Y: 10,
-};
-
 export const tokens = {
   colors: {
     accent: "#F48847", // Brand Orange
     dark: "#134061",   // Brand Navy
+    text: "#1E293B",   // Slate 800
     muted: "#64748b",
-    lightBg: "#FFFFFF", // White background for print
+    lightBg: "#F8FAFC",
     cardBg: "#FFFFFF",
-    border: "#e2e8f0",
-    tableHeaderBg: "#F8FAFC",
-    pillBg: "#FFF7ED", // Orange 50
-    pillBorder: "#FDBA74", // Orange 300
-    success: "#10B981", // Emerald 500
-    successBg: "#ECFDF5", // Emerald 50
-    successBorder: "#6EE7B7", // Emerald 300
-  },
-  radii: {
-    card: 12,
-    pill: 999,
-    image: 8,
+    border: "#E2E8F0",
+    white: "#FFFFFF",
   },
   spacing: {
-    pageX: constants.PAGE_PAD_X,
-    pageY: constants.PAGE_PAD_BOTTOM,
+    page: 40,
+    section: 24,
+    card: 20,
     gap: 12,
-    columnGap: 16,
+  },
+  radius: {
+    lg: 12,
+    md: 8,
+    full: 999,
   },
   type: {
-    h1: { fontSize: 24, fontWeight: 700, lineHeight: 28 },
-    h2: { fontSize: 14, fontWeight: 700, lineHeight: 18 },
-    body: { fontSize: 10, fontWeight: 400, lineHeight: 14 },
-    small: { fontSize: 9, fontWeight: 400, lineHeight: 12 },
-    tiny: { fontSize: 8, fontWeight: 400, lineHeight: 10 },
-  },
+    h1: { fontSize: 32, fontWeight: 800 },
+    h2: { fontSize: 24, fontWeight: 700 },
+    h3: { fontSize: 18, fontWeight: 700 },
+    body: { fontSize: 11, fontWeight: 400, leading: 1.5 },
+    small: { fontSize: 9, fontWeight: 500 },
+    tiny: { fontSize: 7, fontWeight: 400 },
+  }
 };
 
 export const styles = StyleSheet.create({
   page: {
-    paddingTop: constants.HEADER_BAR_H + tokens.spacing.pageY + 6,
-    paddingBottom: tokens.spacing.pageY,
-    paddingHorizontal: tokens.spacing.pageX,
-    fontSize: tokens.type.body.fontSize,
-    color: tokens.colors.dark,
-    fontFamily: "Helvetica",
+    backgroundColor: tokens.colors.white,
+    padding: tokens.spacing.page,
+    fontFamily: "Manrope",
+    color: tokens.colors.text,
   },
   pageBg: {
     position: "absolute",
     top: 0,
-    left: 0,
-    right: 0,
     bottom: 0,
+    left: 0,
+    right: 0,
     backgroundColor: tokens.colors.lightBg,
+    zIndex: -1,
   },
-  headerBar: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    height: constants.HEADER_BAR_H,
+  coverPage: {
     backgroundColor: tokens.colors.dark,
-  },
-  headerContent: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    height: constants.HEADER_BAR_H,
-    paddingLeft: constants.PAGE_PAD_X,
-    paddingRight: constants.PAGE_PAD_X,
-    paddingTop: constants.HEADER_SAFE_Y,
-    paddingBottom: constants.HEADER_SAFE_Y - 2,
-    flexDirection: "row",
+    padding: tokens.spacing.page * 1.5,
+    height: '100%',
     justifyContent: "space-between",
-    alignItems: "center",
-  },
-  headerTitleBlock: {
-    alignItems: "flex-end",
-    justifyContent: "center",
-  },
-  headerRight: {
-    width: "60%",
-    flexDirection: "column",
-    alignItems: "flex-end",
-    justifyContent: "center",
-  },
-  headerTitleRight: {
-    fontSize: 14,
-    fontWeight: 600,
-    lineHeight: 16,
-    color: "#ffffff",
-    textAlign: "right",
+    color: tokens.colors.white,
   },
   section: {
-    marginBottom: 10,
-  },
-  sectionTitle: {
-    fontSize: tokens.type.h2.fontSize,
-    fontWeight: tokens.type.h2.fontWeight,
-    color: tokens.colors.dark,
-    marginBottom: 6,
-  },
-  gridRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    gap: tokens.spacing.columnGap,
+    marginBottom: tokens.spacing.section,
   },
   card: {
     backgroundColor: tokens.colors.cardBg,
-    borderColor: tokens.colors.border,
-    borderWidth: 1,
-    borderRadius: tokens.radii.card,
-    padding: 12,
+    borderRadius: tokens.radius.md,
+    border: `1px solid ${tokens.colors.border}`,
+    padding: tokens.spacing.card,
+    marginBottom: tokens.spacing.gap,
   },
-  chip: {
-    alignSelf: "flex-start",
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: tokens.radii.pill,
-    backgroundColor: tokens.colors.pillBg,
-    borderColor: tokens.colors.pillBorder,
-    borderWidth: 1,
-    color: tokens.colors.accent,
-    fontSize: tokens.type.tiny.fontSize,
-    marginBottom: 4,
+  gridRow: {
+    flexDirection: "row",
+    gap: tokens.spacing.gap,
+    justifyContent: "space-between",
+    marginBottom: tokens.spacing.gap,
   },
-  muted: {
-    color: tokens.colors.muted,
+  headerContent: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 30,
+    paddingBottom: 15,
+    borderBottom: `1px solid ${tokens.colors.border}`,
+  },
+  headerTitleRight: {
+    fontSize: 10,
+    fontWeight: 700,
+    color: tokens.colors.dark,
+    textTransform: "uppercase",
+    letterSpacing: 1,
   },
   footerBar: {
     position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
-    height: 30,
-    backgroundColor: tokens.colors.dark, // Brand Navy
-    alignItems: "center",
-    justifyContent: "center",
+    padding: 20,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    borderTop: `1px solid ${tokens.colors.border}`,
+    color: tokens.colors.muted,
+    fontSize: 8,
   },
 });
