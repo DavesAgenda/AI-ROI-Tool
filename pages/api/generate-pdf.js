@@ -1,5 +1,7 @@
 // Serverless PDF generator for Vercel using @react-pdf/renderer.
 import React from "react";
+import fs from "fs";
+import path from "path";
 import { pdf } from "@react-pdf/renderer";
 import { Report } from "../../pdf/Report";
 import { makeQrDataUri } from "../../pdf/utils/qr";
@@ -56,12 +58,21 @@ function buildReportData(payload, origin) {
   const { tasks = [], totals = {}, lead = {}, matrixDataUrl, logoUrl, meetingUrl } = payload || {};
   const weeklyHours = totals.weeklyHours || 0;
   const annualHours = totals.annualHours || weeklyHours * 52;
-  const resolvedLogo =
-    logoUrl && (logoUrl.startsWith("http") || logoUrl.startsWith("data:"))
-      ? logoUrl
-      : origin
-        ? `${origin}/assets/va-logo-wide.png`
-        : "https://validagenda.com/wp-content/uploads/2024/01/va-logo-wide.png";
+  let resolvedLogo = logoUrl;
+  if (!resolvedLogo || !resolvedLogo.startsWith("data:")) {
+    try {
+      // Try to read local file as base64 for Vercel stability
+      const logoPath = path.join(process.cwd(), "public/assets/va-logo-wide.png");
+      if (fs.existsSync(logoPath)) {
+        const logoData = fs.readFileSync(logoPath);
+        resolvedLogo = `data:image/png;base64,${logoData.toString("base64")}`;
+      } else {
+        resolvedLogo = "https://validagenda.com/wp-content/uploads/2024/01/va-logo-wide.png";
+      }
+    } catch (e) {
+      resolvedLogo = "https://validagenda.com/wp-content/uploads/2024/01/va-logo-wide.png";
+    }
+  }
 
   return {
     preparedForName: [lead.firstName, lead.lastName].filter(Boolean).join(" ").trim() || "your team",
