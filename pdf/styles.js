@@ -1,4 +1,16 @@
-import { StyleSheet } from "@react-pdf/renderer";
+import { StyleSheet, Font } from "@react-pdf/renderer";
+
+// Register fonts
+Font.register({
+  family: 'Manrope',
+  fonts: [
+    { src: 'https://fonts.gstatic.com/s/manrope/v15/xn7_2F_9PRmSV9R_wjX-Z-K9.woff2', fontWeight: 400 },
+    { src: 'https://fonts.gstatic.com/s/manrope/v15/xn7_2F_9PRmSV9R_wjX2Z-K9.woff2', fontWeight: 500 },
+    { src: 'https://fonts.gstatic.com/s/manrope/v15/xn7_2F_9PRmSV9R_wjXEZ-K9.woff2', fontWeight: 600 },
+    { src: 'https://fonts.gstatic.com/s/manrope/v15/xn7_2F_9PRmSV9R_wjXGZ-K9.woff2', fontWeight: 700 },
+    { src: 'https://fonts.gstatic.com/s/manrope/v15/xn7_2F_9PRmSV9R_wjXKZ-K9.woff2', fontWeight: 800 },
+  ]
+});
 
 export const tokens = {
   colors: {
