@@ -55,22 +55,23 @@ function mapTasks(tasks = []) {
 }
 
 function buildReportData(payload, origin) {
-  const { tasks = [], totals = {}, lead = {}, matrixDataUrl, logoUrl, meetingUrl } = payload || {};
-  const weeklyHours = totals.weeklyHours || 0;
-  const annualHours = totals.annualHours || weeklyHours * 52;
+  const { tasks = [], totals = {}, lead = {}, matrixImage, logoUrl, meetingUrl } = payload || {};
+  const weeklyHours = totals.annualHours ? totals.annualHours / 52 : 0;
+  const annualHours = totals.annualHours || 0;
+
   let resolvedLogo = logoUrl;
   if (!resolvedLogo || !resolvedLogo.startsWith("data:")) {
     try {
-      // Try to read local file as base64 for Vercel stability
       const logoPath = path.join(process.cwd(), "public/assets/va-logo-wide.png");
       if (fs.existsSync(logoPath)) {
         const logoData = fs.readFileSync(logoPath);
         resolvedLogo = `data:image/png;base64,${logoData.toString("base64")}`;
       } else {
-        resolvedLogo = "https://validagenda.com/wp-content/uploads/2024/01/va-logo-wide.png";
+        // Confirmed high-quality PNG fallback
+        resolvedLogo = "https://images.squarespace-cdn.com/content/v1/68be735ae1149470271397b1/ac720f0d-aaec-4804-a91d-aa90d32e7d22/VA+Wide+Lockup+White+%28geo%29.png";
       }
     } catch (e) {
-      resolvedLogo = "https://validagenda.com/wp-content/uploads/2024/01/va-logo-wide.png";
+      resolvedLogo = "https://images.squarespace-cdn.com/content/v1/68be735ae1149470271397b1/ac720f0d-aaec-4804-a91d-aa90d32e7d22/VA+Wide+Lockup+White+%28geo%29.png";
     }
   }
 
@@ -85,11 +86,11 @@ function buildReportData(payload, origin) {
     capacityReturnedWeekly: weeklyHours * 0.5,
     opportunities: mapOpportunities(tasks),
     tasks: mapTasks(tasks),
-    matrixImageSrc: payload.matrixImage || null,
-    matrixCaption: "Impact vs effort portfolio view",
+    matrixImageSrc: matrixImage || null,
+    matrixCaption: "Impact vs effort portfolio view. High-payback opportunities appear in the top-right.",
     doNothingAnnualCost: totals.annualCost || 0,
     doNothingHoursPerYear: annualHours * 0.5,
-    bookingUrl: meetingUrl || "",
+    bookingUrl: meetingUrl || "https://validagenda.com/book",
   };
 }
 

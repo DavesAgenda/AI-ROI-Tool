@@ -80,26 +80,41 @@ export default function Calculator() {
         return total === 0 ? 0 : score / total;
     };
 
+    const calculatePriority = (impactScore, viabilityScore) => {
+        if (impactScore >= 50 && viabilityScore >= 50) return "Quick Win";
+        if (impactScore < 50 && viabilityScore >= 50) return "Hobby";
+        if (impactScore >= 50 && viabilityScore < 50) return "Strategic Bet";
+        return "Trap";
+    };
+
     const totals = tasks.reduce((acc, t) => {
         if (!t || !t.metrics) return acc;
         return {
-            hours: acc.hours + (t.metrics.annualHours || 0),
-            cost: acc.cost + (t.metrics.annualCost || 0),
+            annualHours: acc.annualHours + (t.metrics.annualHours || 0),
+            annualCost: acc.annualCost + (t.metrics.annualCost || 0),
             savings: acc.savings + (t.metrics.savings || 0),
             count: acc.count + 1
         };
-    }, { hours: 0, cost: 0, savings: 0, count: 0 });
+    }, { annualHours: 0, annualCost: 0, savings: 0, count: 0 });
 
     // --- Handlers ---
     const handleSaveTask = (values) => {
         const metrics = calculateMetrics(values);
         const readinessScore = calculateReadinessScore(values.readiness);
+        
+        // Calculate priority for the PDF
+        const maxImpact = Math.max(...tasks.map(t => t.metrics.annualCost), 1000);
+        const impactScore = (metrics.annualCost / maxImpact) * 100;
+        const painScore = (values.pain || 5) / 10;
+        const viabilityScore = (readinessScore * 0.6 + painScore * 0.4) * 100;
+        const priority = calculatePriority(impactScore, viabilityScore);
 
         const newTask = {
             id: editingTask?.id || Date.now().toString(),
             ...values,
             readinessScore,
             metrics,
+            priority,
             timestamp: Date.now()
         };
 
@@ -138,8 +153,10 @@ export default function Calculator() {
             const matrixEl = document.getElementById('decision-matrix-container');
             if (matrixEl) {
                 const canvas = await html2canvas(matrixEl, {
-                    backgroundColor: '#0f172a', // Slate 900 to match background
-                    scale: 2 // High res
+                    backgroundColor: '#ffffff', // Set to white for PDF consistency
+                    scale: 3, // Higher res for PDF
+                    logging: false,
+                    useCORS: true
                 });
                 matrixImage = canvas.toDataURL('image/png');
             }
@@ -217,13 +234,13 @@ export default function Calculator() {
                 <GlassCard className="text-center py-8 border-orange-100 bg-orange-50/50">
                     <Label className="uppercase tracking-wider text-slate-500 mb-2">Cost of Inaction</Label>
                     <div className="text-5xl font-bold text-brand-orange">
-                        {formatCurrency(totals.cost)}
+                        {formatCurrency(totals.annualCost)}
                     </div>
                 </GlassCard>
                 <GlassCard className="text-center py-8">
                     <Label className="uppercase tracking-wider text-slate-500 mb-2">Hours Returned</Label>
                     <div className="text-5xl font-bold text-slate-900">
-                        {formatNumber(totals.hours)}
+                        {formatNumber(totals.annualHours)}
                     </div>
                 </GlassCard>
                 <GlassCard className="text-center py-8">
