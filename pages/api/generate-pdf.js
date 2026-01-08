@@ -107,30 +107,22 @@ function mapTasks(tasks = []) {
 async function buildReportData(payload, origin) {
   const { tasks = [], totals = {}, lead = {}, matrixImage, meetingUrl } = payload || {};
 
-  // LOGGING to debug missing imagery
-  console.log("PAYLOAD RECEIVED:", {
-    hasTasks: tasks.length,
-    hasMatrix: !!matrixImage,
-    matrixLength: matrixImage ? matrixImage.length : 0,
-    totals: totals
-  });
-
   const weeklyHours = totals.annualHours ? totals.annualHours / 52 : 0;
   const annualHours = totals.annualHours || 0;
 
-  // Resolve Logo robustly
+  // Resolve Dark Logo from local assets
   let resolvedLogo = null;
-  const LOGO_URL = "https://images.squarespace-cdn.com/content/v1/68be735ae1149470271397b1/ac720f0d-aaec-4804-a91d-aa90d32e7d22/VA+Wide+Lockup+White+%28geo%29.png";
-
   try {
-    const response = await fetch(LOGO_URL);
-    if (response.ok) {
-      const buffer = await response.arrayBuffer();
-      const base64 = Buffer.from(buffer).toString("base64");
-      resolvedLogo = `data:image/png;base64,${base64}`;
+    const logoRelPath = "public/assets/va-logo-dark.png";
+    const logoPath = path.join(process.cwd(), logoRelPath);
+    if (fs.existsSync(logoPath)) {
+      const logoData = fs.readFileSync(logoPath);
+      resolvedLogo = `data:image/png;base64,${logoData.toString("base64")}`;
     }
   } catch (e) {
-    console.warn("Failed to fetch remote logo, falling back to text", e);
+    console.warn("Failed to read local dark logo", e);
+    // Ultimate fallback if local file fails
+    resolvedLogo = "https://images.squarespace-cdn.com/content/v1/68be735ae1149470271397b1/ac720f0d-aaec-4804-a91d-aa90d32e7d22/VA+Wide+Lockup+White+%28geo%29.png";
   }
 
   return {
@@ -145,7 +137,7 @@ async function buildReportData(payload, origin) {
     opportunities: mapOpportunities(tasks),
     tasks: mapTasks(tasks),
     matrixImageSrc: matrixImage && matrixImage.startsWith("data:") ? matrixImage : null,
-    matrixCaption: "Impact vs effort portfolio view. High-payback opportunities appear in the top-right.",
+    matrixCaption: "Strategic Priority Matrix. High-payback opportunities appear in the top-right.",
     doNothingAnnualCost: totals.annualCost || 0,
     doNothingHoursPerYear: annualHours * 0.5,
     bookingUrl: meetingUrl || "https://validagenda.com/book",

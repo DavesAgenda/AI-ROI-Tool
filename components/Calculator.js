@@ -147,18 +147,22 @@ export default function Calculator() {
         setIsSubmitting(true);
         setLeadStatus({ msg: 'Generating your report...', type: 'info' });
 
-        // Capture Matrix Image
+        // Capture Matrix Image with a slight delay to ensure Recharts is stable
         let matrixImage = null;
         try {
             const matrixEl = document.getElementById('decision-matrix-container');
             if (matrixEl) {
+                // Wait for any animations to settle
+                await new Promise(r => setTimeout(r, 500));
+
                 const canvas = await html2canvas(matrixEl, {
-                    backgroundColor: '#ffffff', // Set to white for PDF consistency
-                    scale: 1.5, // Reduced for stability and payload size
+                    backgroundColor: '#ffffff',
+                    scale: 2,
                     logging: false,
-                    useCORS: true
+                    useCORS: true,
+                    allowTaint: true
                 });
-                matrixImage = canvas.toDataURL('image/png');
+                matrixImage = canvas.toDataURL('image/png', 1.0);
             }
         } catch (e) {
             console.error("Failed to capture matrix", e);
