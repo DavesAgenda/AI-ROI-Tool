@@ -34,10 +34,25 @@ const calculatePriority = (impactScore, viabilityScore) => {
 };
 
 function recalibrateTasks(tasks = []) {
-  const maxAnnualCost = Math.max(...tasks.map(t => t.metrics?.annualCost || 0), 1000);
+  const validTasks = tasks.filter(t => t && t.task);
+  const maxAnnualCost = Math.max(...validTasks.map(t => t.metrics?.annualCost || 0), 1000);
 
-  return tasks.map(t => {
-    const metrics = { ...t.metrics };
+  return validTasks.map(t => {
+    // Deep clone and ensure metrics exists
+    const metrics = t.metrics ? { ...t.metrics } : {
+      annualCost: 0,
+      savings: 0,
+      annualHours: 0,
+      weeklyHours: 0
+    };
+
+    // Fallback for missing annualCost (calculate from freq/mins if available - though usually it should be there)
+    if (!metrics.annualCost && t.freq && t.minutes && t.hourly) {
+      const dailyMins = parseFloat(t.freq) * parseFloat(t.minutes);
+      metrics.annualHours = (dailyMins * 261) / 60;
+      metrics.annualCost = metrics.annualHours * parseFloat(t.hourly);
+    }
+
     if (!metrics.savings && metrics.annualCost) {
       metrics.savings = metrics.annualCost * 0.5;
     }
@@ -51,7 +66,11 @@ function recalibrateTasks(tasks = []) {
       priority = calculatePriority(impactScore, viabilityScore);
     }
 
-    return { ...t, metrics, priority: priority || "Quick Win" };
+    return {
+      ...t,
+      metrics,
+      priority: priority || "Quick Win"
+    };
   });
 }
 
@@ -85,13 +104,34 @@ function mapTasks(tasks = []) {
   }));
 }
 
-function buildReportData(payload, origin) {
-  const { tasks = [], totals = {}, lead = {}, matrixImage, logoUrl, meetingUrl } = payload || {};
+async function buildReportData(payload, origin) {
+  const { tasks = [], totals = {}, lead = {}, matrixImage, meetingUrl } = payload || {};
+
+  // LOGGING to debug missing imagery
+  console.log("PAYLOAD RECEIVED:", {
+    hasTasks: tasks.length,
+    hasMatrix: !!matrixImage,
+    matrixLength: matrixImage ? matrixImage.length : 0,
+    totals: totals
+  });
+
   const weeklyHours = totals.annualHours ? totals.annualHours / 52 : 0;
   const annualHours = totals.annualHours || 0;
 
-  // Use verified Remote URL ONLY to avoid WebP issues with local files
-  const resolvedLogo = "https://images.squarespace-cdn.com/content/v1/68be735ae1149470271397b1/ac720f0d-aaec-4804-a91d-aa90d32e7d22/VA+Wide+Lockup+White+%28geo%29.png";
+  // Resolve Logo robustly
+  let resolvedLogo = null;
+  const LOGO_URL = "https://images.squarespace-cdn.com/content/v1/68be735ae1149470271397b1/ac720f0d-aaec-4804-a91d-aa90d32e7d22/VA+Wide+Lockup+White+%28geo%29.png";
+
+  try {
+    const response = await fetch(LOGO_URL);
+    if (response.ok) {
+      const buffer = await response.arrayBuffer();
+      const base64 = Buffer.from(buffer).toString("base64");
+      resolvedLogo = `data:image/png;base64,${base64}`;
+    }
+  } catch (e) {
+    console.warn("Failed to fetch remote logo, falling back to text", e);
+  }
 
   return {
     preparedForName: [lead.firstName, lead.lastName].filter(Boolean).join(" ").trim() || "your team",
@@ -104,7 +144,7 @@ function buildReportData(payload, origin) {
     capacityReturnedWeekly: weeklyHours * 0.5,
     opportunities: mapOpportunities(tasks),
     tasks: mapTasks(tasks),
-    matrixImageSrc: matrixImage || null,
+    matrixImageSrc: matrixImage && matrixImage.startsWith("data:") ? matrixImage : null,
     matrixCaption: "Impact vs effort portfolio view. High-payback opportunities appear in the top-right.",
     doNothingAnnualCost: totals.annualCost || 0,
     doNothingHoursPerYear: annualHours * 0.5,
@@ -122,7 +162,9 @@ export default async function handler(req, res) {
     const proto = (req.headers["x-forwarded-proto"] || "https").split(",")[0];
     const host = (req.headers["x-forwarded-host"] || req.headers.host || "").split(",")[0];
     const origin = host ? `${proto}://${host}` : null;
-    const data = buildReportData(payload || {}, origin);
+
+    // BUILD DATA ASYNC since we fetch the logo now
+    const data = await buildReportData(payload || {}, origin);
     const qr = await makeQrDataUri(data.bookingUrl);
     data.bookingQrDataUri = qr;
 
