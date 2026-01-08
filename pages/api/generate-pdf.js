@@ -23,11 +23,41 @@ const buildPriorityNote = (priority) => {
   if (priority === "Strategic Bet") return "Substantial upside with moderate complexity. Requires defined guardrails.";
   if (priority === "Hobby") return "Low business impact. Not recommended for initial automation phases.";
   if (priority === "Trap") return "High complexity with diminishing returns. Avoid for now.";
-  return "Standard repeatable workflow with measurable savings potential.";
+  return "Repeatable workflow with measurable savings potential.";
 };
 
+const calculatePriority = (impactScore, viabilityScore) => {
+  if (impactScore >= 50 && viabilityScore >= 50) return "Quick Win";
+  if (impactScore < 50 && viabilityScore >= 50) return "Hobby";
+  if (impactScore >= 50 && viabilityScore < 50) return "Strategic Bet";
+  return "Trap";
+};
+
+function recalibrateTasks(tasks = []) {
+  const maxAnnualCost = Math.max(...tasks.map(t => t.metrics?.annualCost || 0), 1000);
+
+  return tasks.map(t => {
+    const metrics = { ...t.metrics };
+    if (!metrics.savings && metrics.annualCost) {
+      metrics.savings = metrics.annualCost * 0.5;
+    }
+
+    let priority = t.priority;
+    if (!priority && metrics.annualCost) {
+      const impactScore = (metrics.annualCost / maxAnnualCost) * 100;
+      const readiness = t.readinessScore || 0.5;
+      const pain = (t.pain || 5) / 10;
+      const viabilityScore = (readiness * 0.6 + pain * 0.4) * 100;
+      priority = calculatePriority(impactScore, viabilityScore);
+    }
+
+    return { ...t, metrics, priority: priority || "Quick Win" };
+  });
+}
+
 function mapOpportunities(tasks = []) {
-  const sorted = [...tasks].sort((a, b) => (b.metrics?.savings || 0) - (a.metrics?.savings || 0));
+  const recalibrated = recalibrateTasks(tasks);
+  const sorted = [...recalibrated].sort((a, b) => (b.metrics?.savings || 0) - (a.metrics?.savings || 0));
   return sorted.slice(0, 2).map((t) => ({
     title: t.task || "Untitled task",
     annualCost: t.metrics?.annualCost || 0,
@@ -38,7 +68,8 @@ function mapOpportunities(tasks = []) {
 }
 
 function mapTasks(tasks = []) {
-  const sorted = [...tasks].sort((a, b) => {
+  const recalibrated = recalibrateTasks(tasks);
+  const sorted = [...recalibrated].sort((a, b) => {
     const rankA = priorityRank[a.priority] || 99;
     const rankB = priorityRank[b.priority] || 99;
     if (rankA !== rankB) return rankA - rankB;
@@ -47,7 +78,7 @@ function mapTasks(tasks = []) {
   return sorted.map((t) => ({
     task: t.task || "Untitled task",
     role: t.role || "Owner",
-    weeklyHours: t.metrics?.weeklyHours || 0,
+    weeklyHours: t.metrics?.weeklyHours || (t.metrics?.annualHours ? t.metrics.annualHours / 52 : 0),
     annualCost: t.metrics?.annualCost || 0,
     savings: t.metrics?.savings || 0,
     priority: t.priority || "",
@@ -59,21 +90,8 @@ function buildReportData(payload, origin) {
   const weeklyHours = totals.annualHours ? totals.annualHours / 52 : 0;
   const annualHours = totals.annualHours || 0;
 
-  let resolvedLogo = logoUrl;
-  if (!resolvedLogo || !resolvedLogo.startsWith("data:")) {
-    try {
-      const logoPath = path.join(process.cwd(), "public/assets/va-logo-wide.png");
-      if (fs.existsSync(logoPath)) {
-        const logoData = fs.readFileSync(logoPath);
-        resolvedLogo = `data:image/png;base64,${logoData.toString("base64")}`;
-      } else {
-        // Confirmed high-quality PNG fallback
-        resolvedLogo = "https://images.squarespace-cdn.com/content/v1/68be735ae1149470271397b1/ac720f0d-aaec-4804-a91d-aa90d32e7d22/VA+Wide+Lockup+White+%28geo%29.png";
-      }
-    } catch (e) {
-      resolvedLogo = "https://images.squarespace-cdn.com/content/v1/68be735ae1149470271397b1/ac720f0d-aaec-4804-a91d-aa90d32e7d22/VA+Wide+Lockup+White+%28geo%29.png";
-    }
-  }
+  // Use verified Remote URL ONLY to avoid WebP issues with local files
+  const resolvedLogo = "https://images.squarespace-cdn.com/content/v1/68be735ae1149470271397b1/ac720f0d-aaec-4804-a91d-aa90d32e7d22/VA+Wide+Lockup+White+%28geo%29.png";
 
   return {
     preparedForName: [lead.firstName, lead.lastName].filter(Boolean).join(" ").trim() || "your team",

@@ -101,7 +101,7 @@ export default function Calculator() {
     const handleSaveTask = (values) => {
         const metrics = calculateMetrics(values);
         const readinessScore = calculateReadinessScore(values.readiness);
-        
+
         // Calculate priority for the PDF
         const maxImpact = Math.max(...tasks.map(t => t.metrics.annualCost), 1000);
         const impactScore = (metrics.annualCost / maxImpact) * 100;
@@ -154,7 +154,7 @@ export default function Calculator() {
             if (matrixEl) {
                 const canvas = await html2canvas(matrixEl, {
                     backgroundColor: '#ffffff', // Set to white for PDF consistency
-                    scale: 3, // Higher res for PDF
+                    scale: 1.5, // Reduced for stability and payload size
                     logging: false,
                     useCORS: true
                 });
