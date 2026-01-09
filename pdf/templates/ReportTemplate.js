@@ -137,14 +137,63 @@ export const ReportTemplate = ({ data }) => {
             <Page data={data}>
                 <SectionHeader chipLabel="THE PORTFOLIO" title="Strategic Priority Matrix" />
 
-                <div className="border border-slate-200 rounded-xl bg-slate-50 p-4 mb-8 flex justify-center items-center h-[500px]">
-                    {data.matrixImageSrc ? (
-                        <img src={data.matrixImageSrc} alt="Matrix" className="max-h-full max-w-full object-contain" />
-                    ) : (
-                        <div className="text-slate-400 text-sm">Portfolio visualization unavailable</div>
-                    )}
+                <div className="border border-slate-200 rounded-xl bg-slate-50 p-6 mb-8 h-[500px] flex flex-col justify-center relative overflow-hidden">
+                    {/* CSS Grid Matrix */}
+                    <div className="relative w-full h-full border-l border-b border-slate-300">
+                        {/* Background Quadrants */}
+                        <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-[#F48847]/5"></div> {/* Top Right */}
+                        <div className="absolute top-0 left-0 w-1/2 h-1/2 bg-slate-500/5"></div> {/* Top Left */}
+                        <div className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-[#134061]/5"></div> {/* Bottom Right */}
+                        <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-slate-200/10"></div> {/* Bottom Left */}
+
+                        {/* Grid Lines */}
+                        <div className="absolute top-1/2 left-0 right-0 h-px bg-slate-300 border-t border-dashed border-slate-300"></div>
+                        <div className="absolute left-1/2 top-0 bottom-0 w-px bg-slate-300 border-l border-dashed border-slate-300"></div>
+
+                        {/* Labels */}
+                        <div className="absolute -left-8 top-1/2 -translate-y-1/2 -rotate-90 text-[10px] text-slate-400 font-bold tracking-wider">VIABILITY (READINESS)</div>
+                        <div className="absolute bottom-[-24px] left-1/2 -translate-x-1/2 text-[10px] text-slate-400 font-bold tracking-wider">IMPACT (COST SAVINGS)</div>
+
+                        {/* Plot Points */}
+                        {(() => {
+                            const validTasks = (data.tasks || []).filter(t => t.metrics && t.metrics.annualCost);
+                            const maxImpact = Math.max(...validTasks.map(t => t.metrics.annualCost), 1000);
+
+                            return validTasks.map((task, i) => {
+                                const impactScore = (task.metrics.annualCost / maxImpact) * 100; // 0-100 (X)
+
+                                // Recalculate Viability (Match logic in DecisionMatrix.js)
+                                const readiness = task.readinessScore || 0;
+                                const pain = (task.pain || 5) / 10;
+                                const viability = (readiness * 0.6 + pain * 0.4) * 100; // 0-100 (Y)
+
+                                // Color Logic
+                                let color = "#94a3b8";
+                                if (impactScore >= 50 && viability >= 50) color = "#F48847"; // Quick Win
+                                else if (impactScore < 50 && viability >= 50) color = "#64748B"; // Low Hanging
+                                else if (impactScore >= 50 && viability < 50) color = "#134061"; // Major
+
+                                // Clamp values to keep within box (padding handling)
+                                const x = Math.max(2, Math.min(98, impactScore));
+                                const y = Math.max(2, Math.min(98, viability));
+
+                                return (
+                                    <div
+                                        key={i}
+                                        className="absolute w-4 h-4 rounded-full border-2 border-white shadow-sm z-10"
+                                        style={{
+                                            backgroundColor: color,
+                                            left: `${x}%`,
+                                            bottom: `${y}%`,
+                                            transform: 'translate(-50%, 50%)'
+                                        }}
+                                    ></div>
+                                );
+                            });
+                        })()}
+                    </div>
                 </div>
-                <div className="text-center text-xs text-slate-400 mb-8">
+                <div className="text-center text-xs text-slate-400 mb-8 mt-6">
                     Impact vs. Viability. We focus on the high-payback, high-readiness workflows in the top right.
                 </div>
 

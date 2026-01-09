@@ -120,7 +120,7 @@ async function buildReportData(payload, origin) {
     weeklyHoursCaptured: weeklyHours,
     capacityReturnedWeekly: weeklyHours * 0.5,
     opportunities: mapOpportunities(tasks),
-    // tasks: mapTasks(tasks), // We don't display the full task list in the new template yet, but we could.
+    tasks: recalibrateTasks(tasks),
     matrixImageSrc: matrixImage && matrixImage.startsWith("data:") ? matrixImage : null,
     matrixCaption: "Strategic Priority Matrix. High-payback opportunities appear in the top-right.",
     doNothingAnnualCost: totals.annualCost || 0,

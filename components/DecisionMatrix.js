@@ -4,6 +4,12 @@ import { ResponsiveContainer, ScatterChart, Scatter, XAxis, YAxis, ZAxis, Toolti
 import { GlassCard } from './UI';
 
 export function DecisionMatrix({ tasks }) {
+    const [mounted, setMounted] = React.useState(false);
+
+    React.useEffect(() => {
+        setMounted(true);
+    }, []);
+
     // Transform tasks for the chart
     // X-Axis: Impact (Annual Cost Savings)
     // Y-Axis: Ease of Implementation (Derived from Readiness & Pain)
@@ -59,6 +65,8 @@ export function DecisionMatrix({ tasks }) {
         }
         return null;
     };
+
+    if (!mounted) return <GlassCard className="h-[500px] w-full" />;
 
     return (
         <GlassCard className="h-[500px] w-full flex flex-col">

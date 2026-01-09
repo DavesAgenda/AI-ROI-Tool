@@ -5,7 +5,7 @@ import { GlassCard, Button, Input, Select, Label, Badge, cn } from './UI';
 import { DecisionMatrix } from './DecisionMatrix';
 import { TaskWizard } from './TaskWizard';
 import { Plus, Trash2, Edit2, activity, ArrowRight, Save, X, CheckCircle, AlertCircle, FileText, Download } from 'lucide-react';
-import html2canvas from 'html2canvas';
+
 
 // Constants
 const WORKING_DAYS = 261;
@@ -147,32 +147,10 @@ export default function Calculator() {
         setIsSubmitting(true);
         setLeadStatus({ msg: 'Generating your report...', type: 'info' });
 
-        // Capture Matrix Image with a slight delay to ensure Recharts is stable
-        let matrixImage = null;
-        try {
-            const matrixEl = document.getElementById('decision-matrix-container');
-            if (matrixEl) {
-                // Wait for any animations to settle
-                await new Promise(r => setTimeout(r, 500));
-
-                const canvas = await html2canvas(matrixEl, {
-                    backgroundColor: '#ffffff',
-                    scale: 2,
-                    logging: false,
-                    useCORS: true,
-                    allowTaint: true
-                });
-                matrixImage = canvas.toDataURL('image/png', 1.0);
-            }
-        } catch (e) {
-            console.error("Failed to capture matrix", e);
-        }
-
         const payload = {
             tasks,
             totals,
-            lead,
-            matrixImage
+            lead
         };
 
         try {
@@ -194,7 +172,17 @@ export default function Calculator() {
                 body: JSON.stringify(payload)
             });
 
-            if (!response.ok) throw new Error("PDF generation failed");
+            if (!response.ok) {
+                // Try to parse error details
+                let errorDetails = "Unknown error";
+                try {
+                    const errJson = await response.json();
+                    errorDetails = errJson.details || errJson.error || response.statusText;
+                } catch (e) {
+                    errorDetails = await response.text();
+                }
+                throw new Error(`PDF generation failed: ${errorDetails}`);
+            }
 
             const blob = await response.blob();
             const url = window.URL.createObjectURL(blob);
@@ -209,7 +197,7 @@ export default function Calculator() {
             setLeadStatus({ msg: 'Report downloaded successfully!', type: 'success' });
         } catch (err) {
             console.error(err);
-            setLeadStatus({ msg: 'Error generating report. Please try again.', type: 'error' });
+            setLeadStatus({ msg: `Error: ${err.message}`, type: 'error' });
         } finally {
             setIsSubmitting(false);
         }
