@@ -186,16 +186,15 @@ export default async function handler(req, res) {
     // Launch logic
     if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
       // Vercel / Production
-      const chromium = require("@sparticuz/chromium");
+      const chromium = require("@sparticuz/chromium-min");
       const puppeteer = require("puppeteer-core");
 
-      // Optional: Load custom font file if needed, but Google Fonts via network usually works better with chromium
-      // chromium.font('https://.../Manrope.ttf'); 
-
       browser = await puppeteer.launch({
-        args: chromium.args,
+        args: [...chromium.args, '--hide-scrollbars', '--disable-web-security'],
         defaultViewport: chromium.defaultViewport,
-        executablePath: await chromium.executablePath(),
+        executablePath: await chromium.executablePath(
+          "https://github.com/Sparticuz/chromium/releases/download/v123.0.1/chromium-v123.0.1-pack.tar"
+        ), // Explicitly provide download url for min package if needed, otherwise it tries relative
         headless: chromium.headless,
         ignoreHTTPSErrors: true,
       });
