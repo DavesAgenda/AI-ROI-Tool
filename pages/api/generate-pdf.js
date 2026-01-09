@@ -1,14 +1,12 @@
-// Serverless PDF generator for Vercel using @react-pdf/renderer.
 import React from "react";
+import ReactDOMServer from "react-dom/server";
 import fs from "fs";
 import path from "path";
-import { pdf } from "@react-pdf/renderer";
-import { Report } from "../../pdf/Report";
+import { ReportTemplate } from "../../pdf/templates/ReportTemplate";
 import { makeQrDataUri } from "../../pdf/utils/qr";
-import { formatCurrency } from "../../pdf/utils/format";
 
 export const config = {
-  runtime: "nodejs",
+  maxDuration: 60, // Increase timeout for Puppeteer
 };
 
 const priorityRank = {
@@ -16,8 +14,10 @@ const priorityRank = {
   "Strategic Bet": 2,
   Trap: 3,
   Hobby: 4,
+  "Low Hanging Fruit": 5
 };
 
+// ... Data mapping functions (Same as before) ...
 const buildPriorityNote = (priority) => {
   if (priority === "Quick Win") return "High recovery potential with minimal technical complexity. Immediate payback.";
   if (priority === "Strategic Bet") return "Substantial upside with moderate complexity. Requires defined guardrails.";
@@ -46,7 +46,7 @@ function recalibrateTasks(tasks = []) {
       weeklyHours: 0
     };
 
-    // Fallback for missing annualCost (calculate from freq/mins if available - though usually it should be there)
+    // Fallback for missing annualCost
     if (!metrics.annualCost && t.freq && t.minutes && t.hourly) {
       const dailyMins = parseFloat(t.freq) * parseFloat(t.minutes);
       metrics.annualHours = (dailyMins * 261) / 60;
@@ -86,24 +86,6 @@ function mapOpportunities(tasks = []) {
   }));
 }
 
-function mapTasks(tasks = []) {
-  const recalibrated = recalibrateTasks(tasks);
-  const sorted = [...recalibrated].sort((a, b) => {
-    const rankA = priorityRank[a.priority] || 99;
-    const rankB = priorityRank[b.priority] || 99;
-    if (rankA !== rankB) return rankA - rankB;
-    return (b.metrics?.savings || 0) - (a.metrics?.savings || 0);
-  });
-  return sorted.map((t) => ({
-    task: t.task || "Untitled task",
-    role: t.role || "Owner",
-    weeklyHours: t.metrics?.weeklyHours || (t.metrics?.annualHours ? t.metrics.annualHours / 52 : 0),
-    annualCost: t.metrics?.annualCost || 0,
-    savings: t.metrics?.savings || 0,
-    priority: t.priority || "",
-  }));
-}
-
 async function buildReportData(payload, origin) {
   const { tasks = [], totals = {}, lead = {}, matrixImage, meetingUrl } = payload || {};
 
@@ -117,13 +99,16 @@ async function buildReportData(payload, origin) {
     const logoPath = path.join(process.cwd(), logoRelPath);
     if (fs.existsSync(logoPath)) {
       const logoData = fs.readFileSync(logoPath);
+      // Ensure we have a valid base64 string
       resolvedLogo = `data:image/png;base64,${logoData.toString("base64")}`;
     }
   } catch (e) {
     console.warn("Failed to read local dark logo", e);
-    // Ultimate fallback if local file fails
     resolvedLogo = "https://images.squarespace-cdn.com/content/v1/68be735ae1149470271397b1/ac720f0d-aaec-4804-a91d-aa90d32e7d22/VA+Wide+Lockup+White+%28geo%29.png";
   }
+
+  // Also pass the external URL one as a fallback for the template if base64 fails (though base64 is preferred for PDF)
+  // Actually, for Puppeteer with proper args, base64 images work fine.
 
   return {
     preparedForName: [lead.firstName, lead.lastName].filter(Boolean).join(" ").trim() || "your team",
@@ -135,7 +120,7 @@ async function buildReportData(payload, origin) {
     weeklyHoursCaptured: weeklyHours,
     capacityReturnedWeekly: weeklyHours * 0.5,
     opportunities: mapOpportunities(tasks),
-    tasks: mapTasks(tasks),
+    // tasks: mapTasks(tasks), // We don't display the full task list in the new template yet, but we could.
     matrixImageSrc: matrixImage && matrixImage.startsWith("data:") ? matrixImage : null,
     matrixCaption: "Strategic Priority Matrix. High-payback opportunities appear in the top-right.",
     doNothingAnnualCost: totals.annualCost || 0,
@@ -144,29 +129,103 @@ async function buildReportData(payload, origin) {
   };
 }
 
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
     return res.status(405).json({ error: "Method not allowed" });
   }
+
   try {
     const payload = typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body;
-    const proto = (req.headers["x-forwarded-proto"] || "https").split(",")[0];
-    const host = (req.headers["x-forwarded-host"] || req.headers.host || "").split(",")[0];
-    const origin = host ? `${proto}://${host}` : null;
-
-    // BUILD DATA ASYNC since we fetch the logo now
-    const data = await buildReportData(payload || {}, origin);
+    const data = await buildReportData(payload || {});
     const qr = await makeQrDataUri(data.bookingUrl);
     data.bookingQrDataUri = qr;
 
-    const doc = <Report data={data} />;
-    const pdfBuffer = await pdf(doc).toBuffer();
+    // Render React to HTML
+    const reportHtml = ReactDOMServer.renderToStaticMarkup(<ReportTemplate data={data} />);
+
+    // Wrap in full HTML document with Tailwind and Fonts
+    const fullHtml = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <script src="https://cdn.tailwindcss.com"></script>
+          <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+          <style>
+            body { font-family: 'Manrope', sans-serif; }
+            /* Safe area for printing */
+            @page {
+                size: A4;
+                margin: 0;
+            }
+          </style>
+          <script>
+            tailwind.config = {
+              theme: {
+                extend: {
+                  colors: {
+                    brand: {
+                      dark: "#134061",
+                      orange: "#F48847"
+                    }
+                  }
+                }
+              }
+            }
+          </script>
+        </head>
+        <body class="bg-slate-100">
+          ${reportHtml}
+        </body>
+      </html>
+    `;
+
+    let browser;
+    // Launch logic
+    if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
+      // Vercel / Production
+      const chromium = require("@sparticuz/chromium");
+      const puppeteer = require("puppeteer-core");
+
+      // Optional: Load custom font file if needed, but Google Fonts via network usually works better with chromium
+      // chromium.font('https://.../Manrope.ttf'); 
+
+      browser = await puppeteer.launch({
+        args: chromium.args,
+        defaultViewport: chromium.defaultViewport,
+        executablePath: await chromium.executablePath(),
+        headless: chromium.headless,
+        ignoreHTTPSErrors: true,
+      });
+    } else {
+      // Local Development
+      const puppeteer = require("puppeteer");
+      browser = await puppeteer.launch({
+        headless: true,
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
+      });
+    }
+
+    const page = await browser.newPage();
+    await page.setContent(fullHtml, { waitUntil: 'networkidle0', timeout: 30000 });
+
+    // Generate PDF
+    const pdfBuffer = await page.pdf({
+      format: 'A4',
+      printBackground: true,
+      margin: { top: 0, right: 0, bottom: 0, left: 0 }
+    });
+
+    await browser.close();
+
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", "attachment; filename=Valid-Agenda-Automation-ROI-Report.pdf");
-    res.status(200).send(pdfBuffer);
+    res.send(pdfBuffer);
+
   } catch (err) {
     console.error("PDF generation failed", err);
-    res.status(500).json({ error: "PDF generation failed" });
+    res.status(500).json({ error: "PDF generation failed", details: err.message });
   }
 }

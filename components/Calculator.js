@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { GlassCard, Button, Input, Label, Badge, cn } from './UI';
+import { GlassCard, Button, Input, Select, Label, Badge, cn } from './UI';
 import { DecisionMatrix } from './DecisionMatrix';
 import { TaskWizard } from './TaskWizard';
 import { Plus, Trash2, Edit2, activity, ArrowRight, Save, X, CheckCircle, AlertCircle, FileText, Download } from 'lucide-react';
@@ -413,12 +413,22 @@ export default function Calculator() {
                             </div>
                             <div className="space-y-1">
                                 <Label className="text-xs uppercase">Role</Label>
-                                <Input
+                                <Select
                                     value={lead.role}
                                     onChange={(e) => setLead(p => ({ ...p, role: e.target.value }))}
                                     required
                                     className="py-2 text-sm"
-                                />
+                                >
+                                    <option value="" disabled>Select your role</option>
+                                    <option>Owner / Founder</option>
+                                    <option>General Manager</option>
+                                    <option>Operations</option>
+                                    <option>Sales</option>
+                                    <option>Marketing</option>
+                                    <option>Finance / Admin</option>
+                                    <option>IT / Technical</option>
+                                    <option>Other</option>
+                                </Select>
                             </div>
 
                             <label className="flex items-start gap-3 p-3 rounded-lg border border-slate-200 bg-white cursor-pointer hover:bg-slate-50 transition">

@@ -1,36 +1,47 @@
-## Automation ROI Tool – Working Notes
+# Automation ROI Tool – Product & Architecture
 
-- **Purpose**: Single-page ROI calculator (`index.html`) to capture repetitive workflows, estimate time/cost, and rank automation candidates for Valid Agenda prospects.
+## 1. Product Vision: The Blueprint Machine
 
-- **Core flow**:
-  - Part 1: Hero explainer + “Start adding tasks”.
-  - Part 2: Workflow Inventory form collects task name, weekly frequency, minutes, hourly rate, role, pain level chips, and readiness toggles (documented, digital, repeatable, safe, approval). Saved tasks render as cards with edit/delete controls; form state is mirrored in `localStorage` (`va-roi-state`).
-  - Part 3: ROI Summary table lists weekly/annual hours, annual cost, and a fixed 50% savings view per task plus totals. Bar chart visualizes current vs automated spend.
-  - Part 4: Decision Matrix plots each task on a canvas (impact = annual cost, effort = readiness/pain mix) with quadrant tags: Quick Win, Strategic Bet, Hobby, Trap. Classification table mirrors the plotted priorities.
-  - Lead magnet: email + consent gate to download a PDF report; “Next steps” CTA links to booking page.
+*   **Mission**: "Payback-first AI. No science projects."
+*   **Role**: A high-friction, high-value assessment tool. It intentionally avoids "chat" interfaces to force structured thinking and commitment from the user. It is the entry point (Lead Magnet) that converts "busy work" into a "Payback Blueprint".
+*   **Output**: The PDF Report is the primary product—a tangible **Payback Blueprint** (Decision Matrix + Prioritized Roadmap).
 
-- **Calculations**:
-  - Weekly hours = freq * minutes / 60; annual hours = weekly * 52; annual cost = annual hours * hourly; savings = 50% of annual cost.
-  - Readiness score = proportion of toggles on; effort bucket: Low (>=0.6), Medium (>=0.4), High (<0.4). Impact bucket: High if annual cost >= 20k.
-  - Priority classification derives from impact/effort combos; badges set styling and matrix colors.
+## 2. Architecture (Antigravity Refactor)
 
-- **State + persistence**:
-  - `state.tasks` items: `{ id, task, freq, minutes, hourly, role, pain, readiness }`.
-  - Form/edit mode stored alongside tasks in `localStorage`; restored on load.
-  - ID `current` used for unsaved form state; saved tasks get timestamp-based IDs.
+### Tech Stack
+*   **Framework**: Next.js (React)
+*   **Styling**: Tailwind CSS
+*   **Animation**: Framer Motion
+*   **PDF Generation**: Server-side approach using **Puppeteer** to render a dedicated `/print-view`. This replaces the legacy `html2canvas` client-side approach to ensure high-fidelity, vector-quality reports.
 
-- **Lead capture & PDF**:
-  - Webhook target: `https://hooks.validagenda.dev/webhook/eb31e5cf-774c-4aa1-b914-8b5fa20be96c`.
-  - On submit, validates email + consent, builds payload with tasks, totals, and metrics, then posts JSON via `fetch` (sendBeacon fallback). PDF is omitted from the beacon to stay under size limits.
-  - PDF is generated client-side: draws summary cards, top tasks, and the decision matrix onto a canvas, embeds a QR to the booking URL, then triggers a download Blob. Status messaging updates the CTA button and `#lead-status`.
-  - Meeting/QR URL: `https://validagenda.com/book`; logo embedded as base64 PNG within the script (also stored as `assets/va-logo-wide.png` and `assets/va-logo-circle.png`).
+### Data Model
+*   **Persistence**: `localStorage` (`va-roi-state`).
+    *   **Privacy-first**: No login required. Data stays on the user's device until submission.
+    *   **Resumable**: Users can leave and return without losing their inventory.
+*   **State Management**: Client-side `useState` orchestrator in `Calculator.js`.
 
-- **Styling**:
-  - Brand variables live inline in `index.html` and mirror Valid Agenda palette; heavy CSS for cards, tables, chips, matrix, footer, and download banner.
-  - `n8n form.css` is a standalone stylesheet to skin embedded n8n forms with the same typography, spacing, and button treatments.
-  - `site.css` and `va.html` are Squarespace exports/reference assets; not used by the standalone ROI calculator.
+### Key Components
+*   **`Calculator.js`**: The central brain. Manages state (`tasks`, `lead`), handles persistence, and orchestrates the submission flow.
+*   **`TaskWizard.js`**: The "Inventory" interface. Handles structured data collection (frequency, role, pain points) and validation.
+*   **`DecisionMatrix.js`**: Visual logic engine. Plots tasks on the Impact vs. Viability canvas and determines the "Quadrant" (Quick Win, Strategic Bet, Hobby, Trap).
 
-- **Integration points / extension ideas**:
-  - Adjust savings factor or introduce scenario sliders in `calculateTaskMetrics`.
-  - Add persistence sync to a backend by extending the webhook payload or adding a secondary POST with the PDF bytes.
-  - Drop-in embed by hosting `index.html` and pointing forms or CTAs to live booking URLs; swap `WEBHOOK_URL` and `MEETING_URL` as needed.
+## 3. Future Roadmap
+
+### Phase 1: Conversion & Content Tuning
+*   **Objective**: Maximize the perceived value of the PDF report.
+*   **Tasks**:
+    *   **PDF Finalization**: Refine content and styling to ensure it feels like a $5k consultant's report, not a generic auto-generated summary.
+    *   **Copy Optimization**: Refine on-page copy to boost form completion rates and reduce drop-off.
+    *   **Self-Qualification**: Add "Qualifying Questions" to the wizard (e.g., "Do you have budget approval?", "Is this process documented?") to improve lead quality.
+
+### Phase 2: Expansion
+*   **Objective**: Broaden the funnel and capture different buyer personas.
+*   **Tasks**:
+    *   **Complementary Calculators**: Add new pages for simple, specific calculators (e.g., "Meeting Cost Calculator", "Email Fatigue Calculator").
+    *   **Resource Library**: Create a library of "Free Blueprint" resources to attract traffic.
+
+### Phase 3: Technical Hardening & PDF Migration
+*   **Objective**: Ensure production-grade reliability and output.
+*   **Tasks**:
+    *   **Puppeteer Migration**: Replace `html2canvas` with a server-side Puppeteer flow for "Consultant-Grade" PDFs (vector charts, selectable text, perfect typography).
+    *   **Edge Case Hardening**: Mitigate layout shifts and ensure the generated PDF is perfect regardless of the number of tasks entered.
