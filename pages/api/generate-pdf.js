@@ -184,8 +184,9 @@ export default async function handler(req, res) {
 
     let browser;
     // Launch logic
-    if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
+    if (process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_VERSION) {
       // Vercel / Production
+      console.log("Environment: Vercel/Production");
       const chromium = require("@sparticuz/chromium-min");
       const puppeteer = require("puppeteer-core");
 
@@ -193,7 +194,7 @@ export default async function handler(req, res) {
         "https://github.com/Sparticuz/chromium/releases/download/v123.0.1/chromium-v123.0.1-pack.tar"
       );
 
-      console.log("Puppeteer Launch Debug:", {
+      console.log("Puppeteer Launch Config:", {
         executablePath,
         headless: chromium.headless,
         args: chromium.args
@@ -212,7 +213,10 @@ export default async function handler(req, res) {
       });
     } else {
       // Local Development
-      const puppeteer = require("puppeteer");
+      console.log("Environment: Local Development");
+      // Use dynamic import to avoid bundling full puppeteer in production
+      // Note: 'puppeteer' is a dev dependency
+      const puppeteer = (await import("puppeteer")).default;
       browser = await puppeteer.launch({
         headless: true,
         args: ['--no-sandbox', '--disable-setuid-sandbox']
