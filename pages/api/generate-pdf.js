@@ -189,12 +189,24 @@ export default async function handler(req, res) {
       const chromium = require("@sparticuz/chromium-min");
       const puppeteer = require("puppeteer-core");
 
+      const executablePath = await chromium.executablePath(
+        "https://github.com/Sparticuz/chromium/releases/download/v123.0.1/chromium-v123.0.1-pack.tar"
+      );
+
+      console.log("Puppeteer Launch Debug:", {
+        executablePath,
+        headless: chromium.headless,
+        args: chromium.args
+      });
+
+      if (!executablePath) {
+        throw new Error("Chromium executablePath is null or undefined");
+      }
+
       browser = await puppeteer.launch({
         args: [...chromium.args, '--hide-scrollbars', '--disable-web-security'],
         defaultViewport: chromium.defaultViewport,
-        executablePath: await chromium.executablePath(
-          "https://github.com/Sparticuz/chromium/releases/download/v123.0.1/chromium-v123.0.1-pack.tar"
-        ), // Explicitly provide download url for min package if needed, otherwise it tries relative
+        executablePath,
         headless: chromium.headless,
         ignoreHTTPSErrors: true,
       });
